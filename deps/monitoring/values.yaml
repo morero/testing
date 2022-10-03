@@ -1,0 +1,101 @@
+kube-prometheus-stack:
+  defaultRules:
+    create: true
+    rules:
+      etcd: false
+      kubeProxy: false
+      kubeScheduler: false
+
+  grafana:
+    defaultDashboardsTimezone: browser
+
+    ## An empty string generates a psuedo-random password
+    ## Otherwise, this value is used
+    adminPassword: ""
+
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: traefik
+        cert-manager.io/cluster-issuer: letsencrypt-production
+      hosts:
+        - grafana.@DOMAIN@
+      tls:
+        - secretName: grafana-tls
+          hosts:
+            - grafana.@DOMAIN@
+
+    persistence:
+      enabled: true
+      size: 3Gi
+
+    additionalDataSources:
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://{{ .Release.Name }}-loki:3100
+        version: 1
+
+    grafana.ini:
+      analytics:
+        check_for_updates: false
+      server:
+        root_url: https://grafana.@DOMAIN@
+
+    sidecar:
+      dashboards:
+        searchNamespace: ALL
+        folderAnnotation: grafana_folder
+        provider:
+          foldersFromFilesStructure: true
+
+  kubeEtcd:
+    enabled: false
+
+  kubeProxy:
+    enabled: false
+
+  kubeScheduler:
+    enabled: false
+
+  prometheus:
+    prometheusSpec:
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: local-path
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 20Gi
+
+loki:
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      cert-manager.io/cluster-issuer: letsencrypt-production
+      traefik.ingress.kubernetes.io/router.middlewares: monitoring-loki-basic-auth@kubernetescrd
+    hosts:
+      - host: loki.@DOMAIN@
+        paths:
+          - /
+    tls:
+      - secretName: loki-tls
+        hosts:
+          - loki.@DOMAIN@
+    basicAuth:
+      removeHeader: true
+      secret: loki-auth-secret
+
+  persistence:
+    enabled: true
+    size: 10Gi
+
+  config:
+    compactor:
+      retention_enabled: true
+
+promtail:
+  config:
+    lokiAddress: http://{{ .Release.Name }}-loki:3100/loki/api/v1/push

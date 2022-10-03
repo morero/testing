@@ -1,0 +1,6 @@
+dependencies:
+- name: yugabyte
+  repository: ""
+  version: 2.12.1
+digest: sha256:77407e25ccb9b5831e88152b12bc3233e1c1bf4d19ddc2985e34fd841557b442
+generated: "2022-03-28T20:50:26.294509903+02:00"

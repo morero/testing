@@ -1,0 +1,9 @@
+gitea:
+  hostName: git-gitea-http.git:3000
+
+ertia:
+  namespaces:
+    - default
+    - demo
+
+  saRobotName: tekton-robot

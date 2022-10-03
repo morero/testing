@@ -1,0 +1,42 @@
+{{- if .Values.ertia.namespaces }}
+{{- range $namespace := .Values.ertia.namespaces }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ $.Values.ertia.saRobotName }}-full-access
+  namespace: {{ $namespace }}
+  labels:
+    {{- include "ertia-secret-spreader.labels" $ | nindent 4 }}
+rules:
+- apiGroups:
+    - ""
+    - apps
+    - autoscaling
+    - networking.k8s.io
+    - monitoring.coreos.com
+  resources:
+    - '*'
+  verbs:
+    - get
+    - list
+    - watch
+    - create
+    - update
+    - patch
+    - delete
+- apiGroups:
+    - batch
+  resources:
+    - jobs
+    - cronjobs
+  verbs:
+    - get
+    - list
+    - watch
+    - create
+    - update
+    - patch
+    - delete
+{{- end }}
+{{- end }}

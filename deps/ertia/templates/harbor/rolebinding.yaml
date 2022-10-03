@@ -1,0 +1,19 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "ertia.fullname" . }}-{{ .Values.harbor.script.setup }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    app: {{ include "ertia.fullname" . }}-{{ .Values.harbor.script.setup }}
+    {{- include "ertia.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "ertia.fullname" . }}-{{ .Values.harbor.script.setup }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "ertia.fullname" . }}-{{ .Values.harbor.script.setup }}
+    namespace: {{ .Release.Namespace }}

@@ -1,0 +1,6 @@
+dependencies:
+- name: gitea
+  repository: ""
+  version: 5.0.1
+digest: sha256:9b5c047f3c7387e7dbf35a99c247acddbb56ca0d37e6e0a4437f6e973303754e
+generated: "2022-03-28T22:26:02.879337957+02:00"

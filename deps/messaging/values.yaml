@@ -1,0 +1,35 @@
+nats:
+  nats:
+    jetstream:
+      enabled: true
+
+      memStorage:
+        enabled: true
+        size: 1Gi
+
+      fileStorage:
+        enabled: true
+        size: 5Gi
+
+  cluster:
+    enabled: true
+    replicas: 3
+
+  natsbox:
+    enabled: false
+
+  exporter:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      namespace: monitoring
+      labels:
+        release: monitoring
+      path: /metrics
+
+  auth:
+    enabled: false
+
+  networkPolicy:
+    enabled: true
+    allowExternal: true
