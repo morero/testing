@@ -5,6 +5,3 @@ resources:
   # Cert-manager
   - cert-manager.yaml
 
-  # CluesterIssuer
-  - letsencrypt-issuer-staging.yaml
-  - letsencrypt-issuer-production.yaml
