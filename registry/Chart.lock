@@ -1,0 +1,6 @@
+dependencies:
+- name: harbor
+  repository: ""
+  version: 1.8.1
+digest: sha256:b0f14add9ff1daa0c6098b5c006a01b9925964cc3299ff9d98fbba11be3691d4
+generated: "2022-03-28T11:10:05.442817864+02:00"

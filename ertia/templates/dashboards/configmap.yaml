@@ -1,0 +1,22 @@
+{{- $files := .Files.Glob "dashboards/*.json" }}
+{{- if $files }}
+apiVersion: v1
+kind: ConfigMapList
+items:
+{{- range $path, $fileContents := $files }}
+{{- $dashboardName := regexReplaceAll "(^.*/)(.*)\\.json$" $path "${2}" }}
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: {{ printf "%s-%s" $.Release.Name $dashboardName | trunc 63 | trimSuffix "-" }}
+    namespace: {{ template "ertia.namespace" $ }}
+    labels:
+      {{ template "grafana.dashboard" $ }}
+      {{- include "ertia.labels" $ | nindent 6 }}
+    annotations:
+      {{ template "grafana.folder" $ }}
+  data:
+    {{ $dashboardName }}.json: |-
+      {{ $.Files.Get $path | nindent 6 }}
+{{- end }}
+{{- end }}

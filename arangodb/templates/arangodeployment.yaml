@@ -1,0 +1,37 @@
+apiVersion: database.arangodb.com/v1
+kind: ArangoDeployment
+metadata:
+  name: {{ .Values.arangodb.prod.deploymentName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  mode: Cluster
+  environment: Production
+  image: arangodb/arangodb:3.9.1@sha256:03e0367fc01d25c9e18e3a0d392fd06b000972cf76688eb89ef4aa75c2370e60
+
+    #   agents:
+    #     #volumeClaimTemplate:
+    #     #  spec:
+    #
+    #     resources:
+    #       requests:
+    #         storage: 8Gi
+    #
+    #   dbservers:
+    #     resources:
+    #       requests:
+    #         storage: 10Gi
+  externalAccess:
+    type: None
+  bootstrap:
+    passwordSecretNames:
+      root: {{ .Values.arangodb.prod.rootSecretName }}
+  metrics:
+    enabled: true
+    mode: sidecar
+    tls: false
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: '9101'
+    prometheus.io/scrape_interval: '15s'
+  labels:
+    release: monitoring

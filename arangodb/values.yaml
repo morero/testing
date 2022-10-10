@@ -1,0 +1,10 @@
+# Default values for arangodb.
+
+operator:
+  dashboard:
+    secretName: arangodb-operator-dashboard
+
+arangodb:
+  prod:
+    deploymentName: arango-prod-cluster
+    rootSecretName: arango-prod-cluster-root-password

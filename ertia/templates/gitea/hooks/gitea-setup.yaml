@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "ertia.fullname" . }}-{{ .Values.gitea.script.setup }}
+  namespace: "{{ .Release.Namespace }}"
+  labels:
+    {{- include "ertia.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "0"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      name: {{ include "ertia.fullname" . }}-{{ .Values.gitea.script.setup }}
+      labels:
+        {{- include "ertia.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ include "ertia.fullname" . }}-{{ .Values.gitea.script.setup }}
+      containers:
+      - name: {{ .Values.gitea.script.setup }}
+        image: "{{ .Values.gitea.image.repository }}@{{ .Values.gitea.image.digest }}"
+        command:
+          - bash
+          - /usr/local/scripts/{{ .Values.gitea.script.setup }}.sh
+          - {{ .Release.Namespace }}
+          - {{ include "gitea.admin-password" . }}
+          - {{ include "gitea.tekton-password" . }}
+        volumeMounts:
+          - name: {{ .Values.gitea.script.setup }}-script
+            mountPath: "/usr/local/scripts"
+      volumes:
+        - name: {{ .Values.gitea.script.setup }}-script
+          configMap:
+            name: {{ .Release.Name }}-{{ .Values.gitea.script.setup }}
