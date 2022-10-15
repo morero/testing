@@ -59,9 +59,9 @@ gitea:
         INTERVAL: 60
       database:
         DB_TYPE: postgres
-        HOST: yb-tservers.database:5433
+        HOST: yb-tservers.yugabyte:5433
         NAME: gitea
-        USER: yugabyte
+        USER: gitea
       other:
         SHOW_FOOTER_VERSION: false
         SHOW_FOOTER_TEMPLATE_LOAD_TIME: false
