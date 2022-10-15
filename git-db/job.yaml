@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: git-db-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: yugabyte-client
+        image: yugabytedb/yugabyte-client
+        command: ["/home/yugabyte/bin/ysqlsh", "yb-tservers", "CREATE DATABASE", "gitea"]
+      restartPolicy: Never
+  backoffLimit: 4

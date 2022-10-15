@@ -1,6 +1,0 @@
-dependencies:
-- name: nats
-  repository: ""
-  version: 0.13.1
-digest: sha256:f4d56a398d27afca543f533fcfc712435de3a6b1ab0f780bec0d85946bf7c124
-generated: "2022-03-28T21:16:58.338277081+02:00"

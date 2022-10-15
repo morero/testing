@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -euo pipefail
-
+ 
 TIMEOUT="3m"
 YSQL_CMD="/home/yugabyte/bin/ysqlsh"
 DB_SERVER="yb-tservers"
@@ -36,16 +36,16 @@ _createDatabase() {
 }
 
 _main() {
-    export -f _waitUntilHealthy
+#    export -f _waitUntilHealthy
 
-    if ! _checkDatabase; then
-        printf "timeout while waiting for database\n"
-        exit 1
-    fi
+#    if ! _checkDatabase; then
+#        printf "timeout while waiting for database\n"
+#        exit 1
+#    fi
 
-    printf "database is ready\n"
+#    printf "database is ready\n"
 
-    _createDatabase gitea
+ #   _createDatabase gitea
 }
 
 _main "$@"
