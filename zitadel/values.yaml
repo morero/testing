@@ -10,16 +10,16 @@ zitadel:
       cockroachdb:
         enabled: false
       postgres:
-        Host: yb-tservers.database
+        Host: yb-tservers.yugabyte
         Port: 5433
         User:
-          Username: yugabyte
-          Password: yugabyte
+          Username: zitadel
+          Password: zitadel
           SSL:
             Mode: "verify-full"
         Admin:
-          Username: yugabyte
-          Password: yugabyte
+          Username: zitadel
+          Password: zitadel
           SSL:
             Mode: "verify-full"
 
