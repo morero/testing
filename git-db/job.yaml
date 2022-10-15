@@ -8,6 +8,6 @@ spec:
       containers:
       - name: yugabyte-client
         image: yugabytedb/yugabyte-client
-        command: ["/home/yugabyte/bin/ysqlsh", "-h", "yb-tservers.yugabyte.cluster.local", "-c", "\"CREATE DATABASE gitea\""]
+        command: ["/home/yugabyte/bin/ysqlsh", "-h", "yb-tservers", "-c", "\"CREATE DATABASE gitea\""]
       restartPolicy: Never
   backoffLimit: 4
