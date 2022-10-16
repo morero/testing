@@ -16,12 +16,14 @@ zitadel:
           Username: zitadel
           Password: zitadel
           SSL:
-            Mode: "verify-full"
+            #Mode: "verify-full"
+          Mode: "disable"
         Admin:
           Username: zitadel
           Password: zitadel
           SSL:
-            Mode: "verify-full"
+            #Mode: "verify-full"
+          Mode: "disable"
 
     Machine:
       Identification:
@@ -47,13 +49,13 @@ zitadel:
   #masterkeySecretName: ""
 
   # The root CA Certificate needed for establishing secure database connections
-  dbSslRootCrt: ''
+  #dbSslRootCrt: ''
 
   # The Secret containing the root CA Certificate at key ca.crt needed for establishing secure database connections
-  dbSslRootCrtSecret: 'crdb-ca-secret'
+  #dbSslRootCrtSecret: 'crdb-ca-secret'
 
   # The Secret containing the client CA Certificate and key at tls.crt and tls.key needed for establishing secure database connections
-  dbSslClientCrtSecret: 'crdb-client-secret'
+  #dbSslClientCrtSecret: 'crdb-client-secret'
 
 replicaCount: 3
 
