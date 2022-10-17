@@ -6,6 +6,8 @@ zitadel:
   # https://github.com/zitadel/zitadel/blob/main/cmd/defaults.yaml
   configmapConfig:
     Database:
+      cockroach:
+        Enabled: false
       postgres:
         Enabled: true
         MaxOpenConns: 25
@@ -134,4 +136,4 @@ cockroachdb:
   enabled: false
   fullnameOverride: crdb
   tls:
-    enabled: true
+    enabled: false
