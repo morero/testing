@@ -59,7 +59,7 @@ gitea:
         INTERVAL: 60
       database:
         DB_TYPE: postgres
-        HOST: yb-tservers.yugabyte:5433
+        HOST: stolon-proxy.stolon:5432
         NAME: gitea
         USER: gitea
       other:

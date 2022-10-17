@@ -10,8 +10,8 @@ zitadel:
       cockroachdb:
         enabled: false
       postgres:
-        Host: yb-tservers.yugabyte
-        Port: 5433
+        Host: stolon-proxy.stolon
+        Port: 5432
         User:
           Username: zitadel
           Password: zitadel

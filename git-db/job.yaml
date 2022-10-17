@@ -1,43 +1,50 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
+  name: git-db-user-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: pg-client
+          image: postgres
+          env:
+            - name: PGPASSWORD
+              value: "stolon"
+          command: ["psql", "-h", "stolon-proxy", "-U", "stolon","-d","postgres","-c", "CREATE USER gitea"]
+      restartPolicy: Never
+  backoffLimit: 4
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
   name: git-db-job
 spec:
   template:
     spec:
       containers:
-      - name: yugabyte-client
-        image: yugabytedb/yugabyte-client
-        command: ["/home/yugabyte/bin/ysqlsh", "-h", "yb-tservers", "-c", "CREATE DATABASE gitea"]
+        - name: pg-client
+          image: postgres
+          env:
+            - name: PGPASSWORD
+              value: "stolon"
+          command: ["psql", "-h", "stolon-proxy", "-U", "stolon","-d","postgres","-c", "CREATE DATABASE gitea"]
       restartPolicy: Never
   backoffLimit: 4
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: git-db-user
+  name: git-db-grant-job
 spec:
   template:
     spec:
       containers:
-        - name: yugabyte-client
-          image: yugabytedb/yugabyte-client
-          command: ["/home/yugabyte/bin/ysqlsh", "-h", "yb-tservers", "-c", "CREATE USER gitea WITH PASSWORD 'gitea'"]
+        - name: pg-client
+          image: postgres
+          env:
+            - name: PGPASSWORD
+              value: "stolon"
+          command: ["psql", "-h", "stolon-proxy", "-U", "stolon","-d","postgres","-c", "GRANT ALL PRIVILEGES ON DATABASE gitea TO gitea"]
       restartPolicy: Never
   backoffLimit: 4
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: git-db-grant
-spec:
-  template:
-    spec:
-      containers:
-        - name: yugabyte-client
-          image: yugabytedb/yugabyte-client
-          command: ["/home/yugabyte/bin/ysqlsh", "-h", "yb-tservers", "-c", "GRANT ALL ON DATABASE gitea TO gitea"]
-      restartPolicy: Never
-  backoffLimit: 4
-
-
