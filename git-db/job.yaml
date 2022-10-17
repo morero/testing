@@ -10,8 +10,8 @@ spec:
           image: postgres
           env:
             - name: PGPASSWORD
-              value: "stolon"
-          command: ["psql", "-h", "stolon-proxy", "-U", "stolon","-d","postgres","-c", "CREATE ROLE gitea WITH LOGIN PASSWORD 'gitea'"]
+              value: "postgres"
+          command: ["psql", "-h", "stolon-proxy", "-U", "postgres","-d","postgres","-c", "CREATE ROLE gitea WITH LOGIN PASSWORD 'gitea'"]
       restartPolicy: Never
   backoffLimit: 4
 ---
@@ -27,8 +27,8 @@ spec:
           image: postgres
           env:
             - name: PGPASSWORD
-              value: "stolon"
-          command: ["psql", "-h", "stolon-proxy", "-U", "stolon","-d","postgres","-c", "CREATE DATABASE gitea WITH OWNER gitea"]
+              value: "postgres"
+          command: ["psql", "-h", "stolon-proxy", "-U", "postgres","-d","postgres","-c", "CREATE DATABASE gitea WITH OWNER gitea"]
       restartPolicy: Never
   backoffLimit: 4
 ---
@@ -44,7 +44,7 @@ spec:
           image: postgres
           env:
             - name: PGPASSWORD
-              value: "stolon"
-          command: ["psql", "-h", "stolon-proxy", "-U", "stolon","-d","postgres","-c", "GRANT ALL PRIVILEGES ON DATABASE gitea TO gitea"]
+              value: "postgres"
+          command: ["psql", "-h", "stolon-proxy", "-U", "postgres","-d","postgres","-c", "GRANT ALL PRIVILEGES ON DATABASE gitea TO gitea"]
       restartPolicy: Never
   backoffLimit: 4

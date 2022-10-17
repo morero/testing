@@ -9,6 +9,19 @@ zitadel:
       Database:
         cockroach:
           Enabled: false
+          enabled: false
+          User:
+            SSL:
+              Mode: disable
+              RootCert:
+              Cert:
+              Key:
+          Admin:
+            SSL:
+              Mode: disable
+              RootCert:
+              Cert:
+              Key:
         postgres:
           Enabled: true
           MaxOpenConns: 25
@@ -19,16 +32,19 @@ zitadel:
           User:
             Username: zitadel
             Password: zitadel
-
             SSL:
-              #Mode: "verify-full"
-              Mode: "disable"
+              Mode: disable
+              RootCert:
+              Cert:
+              Key:
           Admin:
             Username: stolon
             Password: stolon
             SSL:
-              #Mode: "verify-full"
-              Mode: "disable"
+              Mode: disable
+              RootCert:
+              Cert:
+              Key:
 
       Machine:
         Identification:
@@ -57,10 +73,10 @@ zitadel:
     #dbSslRootCrt: ''
 
     # The Secret containing the root CA Certificate at key ca.crt needed for establishing secure database connections
-    #dbSslRootCrtSecret: 'crdb-ca-secret'
+    dbSslRootCrtSecret: ''
 
     # The Secret containing the client CA Certificate and key at tls.crt and tls.key needed for establishing secure database connections
-    #dbSslClientCrtSecret: 'crdb-client-secret'
+    dbSslClientCrtSecret: ''
 
   replicaCount: 3
 
