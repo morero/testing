@@ -71,3 +71,4 @@ gitea:
 
   postgresql:
     enabled: false
+

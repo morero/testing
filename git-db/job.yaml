@@ -11,7 +11,7 @@ spec:
           env:
             - name: PGPASSWORD
               value: "stolon"
-          command: ["psql", "-h", "stolon-proxy", "-U", "stolon","-d","postgres","-c", "CREATE USER gitea"]
+          command: ["psql", "-h", "stolon-proxy", "-U", "stolon","-d","postgres","-c", "CREATE USER gitea WITH PASSWORD 'gitea';"]
       restartPolicy: Never
   backoffLimit: 4
 ---
