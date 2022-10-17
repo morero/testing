@@ -19,8 +19,8 @@ zitadel:
             #Mode: "verify-full"
             Mode: "disable"
         Admin:
-          Username: stolon
-          Password: stolon
+          Username: zitadel-admin
+          Password: zitadel-admin
           SSL:
             #Mode: "verify-full"
             Mode: "disable"
