@@ -11,7 +11,7 @@ spec:
           env:
             - name: PGPASSWORD
               value: "stolon"
-          command: ["psql", "-h", "stolon-proxy", "-U", "stolon","-d","postgres","-c", "CREATE USER zitadel WITH PASSWORD 'zitadel'"]
+          command: ["psql", "-h", "stolon-proxy", "-U", "stolon","-d","postgres","-c", "CREATE ROLE zitadel WITH LOGIN PASSWORD 'zitadel'"]
       restartPolicy: Never
   backoffLimit: 4
 ---
