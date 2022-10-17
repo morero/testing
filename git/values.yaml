@@ -62,6 +62,7 @@ gitea:
         HOST: stolon-proxy.stolon:5432
         NAME: gitea
         USER: gitea
+        PASSWD: gitea
 
       other:
         SHOW_FOOTER_VERSION: false
