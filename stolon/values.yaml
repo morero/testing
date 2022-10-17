@@ -54,7 +54,7 @@ superuserPasswordFile:
 
 superuserUsername: "stolon"
 ## password for the superuser (REQUIRED if superuserSecret and superuserPasswordFile are not set)
-superuserPassword:
+superuserPassword: "stolon"
 
 replicationPasswordFile:
 
