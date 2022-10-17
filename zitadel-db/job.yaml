@@ -28,7 +28,7 @@ spec:
           env:
             - name: PGPASSWORD
               value: "stolon"
-          command: ["psql", "-h", "stolon-proxy", "-U", "stolon","-d","postgres","-c", "CREATE DATABASE zitadel"]
+          command: ["psql", "-h", "stolon-proxy", "-U", "stolon","-d","postgres","-c", "CREATE DATABASE zitadel WITH OWNER zitadel"]
       restartPolicy: Never
   backoffLimit: 4
 ---

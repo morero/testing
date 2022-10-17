@@ -17,13 +17,13 @@ zitadel:
           Password: zitadel
           SSL:
             #Mode: "verify-full"
-          Mode: "disable"
+            Mode: "disable"
         Admin:
           Username: zitadel
           Password: zitadel
           SSL:
             #Mode: "verify-full"
-          Mode: "disable"
+            Mode: "disable"
 
     Machine:
       Identification:
