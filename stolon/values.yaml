@@ -60,7 +60,7 @@ replicationPasswordFile:
 
 replicationUsername: "repluser"
 ## password for the replication user (REQUIRED if replicationSecret and replicationPasswordFile are not set)
-replicationPassword:
+replicationPassword: "repluser"
 
 ## backend could be one of the following: consul, etcdv2, etcdv3 or kubernetes
 store:
