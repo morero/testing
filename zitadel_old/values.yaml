@@ -5,8 +5,9 @@ zitadel:
   # See all defaults here:
   # https://github.com/zitadel/zitadel/blob/main/cmd/defaults.yaml
   configmapConfig:
+
     Database:
-      postgres:
+      cockroach:
         Enabled: true
         MaxOpenConns: 25
         MaxConnLifetime: 1h
