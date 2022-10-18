@@ -1,0 +1,6 @@
+dependencies:
+- name: stolon
+  repository: ""
+  version: 1.7.2
+digest: sha256:5cfa9a062e9102d53acf513f4bccc6d8560d7820f704152cf8ef09d6f11cb1dc
+generated: "2022-10-18T09:14:04.94535932+02:00"
