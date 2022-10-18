@@ -38,8 +38,8 @@ zitadel:
               Cert:
               Key:
           Admin:
-            Username: stolon
-            Password: stolon
+            Username: postgres
+            Password: postgres
             SSL:
               Mode: disable
               RootCert:
