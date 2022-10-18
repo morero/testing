@@ -35,6 +35,23 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
+  name: zitadel-uuid-extension-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: pg-client
+          image: postgres
+          env:
+            - name: PGPASSWORD
+              value: "postgres"
+          command: ["psql", "-h", "stolon-proxy", "-U", "postgres","-d","zitadel","-c", "CREATE EXTENSION pgcrypto"]
+      restartPolicy: Never
+  backoffLimit: 4
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
   name: zitadel-db-grant-job
 spec:
   template:
@@ -48,3 +65,4 @@ spec:
           command: ["psql", "-h", "stolon-proxy", "-U", "postgres","-d","postgres","-c", "GRANT ALL PRIVILEGES ON DATABASE zitadel TO zitadel"]
       restartPolicy: Never
   backoffLimit: 4
+
