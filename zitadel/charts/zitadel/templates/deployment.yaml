@@ -51,6 +51,8 @@ spec:
             - /config/zitadel-config-yaml
             - --masterkeyFile
             - /.secrets/masterkey
+            - --tlsMode
+            - disabled
           env:
             - name: POD_IP
               valueFrom:
