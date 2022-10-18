@@ -6,6 +6,10 @@ zitadel:
     # See all defaults here:
     # https://github.com/zitadel/zitadel/blob/main/cmd/defaults.yaml
     configmapConfig:
+
+      ExternalSecure: false
+      TLS:
+        Enabled: false
       Database:
         cockroach:
           Enabled: false
@@ -120,7 +124,7 @@ zitadel:
     annotations: {}
 
   ingress:
-    enabled: false
+    enabled: true
     className: ""
     annotations: {}
     hosts:
