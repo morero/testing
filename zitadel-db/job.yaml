@@ -45,7 +45,7 @@ spec:
           env:
             - name: PGPASSWORD
               value: "postgres"
-          command: ["psql", "-h", "stolon-proxy", "-U", "postgres","-d","zitadel","-c", "CREATE EXTENSION pgcrypto"]
+          command: ["psql", "-h", "stolon-proxy", "-U", "postgres","-d","zitadel","-c", "CREATE EXTENSION pgcrypto;"]
       restartPolicy: Never
   backoffLimit: 4
 ---
