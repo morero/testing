@@ -29,6 +29,7 @@ zitadel:
           MaxConnIdleTime: 5m
           Host: stolon-proxy.stolon
           Port: 5432
+          Database: zitadel
           User:
             Username: zitadel
             Password: zitadel
