@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: garage
+spec:
+  selector:
+    matchLabels:
+      app: garage
+  replicas: 1
