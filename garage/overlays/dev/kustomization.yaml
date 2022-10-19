@@ -1,4 +1,4 @@
 bases:
 - ../../base
 patchesStrategicMerge:
-  - deployment.yaml
+  - daemon.yaml
