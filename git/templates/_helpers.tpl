@@ -112,3 +112,16 @@ new password and use it.
     {{- (randAlphaNum 40) | b64enc | quote -}}
   {{- end -}}
 {{- end -}}
+
+{{/*
+Looks if there's an existing admin secret and reuse its password. If not it generates
+new password and use it.
+*/}}
+{{- define "gitea.oauth.secret" -}}
+{{- $secret := (lookup "v1" "Secret" (include "git.namespace" .) "zitadel-oauth") -}}
+  {{- if $secret -}}
+    {{- index $secret "data" "secret" -}}
+  {{- else -}}
+    {{- (randAlphaNum 40) | b64enc | quote -}}
+  {{- end -}}
+{{- end -}}

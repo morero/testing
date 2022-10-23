@@ -1,0 +1,26 @@
+
+apiVersion: tekton.dev/v1beta1
+kind: ClusterTask
+metadata:
+  name: ertia-exists
+spec:
+  params:
+    - name: pathToDockerFile
+      type: string
+      description: The path to the dockerfile to build
+      default: /workspace/workspace/Dockerfile
+  steps:
+    - name: ertia-exists
+      image: ubuntu
+      script: |
+          #!/usr/bin/env bash
+          set -xe
+          [ -d "/opt/repo/.ertia" ] && echo "yes"
+          [ ! -d "/opt/repo/.ertia" ] && echo "no"
+          exit 1
+      volumeMounts:
+        - name: source
+          mountPath: /opt/repo/
+            
+  volumes:
+    - name: source

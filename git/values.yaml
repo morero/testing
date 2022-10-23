@@ -11,20 +11,34 @@ gitea:
       kubernetes.io/ingress.class: traefik
       cert-manager.io/cluster-issuer: letsencrypt-production
     hosts:
-      - host: git.@DOMAIN@
+      - host: git.local.ertia.cloud #git.@DOMAIN@
         paths:
           - path: /
             pathType: Prefix
     tls:
       - secretName: git-tls
         hosts:
-          - git.@DOMAIN@
+          - git.ertia.local.cloud #git.@DOMAIN@
 
   persistence:
     enabled: true
     size: 10Gi
 
   gitea:
+
+    oauth2:
+      enabled: true
+      name: 'Zitadel'
+      provider: 'openidConnect'
+      key: 'hello'
+      secret: 'world'
+      autoDiscoverUrl: 'http://zitadel.zitadel/.well-known/openid-configuration'
+      #useCustomUrls:
+      #customAuthUrl:
+      #customTokenUrl:
+      #customProfileUrl:
+      #customEmailUrl:
+
     admin:
       existingSecret: gitea-admin-secret
 
@@ -36,6 +50,9 @@ gitea:
           release: monitoring
 
     config:
+      repository:
+        ENABLE_PUSH_CREATE_ORG: true
+        ENABLE_PUSH_CREATE_USER: true
       admin:
         DISABLE_REGULAR_ORG_CREATION: true
       service:
@@ -73,4 +90,3 @@ gitea:
 
   postgresql:
     enabled: false
-

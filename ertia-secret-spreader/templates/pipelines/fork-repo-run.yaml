@@ -1,0 +1,26 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: pr-fork-repo-
+spec:
+  params:
+    - name: SOURCE_GIT_URL
+      value: "https://github.com/ertia-io/sample-golang"
+    - name: TARGET_GIT_URL
+      value: "gitea-http.gitea:3000/demo/sample-golang"
+    - name: TARGET_GIT_TOKEN
+      value: "gitea"
+    - name: SOURCE_GIT_TOKEN
+      value: ""
+  pipelineRef:
+    name: fork-repo
+  workspaces:
+    - name: pipeline
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+

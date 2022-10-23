@@ -562,11 +562,13 @@ rules:
 - apiGroups:
   - triggers.tekton.dev
   resources:
+  - pipelineruns
   - eventlisteners
   - triggerbindings
   - triggers
   - triggertemplates
   verbs:
+  - create
   - get
   - list
   - watch
@@ -812,6 +814,30 @@ rules:
   - namespaces/finalizers
   verbs:
   - update
+- apiGroups:
+  - triggers.tekton.dev
+  - tekton.dev
+  resources:
+    - eventlisteners
+    - triggerbindings
+    - triggertemplates
+    - pipelineruns
+  verbs:
+    - get
+    - list
+    - create
+    - update
+    - delete
+- apiGroups:
+    - extensions
+  resources:
+    - ingresses
+  verbs:
+    - create
+    - get
+    - list
+    - delete
+    - update
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -2665,7 +2691,7 @@ spec:
       helm list --namespace "$(params.RELEASE_NAMESPACE)"
 
       echo installing helm chart...
-      helm upgrade --install --atomic --timeout "$(params.TIMEOUT)" --namespace "$(params.RELEASE_NAMESPACE)" \
+      helm upgrade --install --atomic --timeout "$(params.TIMEOUT)" --create-namespace --namespace "$(params.RELEASE_NAMESPACE)" \
         "$(params.RELEASE_NAME)" "$(params.HELM_CHARTS_DIR)" --set "$(params.OVERWRITE_VALUES)"
     workingDir: /workspace/source
   workspaces:

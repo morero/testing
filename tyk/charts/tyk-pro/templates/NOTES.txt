@@ -1,0 +1,31 @@
+- If you enabled the Dashboard bootstraping option (.Values.dash.bootstrap), you can find the login details by running the following commands inside your {{ .Release.Namespace }} namespace:
+
+For the URL: (kubectl get nodes --selector=kubernetes.io/role!=master -o jsonpath='{.items[0].status.addresses[?(@.type=="ExternalIP")].address}'), if you're using Minikube then: (minikube ip) would be sufficient"
+For the port: (kubectl get services --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" dashboard-svc-tyk-pro)"
+For username: "{{ .Values.dash.adminUser.email }}"
+For password: (kubectl get secret --namespace {{ .Release.Namespace }} {{ .Release.Name }}-login-details -o jsonpath="{.data.TYK_PASS}" | base64 --decode)
+
+> Please note, if you're using an ingress for the dashboard to find out your URL and port please see the steps below:
+
+> URL can be accessed here: "{{ .Values.dash.hostName }}"
+> For the port run: (kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0]}" services dashboard-svc-{{ include "tyk-pro.fullname" . }})
+
+
+- If you enable Tyk Operator secret option (.Values.dash.operatorSecret), during bootstrapping "tyk-operator-conf" secret will be created in the {{ .Release.Namespace }} namespace. This secret is used by Tyk Operator. 
+It is enabled by default and can be turned off by setting the .Values.dash.operatorSecret to false.
+{{ if not .Values.dash.operatorSecret }}
+You have turned off "tyk-operator-conf" secret creation. If you wish, you can create it as follows:
+kubectl create secret -n ${TYK_POD_NAMESPACE} generic tyk-operator-conf \
+	  --from-literal "TYK_AUTH=${USER_AUTH_CODE}" \
+	  --from-literal "TYK_ORG=${ORGID}" \
+	  --from-literal "TYK_MODE=pro" \
+	  --from-literal "TYK_URL=${DASHBOARD_HOSTNAME}"
+
+You can access credentials for this secret through the dasboard. ${USER_AUTH_CODE} corresponds to Tyk Dashboard API Access Credentials and ${ORGID} corresponds to Organisation ID. 
+{{ end }}
+
+At this point, Tyk Pro is fully installed and should be accessible.
+
+You might want to install Tyk Operator next to manage Ingress resources or manage your APIs.
+
+[Tyk Operator](https://github.com/TykTechnologies/tyk-operator/)

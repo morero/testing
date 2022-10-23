@@ -123,16 +123,22 @@ zitadel:
     protocol: http2
     annotations: {}
 
+  
   ingress:
     enabled: true
-    className: ""
-    annotations: {}
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      cert-manager.io/cluster-issuer: letsencrypt-production
     hosts:
-      - host: localhost
+      - host: auth.local.ertia.cloud #git.@DOMAIN@
         paths:
           - path: /
             pathType: Prefix
-    tls: []
+    tls:
+      - secretName: auth-tls
+        hosts:
+          - auth.ertia.local.cloud #git.@DOMAIN@
+          
 
   resources: {}
 

@@ -1,0 +1,48 @@
+apiVersion: tekton.dev/v1beta1
+kind: ClusterTask
+metadata:
+  name: gitea-webhook-create-run
+spec:
+  params:
+    - name: GITEA_REPO_NAME
+      type: string
+      description: The Gitea Repo where to add to the webhooks
+    - name: WEBHOOK_URL
+      type: string
+      description: The hostname of the webhook to be triggered in this git repo
+  steps:
+    - name: webhook-gitea
+      image: quay.io/siamaksade/python-oc
+      env:
+      - name: GITEA_USER
+        valueFrom:
+          secretKeyRef:
+            name: gitea-admin-secret
+            key: username
+      - name: GITEA_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: gitea-admin-secret
+            key: password
+      script: |
+        #!/usr/bin/env python3
+        import os
+        import requests 
+        gitea_user = os.getenv("GITEA_USER")
+        gitea_pwd = os.getenv("GITEA_PASSWORD")
+        print(gitea_user)
+        print(gitea_pwd) 
+        
+        webhookURL = "$(params.WEBHOOK_URL)"
+        giteaURL = "http://" + gitea_user + ":" + gitea_pwd + "@" + "gitea-http.gitea" + ":3000"
+        # configure webhook on tekton-tutorial-greeter
+        data_webhook = '{"type": "gogs", "config": { "url": "' + webhookURL + '", "content_type": "json"}, "events": ["push"], "active": true}'
+        headers = {'Content-Type': 'application/json'}
+        resp = requests.post(url = giteaURL + "/api/v1/repos/$(params.GITEA_REPO_NAME)/hooks", 
+                            headers = headers, 
+                            data = data_webhook) 
+        if resp.status_code != 200 and resp.status_code != 201:
+          print("Error configuring the webhook (status code: {})".format(resp.status_code))
+          print(resp.content)
+        else:
+          print("Configured webhook: " + webhookURL)        

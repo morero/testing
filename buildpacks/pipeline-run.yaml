@@ -1,0 +1,35 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: pipeline-main
+spec:
+  serviceAccountName: buildpacks-service-account # Only needed if you set up authorization
+  pipelineRef:
+    name: buildpacks-pipeline
+  workspaces:
+    - name: source-workspace
+      subPath: source
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 500Mi
+      # persistentVolumeClaim:
+      #   claimName: buildpacks-source-pvc
+    # - name: cache-workspace
+    #   subPath: cache
+    #   persistentVolumeClaim:
+    #     claimName: buildpacks-source-pvc
+  params:
+    - name: builder
+      value "{{BUILDER}}"
+    - name: repo-url
+      value: "{{REPO_URL}}"
+    - name: source-subpath
+      value: "{{SOURCE_SUBPATH}}"
+    - name: branch-name
+      value: "{{BRANCH_NAME}}"
+    - name: image
+      value: "{{IMAGE}}:{{IMAGE_TAG}}"

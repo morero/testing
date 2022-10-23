@@ -1,0 +1,92 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: prepare-repo
+  namespace: "tekton-pipelines"
+  labels:
+    app.kubernetes.io/version: '0.1'
+  annotations:
+    tekton.dev/pipelines.minVersion: '0.34.1'
+    tekton.dev/categories: build, deploy
+    tekton.dev/tags: clone, build, deploy
+    tekton.dev/displayName: "Build and deploy pipeline"
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: Ertia pipeline for building, from Dockerfile; using buidah, and deploying with Helm.
+  params:
+    - name: GIT_BASE_URL
+      type: string
+      default: "http://git-gitea-http.git:3000"
+    - name: GIT_REPO
+      type: string
+    - name: GIT_SOURCE_REFERENCE
+      type: string
+      description: The branch, tag or SHA to checkout.
+      default: "main"
+  tasks:
+    - name: clone
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: pipeline
+        - name: basic-auth
+          workspace: basic-auth
+      params:
+        - name: url
+          value: "$(params.GIT_BASE_URL)/$(params.GIT_REPO)"
+        - name: revision
+          value: $(params.GIT_SOURCE_REFERENCE)
+
+    
+    - name: ertia-exists
+      taskRef:
+        kind: ClusterTask
+        name: ertia-exists
+      workspaces:
+        - name: source
+          workspace: pipeline
+        - name: dockerconfig
+          workspace: dockerconfig
+      runAfter:
+        - clone
+    
+    - name: add-ertia-config
+      when:
+        - input: "$(tasks.ertia-exists.results.outputValue)"
+          operator: in
+          values: ["no"]
+      taskRef:
+        kind: ClusterTask
+        name: add-ertia-task
+      workspaces:
+        - name: source
+          workspace: pipeline
+        - name: dockerconfig
+          workspace: dockerconfig
+      runAfter:
+        - ertia-exists
+
+    - name: rebase
+      taskRef:
+        kind: ClusterTask
+        name: git-rebase
+      workspaces:
+        - name: output
+          workspace: pipeline
+        - name: basic-auth
+          workspace: basic-auth
+      params:
+        - name: url
+          value: "$(params.GIT_BASE_URL)/$(params.GIT_REPO)"
+        - name: revision
+          value: $(params.GIT_SOURCE_REFERENCE)
+      runAfter:
+        - add-ertia-config
+
+  workspaces:
+    - name: pipeline
+    - name: basic-auth
+    - name: dockerconfig
