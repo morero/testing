@@ -29,7 +29,7 @@ spec:
                 secretKeyRef:
                   name: postgres-git
                   key: password
-          command: ["psql", "-h", "stolon-proxy", "-d","postgres","-c", "CREATE ROLE $GIT_USER WITH LOGIN PASSWORD '$GIT_PASSWORD'"]
+          command: ["psql", "-h", "stolon-proxy","-U", "$PGUSER", "-d", "postgres","-c", "CREATE ROLE $GIT_USER WITH LOGIN PASSWORD \"$GIT_PASSWORD\""]
       restartPolicy: Never
   backoffLimit: 4
 ---
@@ -69,7 +69,7 @@ spec:
                 secretKeyRef:
                   name: postgres-git
                   key: database
-          command: ["psql", "-h", "stolon-proxy", "-U", "postgres","-d","postgres","-c", "CREATE DATABASE $GIT_DB WITH OWNER $GIT_USER"]
+          command: ["psql", "-h", "stolon-proxy","-U", "$PGUSER","-d","postgres","-c", "CREATE DATABASE $GIT_DB WITH OWNER $GIT_USER"]
       restartPolicy: Never
   backoffLimit: 4
 ---
@@ -109,6 +109,6 @@ spec:
                 secretKeyRef:
                   name: postgres-git
                   key: database
-          command: ["psql", "-h", "stolon-proxy", "-U", "postgres","-d","postgres","-c", "GRANT ALL PRIVILEGES ON DATABASE $GIT_DB TO $GIT_USER"]
+          command: ["psql", "-h", "stolon-proxy","-U", "$PGUSER","-d","postgres","-c", "GRANT ALL PRIVILEGES ON DATABASE $GIT_DB TO $GIT_USER"]
       restartPolicy: Never
   backoffLimit: 4

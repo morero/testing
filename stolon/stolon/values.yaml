@@ -12,6 +12,13 @@ stolon:
     usernameKey: username
     passwordKey: password
 
+  keeper:
+    replicaCount: 1
+  proxy:
+    replicaCount: 1
+  sentinel:
+    replicaCount: 1
+
 
 
   # clusterName:
