@@ -58,17 +58,17 @@ stolon:
 
 
 
-  superuserPasswordFile:
+#  superuserPasswordFile:
 
-  superuserUsername: "postgres"
+#  superuserUsername: "postgres"
   ## password for the superuser (REQUIRED if superuserSecret and superuserPasswordFile are not set)
-  superuserPassword: "postgres"
+#  superuserPassword: "postgres"
 
-  replicationPasswordFile:
+#  replicationPasswordFile:
 
-  replicationUsername: "repluser"
+#  replicationUsername: "repluser"
   ## password for the replication user (REQUIRED if replicationSecret and replicationPasswordFile are not set)
-  replicationPassword: "repluser"
+#  replicationPassword: "repluser"
 
 
 
