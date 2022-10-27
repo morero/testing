@@ -12,28 +12,16 @@ spec:
             - name: PGDATABASE
               value: postgres
             - name: PGHOST
-              value: stolon-proxy
+              value: stolon-proxy.stolon
             - name: PGUSER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-admin-user
-                  key: username
+              value: postgres
             - name: PGPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-admin-user
-                  key: password
-            - name: USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-zitadel
-                  key: username
-            - name: PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-zitadel
-                  key: password
-          command: ["psql","-c", "CREATE ROLE $(USER) WITH LOGIN PASSWORD '$(PASSWORD)'"]
+              value: @PGPASSWORD@
+            - name: ZITADEL_USER
+              value: zitadel
+            - name: ZITADEL_PASSWORD
+              value: @ZITADEL_PASSWORD@
+          command: ["psql","-c", "CREATE ROLE $(ZITADEL_USER) WITH LOGIN PASSWORD '$(ZITADEL_PASSWORD)'"]
       restartPolicy: Never
   backoffLimit: 4
 ---
@@ -51,33 +39,16 @@ spec:
             - name: PGDATABASE
               value: postgres
             - name: PGHOST
-              value: stolon-proxy
+              value: stolon-proxy.stolon
             - name: PGUSER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-admin-user
-                  key: username
+              value: postgres
             - name: PGPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-admin-user
-                  key: password
-            - name: USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-zitadel
-                  key: username
-            - name: PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-zitadel
-                  key: password
-            - name: DB
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-zitadel
-                  key: database
-          command: ["psql","-c", "CREATE DATABASE $(DB) WITH OWNER $(USER)"]
+              value: @PGPASSWORD@
+            - name: ZITADEL_USER
+              value: zitadel
+            - name: ZITADEL_PASSWORD
+              value: @ZITADEL_PASSWORD@
+          command: ["psql","-c", "CREATE DATABASE $(ZITADEL_DB) WITH OWNER $(ZITADEL_USER)"]
       restartPolicy: Never
   backoffLimit: 4
 ---
@@ -95,32 +66,15 @@ spec:
             - name: PGDATABASE
               value: postgres
             - name: PGHOST
-              value: stolon-proxy
+              value: stolon-proxy.stolon
             - name: PGUSER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-admin-user
-                  key: username
+              value: postgres
             - name: PGPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-admin-user
-                  key: password
-            - name: USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-zitadel
-                  key: username
-            - name: PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-zitadel
-                  key: password
-            - name: DB
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-zitadel
-                  key: database
-          command: ["psql","-c", "GRANT ALL PRIVILEGES ON DATABASE $(DB) TO $(USER)"]
+              value: @PGPASSWORD@
+            - name: ZITADEL_USER
+              value: zitadel
+            - name: ZITADEL_PASSWORD
+              value: @ZITADEL_PASSWORD@
+          command: ["psql","-c", "GRANT ALL PRIVILEGES ON DATABASE $(ZITADEL_DB) TO $(ZITADEL_USER)"]
       restartPolicy: Never
   backoffLimit: 4
