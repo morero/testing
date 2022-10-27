@@ -46,6 +46,8 @@ spec:
               value: @PGPASSWORD@
             - name: ZITADEL_USER
               value: zitadel
+            - name: ZITADEL_DB
+              value: zitadel
             - name: ZITADEL_PASSWORD
               value: @ZITADEL_PASSWORD@
           command: ["psql","-c", "CREATE DATABASE $(ZITADEL_DB) WITH OWNER $(ZITADEL_USER)"]
@@ -72,6 +74,8 @@ spec:
             - name: PGPASSWORD
               value: @PGPASSWORD@
             - name: ZITADEL_USER
+              value: zitadel
+            - name: ZITADEL_DB
               value: zitadel
             - name: ZITADEL_PASSWORD
               value: @ZITADEL_PASSWORD@
