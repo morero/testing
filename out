@@ -1,1680 +1,577 @@
-NAME: git
-LAST DEPLOYED: Wed Oct 26 00:03:39 2022
-NAMESPACE: git
-STATUS: pending-install
+NAME: stolon
+LAST DEPLOYED: Thu Oct 27 09:19:49 2022
+NAMESPACE: stolon
+STATUS: deployed
 REVISION: 1
+TEST SUITE: None
 USER-SUPPLIED VALUES:
-{}
+null
 
 COMPUTED VALUES:
-gitea:
-  affinity: {}
-  checkDeprecation: true
-  clusterDomain: cluster.local
-  containerSecurityContext: {}
-  dnsConfig: {}
-  extraContainerVolumeMounts: []
-  extraInitVolumeMounts: []
-  extraVolumeMounts: []
-  extraVolumes: []
-  gitea:
-    additionalConfigFromEnvs:
-    - name: ENV_TO_INI__DATABASE__HOST
-      value: stolon-proxy.stolon:5432
-    - name: ENV_TO_INI__DATABASE__PASSWD
-      valueFrom:
-        secretKeyRef:
-          key: password
-          name: postgres-git
-    - name: ENV_TO_INI__DATABASE__USER
-      valueFrom:
-        secretKeyRef:
-          key: username
-          name: postgres-git
-    - name: ENV_TO_INI__DATABASE__NAME
-      valueFrom:
-        secretKeyRef:
-          key: database
-          name: postgres-git
-    additionalConfigSources: []
-    admin:
-      email: gitea@local.domain
-      existingSecret: gitea-admin-secret
-      password: r8sA8CPHD9!bt6d
-      username: gitea_admin
-    config:
-      admin:
-        DISABLE_REGULAR_ORG_CREATION: true
-      cache:
-        ADAPTER: memory
-        ENABLED: true
-        INTERVAL: 60
-      database:
-        DB_TYPE: postgres
-        HOST: stolon-proxy.stolon:5432
-        existingSecret: postgres-git
-      metrics:
-        ENABLED: true
-      oauth2: {}
-      other:
-        SHOW_FOOTER_TEMPLATE_LOAD_TIME: false
-        SHOW_FOOTER_VERSION: false
-      picture:
-        DISABLE_GRAVATAR: true
-      repository:
-        ENABLE_PUSH_CREATE_ORG: true
-        ENABLE_PUSH_CREATE_USER: true
-        ROOT: /data/git/gitea-repositories
-      security:
-        INSTALL_LOCK: "true"
-      server:
-        APP_DATA_PATH: /data
-        DOMAIN: git.local.ertia.cloud
-        ENABLE_PPROF: false
-        HTTP_PORT: 3000
-        LANDING_PAGE: login
-        PROTOCOL: http
-        ROOT_URL: https://git.local.ertia.cloud
-        SSH_DOMAIN: git.local.ertia.cloud
-        SSH_LISTEN_PORT: 2222
-        SSH_PORT: 2222
-      service:
-        ALLOWED_USER_VISIBILITY_MODES: limited
-        DEFAULT_ORG_MEMBER_VISIBLE: true
-        DEFAULT_ORG_VISIBILITY: limited
-        DEFAULT_USER_VISIBILITY: limited
-        DISABLE_REGISTRATION: true
-        REQUIRE_SIGNIN_VIEW: true
-        explore:
-          REQUIRE_SIGNIN_VIEW: true
-    ldap: []
-    livenessProbe:
-      enabled: true
-      failureThreshold: 10
-      initialDelaySeconds: 200
-      periodSeconds: 10
-      successThreshold: 1
-      tcpSocket:
-        port: http
-      timeoutSeconds: 1
-    metrics:
-      enabled: true
-      serviceMonitor:
-        additionalLabels:
-          release: monitoring
-        enabled: true
-    oauth: []
-    oauth2:
-      autoDiscoverUrl: http://zitadel.zitadel/.well-known/openid-configuration
-      enabled: true
-      key: hello
-      name: Zitadel
-      provider: openidConnect
-      secret: world
-    podAnnotations: {}
-    readinessProbe:
-      enabled: true
-      failureThreshold: 3
-      initialDelaySeconds: 5
-      periodSeconds: 10
-      successThreshold: 1
-      tcpSocket:
-        port: http
-      timeoutSeconds: 1
-    startupProbe:
-      enabled: false
-      failureThreshold: 10
-      initialDelaySeconds: 60
-      periodSeconds: 10
-      successThreshold: 1
-      tcpSocket:
-        port: http
-      timeoutSeconds: 1
-  global:
-    imagePullSecrets: []
-    imageRegistry: ""
-    storageClass: ""
+stolon:
+  clusterSpec: {}
+  debug: false
+  etcdImage:
+    pullPolicy: IfNotPresent
+    repository: k8s.gcr.io/etcd-amd64
+    tag: 2.3.7
+  global: {}
   image:
-    pullPolicy: Always
-    registry: ""
-    repository: gitea/gitea
-    rootless: false
-    tag: ""
-  imagePullSecrets: []
-  ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-production
-      kubernetes.io/ingress.class: traefik
-    enabled: true
-    hosts:
-    - host: git.local.ertia.cloud
-      paths:
-      - path: /
-        pathType: Prefix
-    tls:
-    - hosts:
-      - git.ertia.local.cloud
-      secretName: git-tls
-  initPreScript: ""
-  mariadb:
-    architecture: standalone
-    auth:
-      customPasswordFiles: {}
-      database: gitea
-      forcePassword: false
-      password: gitea
-      replicationPassword: ""
-      replicationUser: replicator
-      rootPassword: gitea
-      usePasswordFiles: false
-      username: gitea
-    clusterDomain: cluster.local
-    common:
-      exampleValue: common-chart
-      global:
-        imagePullSecrets: []
-        imageRegistry: ""
-        storageClass: ""
-    commonAnnotations: {}
-    commonLabels: {}
-    enabled: false
-    extraDeploy: []
-    global:
-      imagePullSecrets: []
-      imageRegistry: ""
-      storageClass: ""
-    image:
-      debug: false
-      pullPolicy: IfNotPresent
-      pullSecrets: []
-      registry: docker.io
-      repository: bitnami/mariadb
-      tag: 10.5.9-debian-10-r28
-    initdbScripts: {}
-    metrics:
-      annotations:
-        prometheus.io/port: "9104"
-        prometheus.io/scrape: "true"
-      enabled: false
-      extraArgs:
-        primary: []
-        secondary: []
-      image:
-        pullPolicy: IfNotPresent
-        registry: docker.io
-        repository: bitnami/mysqld-exporter
-        tag: 0.12.1-debian-10-r389
-      livenessProbe:
-        enabled: true
-        failureThreshold: 3
-        initialDelaySeconds: 120
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      readinessProbe:
-        enabled: true
-        failureThreshold: 3
-        initialDelaySeconds: 30
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      resources:
-        limits: {}
-        requests: {}
-      serviceMonitor:
-        additionalLabels: {}
-        enabled: false
-        honorLabels: false
-        interval: 30s
-    primary:
-      affinity: {}
-      args: []
-      command: []
-      configuration: |-
-        [mysqld]
-        skip-name-resolve
-        explicit_defaults_for_timestamp
-        basedir=/opt/bitnami/mariadb
-        plugin_dir=/opt/bitnami/mariadb/plugin
-        port=3306
-        socket=/opt/bitnami/mariadb/tmp/mysql.sock
-        tmpdir=/opt/bitnami/mariadb/tmp
-        max_allowed_packet=16M
-        bind-address=0.0.0.0
-        pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-        log-error=/opt/bitnami/mariadb/logs/mysqld.log
-        character-set-server=UTF8
-        collation-server=utf8_general_ci
-
-        [client]
-        port=3306
-        socket=/opt/bitnami/mariadb/tmp/mysql.sock
-        default-character-set=UTF8
-        plugin_dir=/opt/bitnami/mariadb/plugin
-
-        [manager]
-        port=3306
-        socket=/opt/bitnami/mariadb/tmp/mysql.sock
-        pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-      containerSecurityContext:
-        enabled: true
-        runAsUser: 1001
-      customLivenessProbe: {}
-      customReadinessProbe: {}
-      extraEnvVars: []
-      extraEnvVarsCM: ""
-      extraEnvVarsSecret: ""
-      extraFlags: ""
-      extraVolumeMounts: []
-      extraVolumes: []
-      hostAliases: []
-      initContainers: []
-      livenessProbe:
-        enabled: true
-        failureThreshold: 3
-        initialDelaySeconds: 120
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      nodeAffinityPreset:
-        key: ""
-        type: ""
-        values: []
-      nodeSelector: {}
-      pdb:
-        enabled: false
-        minAvailable: 1
-      persistence:
-        accessModes:
-        - ReadWriteOnce
-        annotations: {}
-        enabled: true
-        selector: {}
-        size: 10Gi
-      podAffinityPreset: ""
-      podAnnotations: {}
-      podAntiAffinityPreset: soft
-      podSecurityContext:
-        enabled: true
-        fsGroup: 1001
-      priorityClassName: ""
-      readinessProbe:
-        enabled: true
-        failureThreshold: 3
-        initialDelaySeconds: 30
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      resources:
-        limits: {}
-        requests: {}
-      service:
-        annotations: {}
-        clusterIP: ""
-        loadBalancerIP: ""
-        loadBalancerSourceRanges: []
-        nodePort: ""
-        port: 3306
-        type: ClusterIP
-      sidecars: []
-      tolerations: []
-      updateStrategy: RollingUpdate
-    rbac:
-      create: false
-    secondary:
-      affinity: {}
-      args: []
-      command: []
-      configuration: |-
-        [mysqld]
-        skip-name-resolve
-        explicit_defaults_for_timestamp
-        basedir=/opt/bitnami/mariadb
-        port=3306
-        socket=/opt/bitnami/mariadb/tmp/mysql.sock
-        tmpdir=/opt/bitnami/mariadb/tmp
-        max_allowed_packet=16M
-        bind-address=0.0.0.0
-        pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-        log-error=/opt/bitnami/mariadb/logs/mysqld.log
-        character-set-server=UTF8
-        collation-server=utf8_general_ci
-
-        [client]
-        port=3306
-        socket=/opt/bitnami/mariadb/tmp/mysql.sock
-        default-character-set=UTF8
-
-        [manager]
-        port=3306
-        socket=/opt/bitnami/mariadb/tmp/mysql.sock
-        pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-      containerSecurityContext:
-        enabled: true
-        runAsUser: 1001
-      customLivenessProbe: {}
-      customReadinessProbe: {}
-      extraEnvVars: []
-      extraEnvVarsCM: ""
-      extraEnvVarsSecret: ""
-      extraFlags: ""
-      extraVolumeMounts: []
-      extraVolumes: []
-      hostAliases: []
-      initContainers: []
-      livenessProbe:
-        enabled: true
-        failureThreshold: 3
-        initialDelaySeconds: 120
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      nodeAffinityPreset:
-        key: ""
-        type: ""
-        values: []
-      nodeSelector: {}
-      pdb:
-        enabled: false
-        minAvailable: 1
-      persistence:
-        accessModes:
-        - ReadWriteOnce
-        annotations: {}
-        enabled: true
-        selector: {}
-        size: 8Gi
-      podAffinityPreset: ""
-      podAnnotations: {}
-      podAntiAffinityPreset: soft
-      podSecurityContext:
-        enabled: true
-        fsGroup: 1001
-      priorityClassName: ""
-      readinessProbe:
-        enabled: true
-        failureThreshold: 3
-        initialDelaySeconds: 30
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      replicaCount: 1
-      resources:
-        limits: {}
-        requests: {}
-      service:
-        annotations: {}
-        clusterIP: ""
-        loadBalancerIP: ""
-        loadBalancerSourceRanges: []
-        nodePort: ""
-        port: 3306
-        type: ClusterIP
-      sidecars: []
-      tolerations: []
-      updateStrategy: RollingUpdate
-    serviceAccount:
-      annotations: {}
-      create: true
-    volumePermissions:
-      enabled: false
-      image:
-        pullPolicy: Always
-        registry: docker.io
-        repository: bitnami/bitnami-shell
-        tag: "10"
-      resources: {}
-  memcached:
+    pullPolicy: IfNotPresent
+    repository: sorintlab/stolon
+    tag: master-pg14
+  job:
+    annotations: {}
+    autoCreateCluster: true
+    autoUpdateClusterSpec: true
+  keeper:
     affinity: {}
-    architecture: standalone
-    arguments:
-    - /run.sh
-    clusterDomain: cluster.local
-    command: []
-    common:
-      exampleValue: common-chart
-      global:
-        imagePullSecrets: []
-        imageRegistry: ""
-        storageClass: ""
-    commonAnnotations: {}
-    commonLabels: {}
-    enabled: false
-    extraDeploy: []
+    annotations: {}
     extraEnv: []
-    global:
-      imagePullSecrets: []
-      imageRegistry: ""
-      storageClass: ""
-    hostAliases: []
-    image:
-      debug: false
-      pullPolicy: IfNotPresent
-      registry: docker.io
-      repository: bitnami/memcached
-      tag: 1.6.9-debian-10-r114
-    metrics:
-      enabled: false
-      image:
-        pullPolicy: IfNotPresent
-        registry: docker.io
-        repository: bitnami/memcached-exporter
-        tag: 0.8.0-debian-10-r105
-      podAnnotations:
-        prometheus.io/port: "9150"
-        prometheus.io/scrape: "true"
-      portName: metrics
-      resources:
-        limits: {}
-        requests: {}
-      service:
-        annotations:
-          prometheus.io/port: '{{ .Values.metrics.service.port }}'
-          prometheus.io/scrape: "true"
-        port: 9150
-        type: ClusterIP
-      serviceMonitor:
+    fsGroup: ""
+    hooks:
+      failKeeper:
         enabled: false
-    nodeAffinityPreset:
-      key: ""
-      type: ""
-      values: []
     nodeSelector: {}
-    persistence:
-      accessModes:
-      - ReadWriteOnce
-      annotations: {}
-      enabled: false
-      size: 8Gi
-    podAffinityPreset: ""
-    podAnnotations: {}
-    podAntiAffinityPreset: soft
-    podLabels: {}
-    portName: memcache
+    podDisruptionBudget: null
+    priorityClassName: ""
     replicaCount: 1
-    resources:
-      limits: {}
-      requests:
-        cpu: 250m
-        memory: 256Mi
-    securityContext:
-      enabled: true
-      fsGroup: 1001
-      readOnlyRootFilesystem: false
-      runAsUser: 1001
+    resources: {}
     service:
       annotations: {}
-      nodePort: ""
-      port: 11211
+      ports:
+        keeper:
+          port: 5432
+          protocol: TCP
+          targetPort: 5432
       type: ClusterIP
-    serviceAccount:
-      automountServiceAccountToken: true
-      create: true
     tolerations: []
-  mysql:
-    clusterDomain: cluster.local
-    db:
-      forcePassword: false
-      injectSecretsAsVolume: false
-      name: gitea
-      password: gitea
-      user: gitea
-    enabled: false
-    global:
-      imagePullSecrets: []
-      imageRegistry: ""
-      storageClass: ""
-    image:
-      debug: false
-      pullPolicy: IfNotPresent
-      registry: docker.io
-      repository: bitnami/mysql
-      tag: 8.0.21-debian-10-r46
-    master:
-      affinity: {}
-      config: |-
-        [mysqld]
-        default_authentication_plugin=mysql_native_password
-        skip-name-resolve
-        explicit_defaults_for_timestamp
-        basedir=/opt/bitnami/mysql
-        plugin_dir=/opt/bitnami/mysql/plugin
-        port=3306
-        socket=/opt/bitnami/mysql/tmp/mysql.sock
-        datadir=/bitnami/mysql/data
-        tmpdir=/opt/bitnami/mysql/tmp
-        max_allowed_packet=16M
-        bind-address=0.0.0.0
-        pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
-        log-error=/opt/bitnami/mysql/logs/mysqld.log
-        character-set-server=UTF8
-        collation-server=utf8_general_ci
-
-        [client]
-        port=3306
-        socket=/opt/bitnami/mysql/tmp/mysql.sock
-        default-character-set=UTF8
-        plugin_dir=/opt/bitnami/mysql/plugin
-
-        [manager]
-        port=3306
-        socket=/opt/bitnami/mysql/tmp/mysql.sock
-        pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
-      containerSecurityContext: {}
-      livenessProbe:
-        enabled: true
-        failureThreshold: 3
-        initialDelaySeconds: 120
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      nodeSelector: {}
-      persistence:
-        accessModes:
-        - ReadWriteOnce
-        annotations: {}
-        enabled: true
-        mountPath: /bitnami/mysql
-        size: 8Gi
-      podAnnotations: {}
-      readinessProbe:
-        enabled: true
-        failureThreshold: 3
-        initialDelaySeconds: 30
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      resources:
-        limits: {}
-        requests: {}
-      securityContext:
-        enabled: true
-        fsGroup: 1001
-        runAsUser: 1001
-      tolerations: []
-      updateStrategy:
-        type: RollingUpdate
-    metrics:
-      enabled: false
-      image:
-        pullPolicy: IfNotPresent
-        registry: docker.io
-        repository: bitnami/mysqld-exporter
-        tag: 0.12.1-debian-10-r216
-      resources:
-        limits: {}
-        requests: {}
-      service:
-        annotations:
-          prometheus.io/port: '{{ .Values.metrics.service.port }}'
-          prometheus.io/scrape: "true"
-        port: 9104
-        type: ClusterIP
-      serviceMonitor:
-        enabled: false
-    persistence:
-      size: 10Gi
-    replication:
-      enabled: true
-      forcePassword: false
-      injectSecretsAsVolume: false
-      user: replicator
-    root:
-      forcePassword: false
-      injectSecretsAsVolume: false
-      password: gitea
-    service:
-      annotations: {}
-      nodePort: {}
-      port: 3306
-      type: ClusterIP
-    serviceAccount:
-      create: true
-    slave:
-      affinity: {}
-      config: |-
-        [mysqld]
-        default_authentication_plugin=mysql_native_password
-        skip-name-resolve
-        explicit_defaults_for_timestamp
-        basedir=/opt/bitnami/mysql
-        port=3306
-        socket=/opt/bitnami/mysql/tmp/mysql.sock
-        datadir=/bitnami/mysql/data
-        tmpdir=/opt/bitnami/mysql/tmp
-        max_allowed_packet=16M
-        bind-address=0.0.0.0
-        pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
-        log-error=/opt/bitnami/mysql/logs/mysqld.log
-        character-set-server=UTF8
-        collation-server=utf8_general_ci
-
-        [client]
-        port=3306
-        socket=/opt/bitnami/mysql/tmp/mysql.sock
-        default-character-set=UTF8
-
-        [manager]
-        port=3306
-        socket=/opt/bitnami/mysql/tmp/mysql.sock
-        pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
-      containerSecurityContext: {}
-      livenessProbe:
-        enabled: true
-        failureThreshold: 3
-        initialDelaySeconds: 120
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      nodeSelector: {}
-      persistence:
-        accessModes:
-        - ReadWriteOnce
-        annotations: {}
-        enabled: true
-        mountPath: /bitnami/mysql
-        size: 8Gi
-      podAnnotations: {}
-      readinessProbe:
-        enabled: true
-        failureThreshold: 3
-        initialDelaySeconds: 30
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      replicas: 1
-      resources:
-        limits: {}
-        requests: {}
-      securityContext:
-        enabled: true
-        fsGroup: 1001
-        runAsUser: 1001
-      tolerations: []
-      updateStrategy:
-        type: RollingUpdate
-    volumePermissions:
-      enabled: false
-      image:
-        pullPolicy: Always
-        registry: docker.io
-        repository: bitnami/minideb
-        tag: buster
-      resources:
-        limits: {}
-        requests: {}
-  nodeSelector: {}
+    uid_prefix: keeper
+    volumeMounts: []
+    volumes: []
   persistence:
     accessModes:
     - ReadWriteOnce
-    annotations: {}
     enabled: true
-    labels: {}
     size: 10Gi
-  podSecurityContext:
-    fsGroup: 1000
-  postgresql:
-    audit:
-      clientMinMessages: error
-      logConnections: false
-      logDisconnections: false
-      logHostname: false
-      logLinePrefix: ""
-      logTimezone: ""
-      pgAuditLog: ""
-      pgAuditLogCatalog: "off"
-    common:
-      exampleValue: common-chart
-      global:
-        imagePullSecrets: []
-        imageRegistry: ""
-        postgresql:
-          postgresqlDatabase: gitea
-          postgresqlPassword: gitea
-          postgresqlUsername: gitea
-          servicePort: 5432
-        storageClass: ""
-    commonAnnotations: {}
-    containerSecurityContext:
-      enabled: true
-      runAsUser: 1001
-    customLivenessProbe: {}
-    customReadinessProbe: {}
-    customStartupProbe: {}
-    enabled: false
-    extraDeploy: []
-    extraEnv: []
-    global:
-      imagePullSecrets: []
-      imageRegistry: ""
-      postgresql:
-        postgresqlDatabase: gitea
-        postgresqlPassword: gitea
-        postgresqlUsername: gitea
-        servicePort: 5432
-      storageClass: ""
-    image:
-      debug: false
-      pullPolicy: IfNotPresent
-      registry: docker.io
-      repository: bitnami/postgresql
-      tag: 11.11.0-debian-10-r62
-    ldap:
-      baseDN: ""
-      bindDN: ""
-      enabled: false
-      port: ""
-      prefix: ""
-      scheme: ""
-      search_attr: ""
-      search_filter: ""
-      server: ""
-      suffix: ""
-      tls: {}
-      url: ""
-    livenessProbe:
-      enabled: true
-      failureThreshold: 6
-      initialDelaySeconds: 30
-      periodSeconds: 10
-      successThreshold: 1
-      timeoutSeconds: 5
+    storageClassName: ""
+  pgParameters:
+    ssl: "off"
+    ssl_ca_file: null
+    ssl_cert_file: null
+    ssl_key_file: null
+  ports:
     metrics:
-      enabled: false
-      extraEnvVars: {}
-      image:
-        pullPolicy: IfNotPresent
-        registry: docker.io
-        repository: bitnami/postgres-exporter
-        tag: 0.9.0-debian-10-r34
-      livenessProbe:
-        enabled: true
-        failureThreshold: 6
-        initialDelaySeconds: 5
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 5
-      prometheusRule:
-        additionalLabels: {}
-        enabled: false
-        namespace: ""
-        rules: []
-      readinessProbe:
-        enabled: true
-        failureThreshold: 6
-        initialDelaySeconds: 5
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 5
-      securityContext:
-        enabled: false
-        runAsUser: 1001
-      service:
-        annotations:
-          prometheus.io/port: "9187"
-          prometheus.io/scrape: "true"
-        type: ClusterIP
-      serviceMonitor:
-        additionalLabels: {}
-        enabled: false
-    networkPolicy:
-      allowExternal: true
-      enabled: false
-      explicitNamespacesSelector: {}
-    persistence:
-      accessModes:
-      - ReadWriteOnce
-      annotations: {}
-      enabled: true
-      mountPath: /bitnami/postgresql
-      selector: {}
-      size: 10Gi
-      subPath: ""
-    postgresqlDataDir: /bitnami/postgresql/data
-    postgresqlSharedPreloadLibraries: pgaudit
-    postgresqlUsername: postgres
-    primary:
-      affinity: {}
-      annotations: {}
-      extraInitContainers: []
-      extraVolumeMounts: []
-      extraVolumes: []
-      labels: {}
-      nodeAffinityPreset:
-        key: ""
-        type: ""
-        values: []
-      nodeSelector: {}
-      podAffinityPreset: ""
-      podAnnotations: {}
-      podAntiAffinityPreset: soft
-      podLabels: {}
-      priorityClassName: ""
-      service: {}
-      sidecars: []
-      tolerations: []
-    primaryAsStandBy:
-      enabled: false
-    psp:
-      create: false
-    rbac:
-      create: false
-    readReplicas:
-      affinity: {}
-      annotations: {}
-      extraInitContainers: []
-      extraVolumeMounts: []
-      extraVolumes: []
-      labels: {}
-      nodeAffinityPreset:
-        key: ""
-        type: ""
-        values: []
-      nodeSelector: {}
-      persistence:
-        enabled: true
-      podAffinityPreset: ""
-      podAnnotations: {}
-      podAntiAffinityPreset: soft
-      podLabels: {}
-      priorityClassName: ""
-      resources: {}
-      service: {}
-      sidecars: []
-      tolerations: []
-    readinessProbe:
-      enabled: true
-      failureThreshold: 6
-      initialDelaySeconds: 5
-      periodSeconds: 10
-      successThreshold: 1
-      timeoutSeconds: 5
-    replication:
-      applicationName: my_application
-      enabled: false
-      numSynchronousReplicas: 0
-      password: repl_password
-      readReplicas: 1
-      synchronousCommit: "off"
-      user: repl_user
-    resources:
-      requests:
-        cpu: 250m
-        memory: 256Mi
-    securityContext:
-      enabled: true
-      fsGroup: 1001
+      containerPort: 8080
+    stolon:
+      containerPort: 5432
+  proxy:
+    affinity: {}
+    annotations: {}
+    extraEnv: []
+    nodeSelector: {}
+    podDisruptionBudget: null
+    priorityClassName: ""
+    replicaCount: 1
+    resources: {}
     service:
       annotations: {}
-      port: 5432
+      ports:
+        proxy:
+          port: 5432
+          protocol: TCP
+          targetPort: 5432
       type: ClusterIP
-    serviceAccount:
-      enabled: false
-    shmVolume:
-      chmod:
-        enabled: true
-      enabled: true
-    startupProbe:
-      enabled: false
-      failureThreshold: 10
-      initialDelaySeconds: 30
-      periodSeconds: 15
-      successThreshold: 1
-      timeoutSeconds: 5
-    tls:
-      certFilename: ""
-      certKeyFilename: ""
-      certificatesSecret: ""
-      enabled: false
-      preferServerCiphers: true
-    updateStrategy:
-      type: RollingUpdate
-    volumePermissions:
-      enabled: false
-      image:
-        pullPolicy: Always
-        registry: docker.io
-        repository: bitnami/bitnami-shell
-        tag: "10"
-      securityContext:
-        runAsUser: 0
-  replicaCount: 1
-  resources: {}
-  schedulerName: ""
-  securityContext: {}
-  service:
-    http:
-      annotations: {}
-      clusterIP: None
-      externalIPs: null
-      externalTrafficPolicy: null
-      ipFamilies: null
-      ipFamilyPolicy: null
-      loadBalancerIP: null
-      loadBalancerSourceRanges: []
-      nodePort: null
-      port: 3000
-      type: ClusterIP
-    ssh:
-      annotations: {}
-      clusterIP: None
-      externalTrafficPolicy: Local
-      loadBalancerSourceRanges: []
-      port: 2222
-      type: LoadBalancer
-  signing:
-    enabled: false
-    existingSecret: ""
-    gpgHome: /data/git/.gnupg
-    privateKey: ""
-  statefulset:
+    tolerations: []
+  rbac:
+    create: true
+  replicationPassword: defaultPassword
+  replicationPasswordFile: null
+  replicationSecret:
+    name: ""
+    passwordKey: pg_repl_password
+    usernameKey: pg_repl_username
+  replicationUsername: postgres-repl
+  sentinel:
+    affinity: {}
     annotations: {}
-    env: []
+    extraEnv: []
+    nodeSelector: {}
+    podDisruptionBudget: null
+    priorityClassName: ""
+    replicaCount: 1
+    resources: {}
+    tolerations: []
+  serviceAccount:
+    create: true
+  serviceMonitor:
+    enabled: false
     labels: {}
-    terminationGracePeriodSeconds: 60
-  tolerations: []
+  shmVolume:
+    enabled: false
+  store:
+    backend: kubernetes
+    kubeResourceKind: configmap
+  superuserPassword: defaultPassword
+  superuserPasswordFile: null
+  superuserSecret:
+    name: ""
+    passwordKey: pg_su_password
+    usernameKey: pg_su_username
+  superuserUsername: postgres
+  tls:
+    enabled: false
+    rootCa: ""
+    rootCaFile: /certs/rootCa.crt
+    serverCrt: ""
+    serverCrtFile: /certs/serverCrt.crt
+    serverKey: ""
+    serverKeyFile: /certs/serverKey.key
 
 HOOKS:
 ---
-# Source: git/charts/gitea/templates/tests/test-http-connection.yaml
-apiVersion: v1
-kind: Pod
+# Source: stolon/charts/stolon/templates/hooks/create-cluster-job.yaml
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: "git-gitea-test-connection"
+  name: stolon-create-cluster
   labels:
-
-    helm.sh/chart: gitea-0.0.0
-    app: gitea
-    app.kubernetes.io/name: gitea
-    app.kubernetes.io/instance: git
-    app.kubernetes.io/version: "1.17.3"
-    version: "1.17.3"
-    app.kubernetes.io/managed-by: Helm
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
   annotations:
-    "helm.sh/hook": test-success
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
-  containers:
-    - name: wget
-      image: busybox
-      command: ['wget']
-      args:  ['git-gitea-http:3000']
-  restartPolicy: Never
+  template:
+    metadata:
+      labels:
+        app: stolon
+        release: stolon
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: stolon
+      containers:
+        - name: stolon-create-cluster
+          image: "sorintlab/stolon:master-pg14"
+          imagePullPolicy: IfNotPresent
+          command: ["/usr/local/bin/stolonctl"]
+          args:
+            - init
+            - --cluster-name=stolon
+            - --store-backend=kubernetes
+            - --kube-resource-kind=configmap
+            - --yes
+            - '{ "initMode": "new", "pgParameters": {"ssl":"off","ssl_ca_file":null,"ssl_cert_file":null,"ssl_key_file":null}  }'
+---
+# Source: stolon/charts/stolon/templates/hooks/update-cluster-spec-job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: stolon-update-cluster-spec
+  labels:
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
+  annotations:
+    "helm.sh/hook": post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    metadata:
+      labels:
+        app: stolon
+        release: stolon
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: stolon
+      containers:
+        - name: stolon-update-cluster-spec
+          image: "sorintlab/stolon:master-pg14"
+          imagePullPolicy: IfNotPresent
+          command: ["/usr/local/bin/stolonctl"]
+          args:
+            - update
+            - --cluster-name=stolon
+            - --store-backend=kubernetes
+            - --kube-resource-kind=configmap
+            - -p
+            - '{ "pgParameters": {"ssl":"off","ssl_ca_file":null,"ssl_cert_file":null,"ssl_key_file":null}}'
 MANIFEST:
 ---
-# Source: git/charts/gitea/templates/gitea/config.yaml
+# Source: stolon/charts/stolon/templates/serviceaccount.yaml
 apiVersion: v1
-kind: Secret
+kind: ServiceAccount
 metadata:
-  name: git-gitea-inline-config
+  name: stolon
   labels:
-    helm.sh/chart: gitea-0.0.0
-    app: gitea
-    app.kubernetes.io/name: gitea
-    app.kubernetes.io/instance: git
-    app.kubernetes.io/version: "1.17.3"
-    version: "1.17.3"
-    app.kubernetes.io/managed-by: Helm
-type: Opaque
-stringData:
-  _generals_: ""
-  admin: DISABLE_REGULAR_ORG_CREATION=true
-  cache: |-
-    ADAPTER=memory
-    ENABLED=true
-    INTERVAL=60
-  database: |-
-    DB_TYPE=postgres
-    HOST=stolon-proxy.stolon:5432
-    existingSecret=postgres-git
-  metrics: ENABLED=true
-  other: |-
-    SHOW_FOOTER_TEMPLATE_LOAD_TIME=false
-    SHOW_FOOTER_VERSION=false
-  picture: DISABLE_GRAVATAR=true
-  repository: |-
-    ENABLE_PUSH_CREATE_ORG=true
-    ENABLE_PUSH_CREATE_USER=true
-    ROOT=/data/git/gitea-repositories
-  security: INSTALL_LOCK=true
-  server: |-
-    APP_DATA_PATH=/data
-    DOMAIN=git.local.ertia.cloud
-    ENABLE_PPROF=false
-    HTTP_PORT=3000
-    LANDING_PAGE=login
-    PROTOCOL=http
-    ROOT_URL=https://git.local.ertia.cloud
-    SSH_DOMAIN=git.local.ertia.cloud
-    SSH_LISTEN_PORT=2222
-    SSH_PORT=2222
-  service: |-
-    ALLOWED_USER_VISIBILITY_MODES=limited
-    DEFAULT_ORG_MEMBER_VISIBLE=true
-    DEFAULT_ORG_VISIBILITY=limited
-    DEFAULT_USER_VISIBILITY=limited
-    DISABLE_REGISTRATION=true
-    REQUIRE_SIGNIN_VIEW=true
-    explore=map[REQUIRE_SIGNIN_VIEW:true]
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
 ---
-# Source: git/charts/gitea/templates/gitea/config.yaml
+# Source: stolon/charts/stolon/templates/secret.yaml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: git-gitea
+  name: stolon
   labels:
-    helm.sh/chart: gitea-0.0.0
-    app: gitea
-    app.kubernetes.io/name: gitea
-    app.kubernetes.io/instance: git
-    app.kubernetes.io/version: "1.17.3"
-    version: "1.17.3"
-    app.kubernetes.io/managed-by: Helm
-type: Opaque
-stringData:
-  config_environment.sh: |-
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    function env2ini::log() {
-      printf "${1}\n"
-    }
-
-    function env2ini::read_config_to_env() {
-      local section="${1}"
-      local line="${2}"
-
-      if [[ -z "${line}" ]]; then
-        # skip empty line
-        return
-      fi
-      
-      # 'xargs echo -n' trims all leading/trailing whitespaces and a trailing new line
-      local setting="$(awk -F '=' '{print $1}' <<< "${line}" | xargs echo -n)"
-
-      if [[ -z "${setting}" ]]; then
-        env2ini::log '  ! invalid setting'
-        exit 1
-      fi
-
-      local value=''
-      local regex="^${setting}(\s*)=(\s*)(.*)"
-      if [[ $line =~ $regex ]]; then
-        value="${BASH_REMATCH[3]}"
-      else
-        env2ini::log '  ! invalid setting'
-        exit 1
-      fi
-
-      env2ini::log "    + '${setting}'"
-
-      if [[ -z "${section}" ]]; then
-        export "ENV_TO_INI____${setting^^}=${value}"                           # '^^' makes the variable content uppercase
-        return
-      fi
-
-      local masked_section="${section//./_0X2E_}"                            # '//' instructs to replace all matches
-      masked_section="${masked_section//-/_0X2D_}"
-
-      export "ENV_TO_INI__${masked_section^^}__${setting^^}=${value}"        # '^^' makes the variable content uppercase
-    }
-
-    function env2ini::reload_preset_envs() {
-      env2ini::log "Reloading preset envs..."
-
-      while read -r line; do
-        if [[ -z "${line}" ]]; then
-          # skip empty line
-          return
-        fi
-
-        # 'xargs echo -n' trims all leading/trailing whitespaces and a trailing new line
-        local setting="$(awk -F '=' '{print $1}' <<< "${line}" | xargs echo -n)"
-
-        if [[ -z "${setting}" ]]; then
-          env2ini::log '  ! invalid setting'
-          exit 1
-        fi
-
-        local value=''
-        local regex="^${setting}(\s*)=(\s*)(.*)"
-        if [[ $line =~ $regex ]]; then
-          value="${BASH_REMATCH[3]}"
-        else
-          env2ini::log '  ! invalid setting'
-          exit 1
-        fi
-
-        env2ini::log "  + '${setting}'"
-
-        export "${setting^^}=${value}"                           # '^^' makes the variable content uppercase
-      done < "/tmp/existing-envs"
-
-      rm /tmp/existing-envs
-    }
-
-
-    function env2ini::process_config_file() {
-      local config_file="${1}"
-      local section="$(basename "${config_file}")"
-
-      if [[ $section == '_generals_' ]]; then
-        env2ini::log "  [ini root]"
-        section=''
-      else
-        env2ini::log "  ${section}"
-      fi
-
-      while read -r line; do
-        env2ini::read_config_to_env "${section}" "${line}"
-      done < <(awk 1 "${config_file}")                             # Helm .toYaml trims the trailing new line which breaks line processing; awk 1 ... adds it back while reading
-    }
-
-    function env2ini::load_config_sources() {
-      local path="${1}"
-
-      if [[ -d "${path}" ]]; then
-        env2ini::log "Processing $(basename "${path}")..."
-
-        while read -d '' configFile; do
-          env2ini::process_config_file "${configFile}"
-        done < <(find "${path}" -type l -not -name '..data' -print0)
-
-        env2ini::log "\n"
-      fi
-    }
-
-    function env2ini::generate_initial_secrets() {
-      # These environment variables will either be
-      #   - overwritten with user defined values,
-      #   - initially used to set up Gitea
-      # Anyway, they won't harm existing app.ini files
-
-      export ENV_TO_INI__SECURITY__INTERNAL_TOKEN=$(gitea generate secret INTERNAL_TOKEN)
-      export ENV_TO_INI__SECURITY__SECRET_KEY=$(gitea generate secret SECRET_KEY)
-      export ENV_TO_INI__OAUTH2__JWT_SECRET=$(gitea generate secret JWT_SECRET)
-      export ENV_TO_INI__SERVER__LFS_JWT_SECRET=$(gitea generate secret LFS_JWT_SECRET)
-
-      env2ini::log "...Initial secrets generated\n"
-    }
-
-    env | (grep ENV_TO_INI || [[ $? == 1 ]]) > /tmp/existing-envs
-    
-    # MUST BE CALLED BEFORE OTHER CONFIGURATION
-    env2ini::generate_initial_secrets
-
-    env2ini::load_config_sources '/env-to-ini-mounts/inlines/'
-    env2ini::load_config_sources '/env-to-ini-mounts/additionals/'
-
-    # load existing envs to override auto generated envs
-    env2ini::reload_preset_envs
-
-    env2ini::log "=== All configuration sources loaded ===\n"
-
-    # safety to prevent rewrite of secret keys if an app.ini already exists
-    if [ -f ${GITEA_APP_INI} ]; then
-      env2ini::log 'An app.ini file already exists. To prevent overwriting secret keys, these settings are dropped and remain unchanged:'
-      env2ini::log '  - security.INTERNAL_TOKEN'
-      env2ini::log '  - security.SECRET_KEY'
-      env2ini::log '  - oauth2.JWT_SECRET'
-      env2ini::log '  - server.LFS_JWT_SECRET'
-
-      unset ENV_TO_INI__SECURITY__INTERNAL_TOKEN
-      unset ENV_TO_INI__SECURITY__SECRET_KEY
-      unset ENV_TO_INI__OAUTH2__JWT_SECRET
-      unset ENV_TO_INI__SERVER__LFS_JWT_SECRET
-    fi
-
-    environment-to-ini -o $GITEA_APP_INI -p ENV_TO_INI
----
-# Source: git/charts/gitea/templates/gitea/init.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: git-gitea-init
-  labels:
-    helm.sh/chart: gitea-0.0.0
-    app: gitea
-    app.kubernetes.io/name: gitea
-    app.kubernetes.io/instance: git
-    app.kubernetes.io/version: "1.17.3"
-    version: "1.17.3"
-    app.kubernetes.io/managed-by: Helm
-type: Opaque
-stringData:
-  configure_gpg_environment.sh: |-
-    #!/usr/bin/env bash
-    set -eu
-
-    gpg --batch --import /raw/private.asc
-  init_directory_structure.sh: |-
-    #!/usr/bin/env bash
-
-    set -euo pipefail
-
-    set -x
-    chown 1000:1000 /data
-    mkdir -p /data/git/.ssh
-    chmod -R 700 /data/git/.ssh
-    [ ! -d /data/gitea/conf ] && mkdir -p /data/gitea/conf
-
-    # prepare temp directory structure
-    mkdir -p "${GITEA_TEMP}"
-    chown 1000:1000 "${GITEA_TEMP}"
-    chmod ug+rwx "${GITEA_TEMP}"
-
-    
-
-  configure_gitea.sh: |-
-    #!/usr/bin/env bash
-
-    set -euo pipefail
-
-    echo '==== BEGIN GITEA CONFIGURATION ===='
-
-    { # try
-      gitea migrate
-    } || { # catch
-      echo "Gitea migrate might fail due to database connection...This init-container will try again in a few seconds"
-      exit 1
-    }
-    function configure_admin_user() {
-      local ACCOUNT_ID=$(gitea admin user list --admin | grep -e "\s\+${GITEA_ADMIN_USERNAME}\s\+" | awk -F " " "{printf \$1}")
-      if [[ -z "${ACCOUNT_ID}" ]]; then
-        echo "No admin user '${GITEA_ADMIN_USERNAME}' found. Creating now..."
-        gitea admin user create --admin --username "${GITEA_ADMIN_USERNAME}" --password "${GITEA_ADMIN_PASSWORD}" --email "gitea@local.domain" --must-change-password=false
-        echo '...created.'
-      else
-        echo "Admin account '${GITEA_ADMIN_USERNAME}' already exist. Running update to sync password..."
-        gitea admin user change-password --username "${GITEA_ADMIN_USERNAME}" --password "${GITEA_ADMIN_PASSWORD}"
-        echo '...password sync done.'
-      fi
-    }
-
-    configure_admin_user
-
-    function configure_ldap() {
-        echo 'no ldap configuration... skipping.'
-    }
-
-    configure_ldap
-
-    function configure_oauth() {
-        echo 'no oauth configuration... skipping.'
-    }
-
-    configure_oauth
-
-    echo '==== END GITEA CONFIGURATION ===='
----
-# Source: git/templates/secret.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: gitea-admin-secret
-  namespace: git
-  labels:
-    helm.sh/chart: git-0.0.1
-    app.kubernetes.io/name: git
-    app.kubernetes.io/instance: git
-    app.kubernetes.io/version: "0.0.1"
-    app.kubernetes.io/managed-by: Helm
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
 type: Opaque
 data:
-  username: "Z2l0ZWFfYWRtaW4="
-  password: "TklPZ0twMHFqeGFyZ05lNHRybFdoVUlWaUxhZUdacHd2SEl2NXE0YQ=="
+
+  pg_su_password: "ZGVmYXVsdFBhc3N3b3Jk"
+
+
+  pg_repl_password: "ZGVmYXVsdFBhc3N3b3Jk"
 ---
-# Source: git/templates/secret.yaml
+# Source: stolon/charts/stolon/templates/configmap.yaml
 apiVersion: v1
-kind: Secret
+kind: ConfigMap
 metadata:
-  name: gitea-tekton-secret
-  namespace: git
+  name: stolon
   labels:
-    helm.sh/chart: git-0.0.1
-    app.kubernetes.io/name: git
-    app.kubernetes.io/instance: git
-    app.kubernetes.io/version: "0.0.1"
-    app.kubernetes.io/managed-by: Helm
-type: Opaque
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
 data:
-  username: "dGVrdG9u"
-  password: "bEJjU0JDME5wUGdnT3djc0RTRE1ralpmRDdPem1jcFFvQlcyUFRHYQ=="
 ---
-# Source: git/templates/secret.yaml
+# Source: stolon/charts/stolon/templates/hooks/init-db-job.yaml
 apiVersion: v1
-kind: Secret
+kind: ConfigMap
 metadata:
-  name: postgres-git
-  namespace: git
-  labels:
-    helm.sh/chart: git-0.0.1
-    app.kubernetes.io/name: git
-    app.kubernetes.io/instance: git
-    app.kubernetes.io/version: "0.0.1"
-    app.kubernetes.io/managed-by: Helm
-type: Opaque
+  name: stolon-init-scripts
 data:
-  username: "dFhLNXBHR0ZSRlI1akdLc00wdzJsazRtcGFhWFFVZTJ6VjN0SVdFeg=="
-  password: "ampFbUd3M1hmOWlraTdUZHdaYVpMRGZ4RmtKSHRiQXhTWlgwTFN1Mw=="
-  database: "bWxyNEl1NVRkS1hNNUFSVm03UllFNmEyVXl6N25SVmJjdFc5SnEyZA=="
 ---
-# Source: git/charts/gitea/templates/gitea/http-svc.yaml
+# Source: stolon/charts/stolon/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: stolon
+  labels:
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
+rules:
+- apiGroups:
+    - ""
+  resources:
+    - pods
+    - endpoints
+    - configmaps
+    - events
+  verbs:
+    - "*"
+---
+# Source: stolon/charts/stolon/templates/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: stolon
+  labels:
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: stolon
+subjects:
+- kind: ServiceAccount
+  name: stolon
+---
+# Source: stolon/charts/stolon/templates/keeper-headless-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: git-gitea-http
+  name: stolon-keeper-headless
   labels:
-    helm.sh/chart: gitea-0.0.0
-    app: gitea
-    app.kubernetes.io/name: gitea
-    app.kubernetes.io/instance: git
-    app.kubernetes.io/version: "1.17.3"
-    version: "1.17.3"
-    app.kubernetes.io/managed-by: Helm
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
   annotations:
-    {}
 spec:
   type: ClusterIP
-  clusterIP: None
   ports:
-  - name: http
-    port: 3000
-    targetPort: 3000
+    - name: keeper
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
   selector:
-    app.kubernetes.io/name: gitea
-    app.kubernetes.io/instance: git
+    app: stolon
+    release: stolon
+    component: stolon-keeper
 ---
-# Source: git/charts/gitea/templates/gitea/ssh-svc.yaml
+# Source: stolon/charts/stolon/templates/proxy-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: git-gitea-ssh
+  name: stolon-proxy
   labels:
-    helm.sh/chart: gitea-0.0.0
-    app: gitea
-    app.kubernetes.io/name: gitea
-    app.kubernetes.io/instance: git
-    app.kubernetes.io/version: "1.17.3"
-    version: "1.17.3"
-    app.kubernetes.io/managed-by: Helm
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
   annotations:
-    {}
 spec:
-  type: LoadBalancer
-  externalTrafficPolicy: Local
+  type: ClusterIP
   ports:
-  - name: ssh
-    port: 2222
-    targetPort: 2222
-    protocol: TCP
+    - name: proxy
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
   selector:
-    app.kubernetes.io/name: gitea
-    app.kubernetes.io/instance: git
+    app: stolon
+    release: stolon
+    component: stolon-proxy
 ---
-# Source: git/charts/gitea/templates/gitea/statefulset.yaml
+# Source: stolon/charts/stolon/templates/proxy-deployment.yaml
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: git-gitea
-  annotations:
+  name: stolon-proxy
   labels:
-    helm.sh/chart: gitea-0.0.0
-    app: gitea
-    app.kubernetes.io/name: gitea
-    app.kubernetes.io/instance: git
-    app.kubernetes.io/version: "1.17.3"
-    version: "1.17.3"
-    app.kubernetes.io/managed-by: Helm
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: gitea
-      app.kubernetes.io/instance: git
-  serviceName: git-gitea
+      app: stolon
+      release: stolon
+      component: stolon-proxy
   template:
     metadata:
-      annotations:
-        checksum/config: 613b546bacac492585ef17f077f22deae15cc632eaf81fb73f5097da421d237d
       labels:
-        helm.sh/chart: gitea-0.0.0
-        app: gitea
-        app.kubernetes.io/name: gitea
-        app.kubernetes.io/instance: git
-        app.kubernetes.io/version: "1.17.3"
-        version: "1.17.3"
-        app.kubernetes.io/managed-by: Helm
+        app: stolon
+        release: stolon
+        component: stolon-proxy
+        stolon-cluster: stolon
+      annotations:
     spec:
-      
-      securityContext:
-        fsGroup: 1000
-      initContainers:
-        - name: init-directories
-          image: "gitea/gitea:1.17.3"
-          imagePullPolicy: Always
-          command: ["/usr/sbin/init_directory_structure.sh"]
-          env:
-            - name: GITEA_APP_INI
-              value: /data/gitea/conf/app.ini
-            - name: GITEA_CUSTOM
-              value: /data/gitea
-            - name: GITEA_WORK_DIR
-              value: /data
-            - name: GITEA_TEMP
-              value: /tmp/gitea
-          volumeMounts:
-            - name: init
-              mountPath: /usr/sbin
-            - name: temp
-              mountPath: /tmp
-            - name: data
-              mountPath: /data
-            
-          securityContext:
-            {}
-        - name: init-app-ini
-          image: "gitea/gitea:1.17.3"
-          imagePullPolicy: Always
-          command: ["/usr/sbin/config_environment.sh"]
-          env:
-            - name: GITEA_APP_INI
-              value: /data/gitea/conf/app.ini
-            - name: GITEA_CUSTOM
-              value: /data/gitea
-            - name: GITEA_WORK_DIR
-              value: /data
-            - name: GITEA_TEMP
-              value: /tmp/gitea
-            - name: ENV_TO_INI__DATABASE__HOST
-              value: stolon-proxy.stolon:5432
-            - name: ENV_TO_INI__DATABASE__PASSWD
-              valueFrom:
-                secretKeyRef:
-                  key: password
-                  name: postgres-git
-            - name: ENV_TO_INI__DATABASE__USER
-              valueFrom:
-                secretKeyRef:
-                  key: username
-                  name: postgres-git
-            - name: ENV_TO_INI__DATABASE__NAME
-              valueFrom:
-                secretKeyRef:
-                  key: database
-                  name: postgres-git
-          volumeMounts:
-            - name: config
-              mountPath: /usr/sbin
-            - name: temp
-              mountPath: /tmp
-            - name: data
-              mountPath: /data
-            - name: inline-config-sources
-              mountPath: /env-to-ini-mounts/inlines/
-            
-          securityContext:
-            {}
-        - name: configure-gitea
-          image: "gitea/gitea:1.17.3"
-          command: ["/usr/sbin/configure_gitea.sh"]
-          imagePullPolicy: Always
-          securityContext:
-            runAsUser: 1000
-          env:
-            - name: GITEA_APP_INI
-              value: /data/gitea/conf/app.ini
-            - name: GITEA_CUSTOM
-              value: /data/gitea
-            - name: GITEA_WORK_DIR
-              value: /data
-            - name: GITEA_TEMP
-              value: /tmp/gitea
-            - name: GITEA_ADMIN_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  key:  username
-                  name: gitea-admin-secret
-            - name: GITEA_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key:  password
-                  name: gitea-admin-secret
-          volumeMounts:
-            - name: init
-              mountPath: /usr/sbin
-            - name: temp
-              mountPath: /tmp
-            - name: data
-              mountPath: /data
-            
-      terminationGracePeriodSeconds: 60
+      serviceAccountName: stolon
       containers:
-        - name: gitea
-          image: "gitea/gitea:1.17.3"
-          imagePullPolicy: Always
+        - name: stolon
+          image: "sorintlab/stolon:master-pg14"
+          imagePullPolicy: IfNotPresent
+          command:
+            - "/bin/bash"
+            - "-ec"
+            - |
+              exec gosu stolon stolon-proxy
           env:
-            # SSH Port values have to be set here as well for openssh configuration
-            - name: SSH_LISTEN_PORT
-              value: "2222"
-            - name: SSH_PORT
-              value: "2222"
-            - name: GITEA_APP_INI
-              value: /data/gitea/conf/app.ini
-            - name: GITEA_CUSTOM
-              value: /data/gitea
-            - name: GITEA_WORK_DIR
-              value: /data
-            - name: GITEA_TEMP
-              value: /tmp/gitea
-            - name: TMPDIR
-              value: /tmp/gitea
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: STPROXY_CLUSTER_NAME
+              value: stolon
+            - name: STPROXY_STORE_BACKEND
+              value: "kubernetes"
+            - name: STPROXY_KUBE_RESOURCE_KIND
+              value: "configmap"
+            - name: STPROXY_LISTEN_ADDRESS
+              value: "0.0.0.0"
+            - name: STPROXY_METRICS_LISTEN_ADDRESS
+              value: "0.0.0.0:8080"
+            - name: STPROXY_DEBUG
+              value: "false"
           ports:
-            - name: ssh
-              containerPort: 2222
-            - name: http
-              containerPort: 3000
-          livenessProbe:
-            failureThreshold: 10
-            initialDelaySeconds: 200
-            periodSeconds: 10
-            successThreshold: 1
-            tcpSocket:
-              port: http
-            timeoutSeconds: 1
-          readinessProbe:
-            failureThreshold: 3
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
-            tcpSocket:
-              port: http
-            timeoutSeconds: 1
+            - name: metrics
+              containerPort: 8080
+            - name: stolon
+              containerPort: 5432
           resources:
             {}
-          securityContext:
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+---
+# Source: stolon/charts/stolon/templates/sentinel-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stolon-sentinel
+  labels:
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stolon
+      release: stolon
+      component: stolon-sentinel
+  template:
+    metadata:
+      labels:
+        app: stolon
+        release: stolon
+        component: stolon-sentinel
+        stolon-cluster: stolon
+      annotations:
+        checksum/config: 1ba679573fabf1d9e4638472910e24cc0cf1d9a988e6e028d2b8c29ddc63023e
+    spec:
+      serviceAccountName: stolon
+      containers:
+        - name: stolon
+          image: "sorintlab/stolon:master-pg14"
+          imagePullPolicy: IfNotPresent
+          command:
+            - "/bin/bash"
+            - "-ec"
+            - |
+              exec gosu stolon stolon-sentinel
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: STSENTINEL_CLUSTER_NAME
+              value: stolon
+            - name: STSENTINEL_STORE_BACKEND
+              value: "kubernetes"
+            - name: STSENTINEL_KUBE_RESOURCE_KIND
+              value: "configmap"
+            - name: STSENTINEL_METRICS_LISTEN_ADDRESS
+              value: "0.0.0.0:8080"
+            - name: STSENTINEL_DEBUG
+              value: "false"
+          ports:
+            - name: metrics
+              containerPort: 8080
+            - name: stolon
+              containerPort: 5432
+          resources:
+            {}
+---
+# Source: stolon/charts/stolon/templates/keeper-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: stolon-keeper
+  labels:
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
+spec:
+  serviceName: stolon-keeper-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stolon
+      release: stolon
+      component: stolon-keeper
+  template:
+    metadata:
+      labels:
+        app: stolon
+        release: stolon
+        component: stolon-keeper
+        stolon-cluster: stolon
+      annotations:
+    spec:
+      serviceAccountName: stolon
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: stolon
+          image: "sorintlab/stolon:master-pg14"
+          imagePullPolicy: IfNotPresent
+          command:
+            - "/bin/bash"
+            - "-ec"
+            - |
+              # Generate our keeper uid using the pod index
+              IFS='-' read -ra ADDR <<< "$(hostname)"
+              export STKEEPER_UID="keeper${ADDR[-1]}"
+              export POD_IP=$(hostname -i)
+              export STKEEPER_PG_ADVERTISE_ADDRESS=$POD_IP
+              export STKEEPER_PG_LISTEN_ADDRESS=${STKEEPER_PG_LISTEN_ADDRESS:-$POD_IP}
+              export STOLON_DATA=/stolon-data
+              chown stolon:stolon $STOLON_DATA
+              exec gosu stolon stolon-keeper --data-dir $STOLON_DATA
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: STKEEPER_CLUSTER_NAME
+              value: stolon
+            - name: STKEEPER_STORE_BACKEND
+              value: "kubernetes"
+            - name: STKEEPER_KUBE_RESOURCE_KIND
+              value: "configmap"
+            - name: STKEEPER_PG_REPL_USERNAME
+
+              value: "postgres-repl"
+
+            - name: STKEEPER_PG_REPL_PASSWORDFILE
+
+              value: "/etc/secrets/stolon/pg_repl_password"
+
+            - name: STKEEPER_PG_SU_USERNAME
+
+              value: "postgres"
+
+            - name: STKEEPER_PG_SU_PASSWORDFILE
+
+              value: "/etc/secrets/stolon/pg_su_password"
+
+            - name: STKEEPER_METRICS_LISTEN_ADDRESS
+              value: "0.0.0.0:8080"
+            - name: STKEEPER_DEBUG
+              value: "false"
+          ports:
+            - name: metrics
+              containerPort: 8080
+            - name: stolon
+              containerPort: 5432
+          resources:
             {}
           volumeMounts:
-            - name: temp
-              mountPath: /tmp
-            - name: data
-              mountPath: /data
-            
+          - name: data
+            mountPath: /stolon-data
+
+          - name: stolon-secrets
+            mountPath: /etc/secrets/stolon
+
+
+
+          lifecycle:
       volumes:
-        - name: init
-          secret:
-            secretName: git-gitea-init
-            defaultMode: 110
         - name: config
+          configMap:
+            name: stolon
+
+        - name: stolon-secrets
           secret:
-            secretName: git-gitea
-            defaultMode: 110
-        - name: inline-config-sources
-          secret:
-            secretName: git-gitea-inline-config
-        - name: temp
-          emptyDir: {}
+            secretName: stolon
+
+
+
   volumeClaimTemplates:
     - metadata:
         name: data
       spec:
         accessModes:
-            - "ReadWriteOnce"        
+          - "ReadWriteOnce"
         resources:
           requests:
             storage: "10Gi"
----
-# Source: git/charts/gitea/templates/gitea/ingress.yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: git-gitea
-  labels:
-    helm.sh/chart: gitea-0.0.0
-    app: gitea
-    app.kubernetes.io/name: gitea
-    app.kubernetes.io/instance: git
-    app.kubernetes.io/version: "1.17.3"
-    version: "1.17.3"
-    app.kubernetes.io/managed-by: Helm
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-production
-    kubernetes.io/ingress.class: traefik
-spec:
-  tls:
-    - hosts:
-        - "git.ertia.local.cloud"
-      secretName: git-tls
-  rules:
-    - host: "git.local.ertia.cloud"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: git-gitea-http
-                port:
-                  number: 3000
----
-# Source: git/charts/gitea/templates/gitea/servicemonitor.yaml
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: git-gitea
-  labels:
-    helm.sh/chart: gitea-0.0.0
-    app: gitea
-    app.kubernetes.io/name: gitea
-    app.kubernetes.io/instance: git
-    app.kubernetes.io/version: "1.17.3"
-    version: "1.17.3"
-    app.kubernetes.io/managed-by: Helm
-    release: monitoring
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: gitea
-      app.kubernetes.io/instance: git
-  endpoints:
-  - port: http
 
