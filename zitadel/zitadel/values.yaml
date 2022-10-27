@@ -70,6 +70,7 @@ zitadel:
               Cert:
               Key:
           Admin:
+            Database: postgres
             Username: postgres
             Password: postgres
             SSL:
