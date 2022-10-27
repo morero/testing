@@ -2,15 +2,23 @@ stolon:
 
   # Overrides
 
-  superuserSecret:
-    name: "postgres-admin-user"
-    usernameKey: username
-    passwordKey: password
+  superuserUsername: "postgres"
+  superuserPassword: "defaultPassword" # Replaced by deployment
 
-  replicationSecret:
-    name: "postgres-repl-user"
-    usernameKey: username
-    passwordKey: password
+  replicationUsername: "postgres-repl"
+  replicationPassword: "defaultPassword" # Replaced by deployment
+
+
+
+#  superuserSecret:
+#    name: "postgres-admin-user"
+#    usernameKey: username
+#    passwordKey: password
+
+#  replicationSecret:
+#    name: "postgres-repl-user"
+#    usernameKey: username
+#    passwordKey: password
 
   keeper:
     replicaCount: 1
