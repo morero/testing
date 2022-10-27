@@ -46,6 +46,8 @@ spec:
               value: @PGPASSWORD@
             - name: GIT_USER
               value: gitea
+            - name: GIT_DB
+              value: gitea
             - name: GIT_PASSWORD
               value: @GIT_PASSWORD@
           command: ["psql","-c", "CREATE DATABASE $(GIT_DB) WITH OWNER $(GIT_USER)"]
@@ -72,6 +74,8 @@ spec:
             - name: PGPASSWORD
               value: @PGPASSWORD@
             - name: GIT_USER
+              value: gitea
+            - name: GIT_DB
               value: gitea
             - name: GIT_PASSWORD
               value: @GIT_PASSWORD@
