@@ -81,7 +81,6 @@ gitea:
         NAME: gitea
         USER: gitea
         PASSWD: gitea
-        SCHEMA: gitea
 
       other:
         SHOW_FOOTER_VERSION: false
