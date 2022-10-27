@@ -14,25 +14,13 @@ spec:
             - name: PGHOST
               value: stolon-proxy
             - name: PGUSER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-admin-user
-                  key: username
+              value: postgres
             - name: PGPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-admin-user
-                  key: password
+              value: @PGPASSWORD@
             - name: GIT_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-git
-                  key: username
+              value: gitea
             - name: GIT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-git
-                  key: password
+              value: @GIT_PASSWORD@
           command: ["psql","-c", "CREATE ROLE $(GIT_USER) WITH LOGIN PASSWORD '$(GIT_PASSWORD)'"]
       restartPolicy: Never
   backoffLimit: 4
@@ -53,30 +41,13 @@ spec:
             - name: PGHOST
               value: stolon-proxy
             - name: PGUSER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-admin-user
-                  key: username
+              value: postgres
             - name: PGPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-admin-user
-                  key: password
+              value: @PGPASSWORD@
             - name: GIT_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-git
-                  key: username
+              value: gitea
             - name: GIT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-git
-                  key: password
-            - name: GIT_DB
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-git
-                  key: database
+              value: @GIT_PASSWORD@
           command: ["psql","-c", "CREATE DATABASE $(GIT_DB) WITH OWNER $(GIT_USER)"]
       restartPolicy: Never
   backoffLimit: 4
@@ -97,30 +68,13 @@ spec:
             - name: PGHOST
               value: stolon-proxy
             - name: PGUSER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-admin-user
-                  key: username
+              value: postgres
             - name: PGPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-admin-user
-                  key: password
+              value: @PGPASSWORD@
             - name: GIT_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-git
-                  key: username
+              value: gitea
             - name: GIT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-git
-                  key: password
-            - name: GIT_DB
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-git
-                  key: database
+              value: @GIT_PASSWORD@
           command: ["psql","-c", "GRANT ALL PRIVILEGES ON DATABASE $(GIT_DB) TO $(GIT_USER)"]
       restartPolicy: Never
   backoffLimit: 4

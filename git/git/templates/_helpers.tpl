@@ -125,3 +125,30 @@ new password and use it.
     {{- (randAlphaNum 40) | b64enc | quote -}}
   {{- end -}}
 {{- end -}}
+
+{{- define "gitea.postgres-username" -}}
+{{- $secret := (lookup "v1" "Secret" "stolon" "postgres-git") -}}
+  {{- if $secret -}}
+    {{- index $secret "data" "username" -}}
+  {{- else -}}
+    {{- (randAlphaNum 40) | b64enc | quote -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "gitea.postgres-password" -}}
+{{- $secret := (lookup "v1" "Secret" "stolon" "postgres-git") -}}
+  {{- if $secret -}}
+    {{- index $secret "data" "password" -}}
+  {{- else -}}
+    {{- (randAlphaNum 40) | b64enc | quote -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "gitea.postgres-database" -}}
+{{- $secret := (lookup "v1" "Secret" "stolon" "postgres-git") -}}
+  {{- if $secret -}}
+    {{- index $secret "data" "database" -}}
+  {{- else -}}
+    {{- (randAlphaNum 40) | b64enc | quote -}}
+  {{- end -}}
+{{- end -}}

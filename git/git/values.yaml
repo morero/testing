@@ -25,7 +25,6 @@ gitea:
     size: 10Gi
 
   gitea:
-
     oauth2:
       enabled: true
       name: 'Zitadel'
@@ -74,12 +73,15 @@ gitea:
         ENABLED: true
         ADAPTER: memory
         INTERVAL: 60
+
+      #Will be overridden from deployment
       database:
         DB_TYPE: postgres
         HOST: stolon-proxy.stolon:5432
         NAME: gitea
-        USER: gitea
+        USER: root
         PASSWD: gitea
+        SCHEMA: gitea
 
       other:
         SHOW_FOOTER_VERSION: false
@@ -88,5 +90,6 @@ gitea:
   memcached:
     enabled: false
 
+  #Use external DB
   postgresql:
     enabled: false

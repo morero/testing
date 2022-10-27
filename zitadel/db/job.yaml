@@ -1,0 +1,126 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: zitadel-db-user-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: pg-client
+          image: postgres
+          env:
+            - name: PGDATABASE
+              value: postgres
+            - name: PGHOST
+              value: stolon-proxy
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-admin-user
+                  key: username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-admin-user
+                  key: password
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-zitadel
+                  key: username
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-zitadel
+                  key: password
+          command: ["psql","-c", "CREATE ROLE $(USER) WITH LOGIN PASSWORD '$(PASSWORD)'"]
+      restartPolicy: Never
+  backoffLimit: 4
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: zitadel-db-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: pg-client
+          image: postgres
+          env:
+            - name: PGDATABASE
+              value: postgres
+            - name: PGHOST
+              value: stolon-proxy
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-admin-user
+                  key: username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-admin-user
+                  key: password
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-zitadel
+                  key: username
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-zitadel
+                  key: password
+            - name: DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-zitadel
+                  key: database
+          command: ["psql","-c", "CREATE DATABASE $(DB) WITH OWNER $(USER)"]
+      restartPolicy: Never
+  backoffLimit: 4
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: zitadel-db-grant-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: pg-client
+          image: postgres
+          env:
+            - name: PGDATABASE
+              value: postgres
+            - name: PGHOST
+              value: stolon-proxy
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-admin-user
+                  key: username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-admin-user
+                  key: password
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-zitadel
+                  key: username
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-zitadel
+                  key: password
+            - name: DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-zitadel
+                  key: database
+          command: ["psql","-c", "GRANT ALL PRIVILEGES ON DATABASE $(DB) TO $(USER)"]
+      restartPolicy: Never
+  backoffLimit: 4
