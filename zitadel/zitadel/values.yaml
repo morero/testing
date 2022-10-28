@@ -165,9 +165,9 @@ zitadel:
           - path: /
             pathType: Prefix
     tls:
-      - secretName: git-tls
+      - secretName: zitadel-tls
         hosts:
-          - git.local.ertia.cloud #git.@DOMAIN@            
+          - auth.local.ertia.cloud #git.@DOMAIN@            
           
 
   resources: {}
