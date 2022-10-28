@@ -1,4 +1,9 @@
 gitea:
+  
+  securityContext:
+  capabilities:
+    add: ["SYS_CHROOT"]
+  
   service:
     ssh:
       type: LoadBalancer
@@ -16,10 +21,10 @@ gitea:
         paths:
           - path: /
             pathType: Prefix
-    #tls:
-     # - secretName: git-tls
-      #  hosts:
-       #   - git.ertia.local.cloud #git.@DOMAIN@
+    tls:
+      - secretName: git-tls
+        hosts:
+          - git.ertia.local.cloud #git.@DOMAIN@
 
   persistence:
     enabled: true
