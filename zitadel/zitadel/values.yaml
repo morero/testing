@@ -158,7 +158,7 @@ zitadel:
     annotations:
       kubernetes.io/ingress.class: traefik
       #cert-manager.io/cluster-issuer: letsencrypt-production
-      cert-manager.io/cluster-issuer: mkcert
+      cert-manager.io/cluster-issuer: self-signed #mkcert
     hosts:
       - host: auth.local.ertia.cloud #git.@DOMAIN@
         paths:
