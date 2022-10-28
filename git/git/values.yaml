@@ -24,7 +24,7 @@ gitea:
     tls:
       - secretName: git-tls
         hosts:
-          - git.ertia.local.cloud #git.@DOMAIN@
+          - git.local.ertia.cloud #git.@DOMAIN@
 
   persistence:
     enabled: true
@@ -38,7 +38,7 @@ gitea:
       key: 'hello'
       secret: 'world'
       autoDiscoverUrl: 'http://zitadel.zitadel/.well-known/openid-configuration'
-      #useCustomUrls:
+      #useCustomUgit add rls:
       #customAuthUrl:
       #customTokenUrl:
       #customProfileUrl:
