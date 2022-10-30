@@ -35,8 +35,8 @@ zitadel:
     image:
       tag: v2.11.0
     configmapConfig:
-
-      ExternalSecure: false
+      ExternalDomain: auth.local.ertia.cloud
+      ExternalSecure: true
       TLS:
         Enabled: false
       Database:

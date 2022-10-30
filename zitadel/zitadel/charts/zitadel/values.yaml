@@ -5,6 +5,8 @@ zitadel:
   # See all defaults here:
   # https://github.com/zitadel/zitadel/blob/main/cmd/defaults.yaml
   configmapConfig:
+  
+    ExternalDomain: 
 
     Database:
       cockroach:

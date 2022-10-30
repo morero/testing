@@ -32,13 +32,16 @@ gitea:
     size: 10Gi
 
   gitea:
-    oauth2:
+    oauth:
       enabled: true
       name: 'Zitadel'
       provider: 'openidConnect'
-      key: 'hello'
-      secret: 'world'
+      key: gitea-oauth
+      secret: default
       autoDiscoverUrl: 'http://zitadel.zitadel/.well-known/openid-configuration'
+                  
+
+     #   existingSecret:
       #useCustomUgit add rls:
       #customAuthUrl:
       #customTokenUrl:
