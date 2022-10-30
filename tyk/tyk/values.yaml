@@ -4,7 +4,7 @@
 
 replicaCount: 1
 
-tyk-pro:
+tyk-headless:
   backend: postgres
   
   # Postgres connection string parameters.
