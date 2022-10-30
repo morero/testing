@@ -14,7 +14,7 @@ tyk-pro:
     user: tyk
     password: tyk
     database: tyk
-    sslmode:  false
+    #sslmode:
     
   redis:
     addrs:
