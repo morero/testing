@@ -32,7 +32,7 @@ gitea:
     size: 10Gi
 
   gitea:
-    oauth:
+    oauth2:
       enabled: true
       name: 'Zitadel'
       provider: 'openidConnect'
