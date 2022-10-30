@@ -13,6 +13,8 @@ gitea:
   ingress:
     enabled: true
     annotations:
+      traefik.ingress.kubernetes.io/router.tls: 'true'
+      kubernetes.io/tls-acme: 'true'
       kubernetes.io/ingress.class: traefik
       ingress.kubernetes.io/ssl-redirect: "true"
       #cert-manager.io/cluster-issuer: letsencrypt-production

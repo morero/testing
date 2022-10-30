@@ -1,0 +1,84 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: tyk-db-user-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: pg-client
+          image: postgres
+          env:
+            - name: PGDATABASE
+              value: postgres
+            - name: PGHOST
+              value: stolon-proxy.stolon
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              value: @PGPASSWORD@
+            - name: TYK_USER
+              value: tyk
+            - name: TYK_PASSWORD
+              value: @TYK_PASSWORD@
+          command: ["psql","-c", "CREATE ROLE $(TYK_USER) WITH LOGIN PASSWORD '$(TYK_PASSWORD)'"]
+      restartPolicy: Never
+  backoffLimit: 4
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: tyk-db-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: pg-client
+          image: postgres
+          env:
+            - name: PGDATABASE
+              value: postgres
+            - name: PGHOST
+              value: stolon-proxy.stolon
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              value: @PGPASSWORD@
+            - name: TYK_USER
+              value: tyk
+            - name: TYK_DB
+              value: tyk
+            - name: TYK_PASSWORD
+              value: @TYK_PASSWORD@
+          command: ["psql","-c", "CREATE DATABASE $(TYK_DB) WITH OWNER $(TYK_USER)"]
+      restartPolicy: Never
+  backoffLimit: 4
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: tyk-db-grant-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: pg-client
+          image: postgres
+          env:
+            - name: PGDATABASE
+              value: postgres
+            - name: PGHOST
+              value: stolon-proxy.stolon
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              value: @PGPASSWORD@
+            - name: TYK_USER
+              value: tyk
+            - name: TYK_DB
+              value: tyk
+            - name: TYK_PASSWORD
+              value: @TYK_PASSWORD@
+          command: ["psql","-c", "GRANT ALL PRIVILEGES ON DATABASE $(TYK_DB) TO $(TYK_USER)"]
+      restartPolicy: Never
+  backoffLimit: 4
