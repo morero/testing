@@ -161,7 +161,7 @@ zitadel:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
       #cert-manager.io/cluster-issuer: letsencrypt-production
       cert-manager.io/cluster-issuer: self-signed #mkcert
-      traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd      
+      traefik.ingress.kubernetes.io/router.middlewares: traefik-redirect-https@kubernetescrd
     hosts:
       - host: auth.local.ertia.cloud #git.@DOMAIN@
         paths:
