@@ -18,4 +18,4 @@ tyk-headless:
     
   redis:
     addrs:
-      - redis.redis:6379
+      - redis-headless.redis:6379
