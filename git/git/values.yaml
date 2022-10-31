@@ -39,7 +39,7 @@ gitea:
       provider: 'openidConnect'
       key: gitea-oauth
       secret: default
-      autoDiscoverUrl: 'http://zitadel.zitadel/.well-known/openid-configuration'
+      autoDiscoverUrl: 'https://zitadel.zitadel/.well-known/openid-configuration'
                   
 
      #   existingSecret:

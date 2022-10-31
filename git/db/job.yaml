@@ -23,7 +23,7 @@ spec:
               value: @GIT_PASSWORD@
           command: ["psql","-c", "CREATE ROLE $(GIT_USER) WITH LOGIN PASSWORD '$(GIT_PASSWORD)'"]
       restartPolicy: Never
-  backoffLimit: 4
+  backoffLimit: 10
 ---
 apiVersion: batch/v1
 kind: Job
@@ -52,7 +52,7 @@ spec:
               value: @GIT_PASSWORD@
           command: ["psql","-c", "CREATE DATABASE $(GIT_DB) WITH OWNER $(GIT_USER)"]
       restartPolicy: Never
-  backoffLimit: 4
+  backoffLimit: 10
 ---
 apiVersion: batch/v1
 kind: Job
@@ -81,4 +81,4 @@ spec:
               value: @GIT_PASSWORD@
           command: ["psql","-c", "GRANT ALL PRIVILEGES ON DATABASE $(GIT_DB) TO $(GIT_USER)"]
       restartPolicy: Never
-  backoffLimit: 4
+  backoffLimit: 10
