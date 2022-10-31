@@ -8,53 +8,53 @@ traefik:
       address: ":80"
     websecure:
       address: ":443"
-  tls:
-    stores:
-      default: 
-        defaultCertificate:
-  providers:
-    file:
-      filename: /etc/traefik/traefik.yaml
+      
   http:
-    middlewares:
-      zitadel:
-        headers:
-          isDevelopment: false
-          allowedHosts:
-          - 'localhost'
-      redirect-to-https:
-        redirectScheme:
-          scheme: https
-          port: 443
-          permanent: true
-    routers:
-      router0:
-        entryPoints:
-        - web
-        middlewares:
-        - redirect-to-https
-        rule: 'HostRegexp(`localhost`, `{subdomain:[a-z]+}.localhost`)'
-        service: zitadel
-      router1:
-        entryPoints:
-        - websecure
-        service: zitadel
-        middlewares:
-        - zitadel
-        rule: 'HostRegexp(`localhost`, `{subdomain:[a-z]+}.localhost`)'
-        tls:
-          domains:
-            - main: "localhost"
-              sans:
-                - "*.localhost"
-                - "localhost"
-    services:
-      zitadel:
-        loadBalancer:
-          servers:
-          - url: h2c://localhost:8080
-          passHostHeader: true
-  
+
+  middlewares:
+    zitadel:
+      headers:
+        isDevelopment: false
+        allowedHosts:
+        - 'my.domain'
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        port: 443
+        permanent: true
+
+  routers:
+    # Redirect HTTP to HTTPS
+    router0:
+      entryPoints:
+      - web
+      middlewares:
+      - redirect-to-https
+      rule: 'HostRegexp(`my.domain`, `{subdomain:[a-z]+}.my.domain`)'
+      service: zitadel
+    # The actual ZITADEL router
+    router1:
+      entryPoints:
+      - websecure
+      service: zitadel
+      middlewares:
+      - zitadel
+      rule: 'HostRegexp(`my.domain`, `{subdomain:[a-z]+}.my.domain`)'
+      tls:
+        domains:
+          - main: "my.domain"
+            sans:
+              - "*.my.domain"
+              - "my.domain"
+
+  # Add the service
+  services:
+    zitadel:
+      loadBalancer:
+        servers:
+          # h2c is the scheme for unencrypted HTTP/2
+        - url: h2c://zitadel:8080
+        passHostHeader: true  
 #traefik:
 #  ports:
 #    web:

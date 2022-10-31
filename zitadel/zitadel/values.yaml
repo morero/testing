@@ -198,6 +198,3 @@ zitadel:
     fullnameOverride: crdb
     tls:
       enabled: false
-
-
-
