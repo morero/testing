@@ -1,20 +1,21 @@
 # Default values for traefik.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-
 traefik:
-  ports:
-    web:
-      redirectTo: websecure
-  
-  http:
-    services:
-      zitadel:
-        loadBalancer:
-          servers:
-          - url: h2c://localhost:8080
-          passHostHeader: true
 
+  entrypoints:
+    web:
+      address: ":80"
+    websecure:
+      address: ":443"
+  tls:
+    stores:
+      default: 
+        defaultCertificate:
+  providers:
+    file:
+      filename: /etc/traefik/traefik.yaml
+  http:
     middlewares:
       zitadel:
         headers:
@@ -47,3 +48,15 @@ traefik:
               sans:
                 - "*.localhost"
                 - "localhost"
+    services:
+      zitadel:
+        loadBalancer:
+          servers:
+          - url: h2c://localhost:8080
+          passHostHeader: true
+  
+#traefik:
+#  ports:
+#    web:
+#      redirectTo: websecure
+ 
