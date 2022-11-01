@@ -150,7 +150,9 @@ zitadel:
     type: ClusterIP
     port: 8080
     protocol: http2
-    annotations: {}
+    annotations: 
+      mesh.traefik.io/traffic-type: "http"
+      mesh.traefik.io/scheme: "h2c"
 
   
   ingress:
@@ -161,7 +163,6 @@ zitadel:
       traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
       #cert-manager.io/cluster-issuer: letsencrypt-production
       cert-manager.io/cluster-issuer: self-signed #mkcert
-      mesh.traefik.io/scheme: "h2c"
     hosts:
       - host: auth.local.ertia.cloud #git.@DOMAIN@
         paths:
