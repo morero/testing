@@ -128,7 +128,7 @@ metrics:
     honorTimestamps: true
 
 cockroachdb:
-  enabled: true
+  enabled: false
   fullnameOverride: crdb
   tls:
     enabled: true
