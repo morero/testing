@@ -39,7 +39,7 @@ zitadel:
         Org:
           Human:
             Username: 'ertia'
-            Password: 'replaceMeLater!'      
+            Password: 'replaceMeLater100!'      
       ExternalDomain: 'auth.local.ertia.cloud'
       ExternalSecure: true
       TLS:
