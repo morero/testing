@@ -42,6 +42,7 @@ zitadel:
             Password: 'replaceMeLater100!'      
       ExternalDomain: 'auth.local.ertia.cloud'
       ExternalSecure: true
+      ExternalPort: 443
       TLS:
         Enabled: false
       Database:
