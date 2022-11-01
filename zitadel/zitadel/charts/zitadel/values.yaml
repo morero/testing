@@ -8,6 +8,7 @@ zitadel:
 
     Database:
       cockroach:
+        Enabled: false
         Host: "crdb-public"
         User:
           SSL:
