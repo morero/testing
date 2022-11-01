@@ -2,61 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 traefik:
-
-  entrypoints:
+  ports:
     web:
-      address: ":80"
-    websecure:
-      address: ":443"
-      
-  http:
-
-  middlewares:
-    zitadel:
-      headers:
-        isDevelopment: false
-        allowedHosts:
-        - 'auth.local.ertia.cloud'
-    redirect-to-https:
-      redirectScheme:
-        scheme: https
-        port: 443
-        permanent: true
-
-  routers:
-    # Redirect HTTP to HTTPS
-    router0:
-      entryPoints:
-      - web
-      middlewares:
-      - redirect-to-https
-      rule: 'HostRegexp(`auth.local.ertia.cloud`, `{subdomain:[a-z]+}.auth.local.ertia.cloud`)'
-      service: zitadel
-    # The actual ZITADEL router
-    router1:
-      entryPoints:
-      - websecure
-      service: zitadel
-      middlewares:
-      - zitadel
-      rule: 'HostRegexp(`auth.local.ertia.cloud`, `{subdomain:[a-z]+}.auth.local.ertia.cloud`)'
-      tls:
-        domains:
-          - main: "auth.local.ertia.cloud"
-            sans:
-              - "*.auth.local.ertia.cloud"
-              - "auth.local.ertia.cloud"
-
-  # Add the service
-  services:
-    zitadel:
-      loadBalancer:
-        servers:
-          # h2c is the scheme for unencrypted HTTP/2
-        - url: h2c://zitadel:8080
-        passHostHeader: true  
-#traefik:
-#  ports:
-#    web:
-#      redirectTo: websecure
+      redirectTo: websecure
  
