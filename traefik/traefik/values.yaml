@@ -16,7 +16,7 @@ traefik:
       headers:
         isDevelopment: false
         allowedHosts:
-        - 'my.domain'
+        - 'auth.local.ertia.cloud'
     redirect-to-https:
       redirectScheme:
         scheme: https
@@ -30,7 +30,7 @@ traefik:
       - web
       middlewares:
       - redirect-to-https
-      rule: 'HostRegexp(`my.domain`, `{subdomain:[a-z]+}.my.domain`)'
+      rule: 'HostRegexp(`auth.local.ertia.cloud`, `{subdomain:[a-z]+}.auth.local.ertia.cloud`)'
       service: zitadel
     # The actual ZITADEL router
     router1:
@@ -39,13 +39,13 @@ traefik:
       service: zitadel
       middlewares:
       - zitadel
-      rule: 'HostRegexp(`my.domain`, `{subdomain:[a-z]+}.my.domain`)'
+      rule: 'HostRegexp(`auth.local.ertia.cloud`, `{subdomain:[a-z]+}.auth.local.ertia.cloud`)'
       tls:
         domains:
-          - main: "my.domain"
+          - main: "auth.local.ertia.cloud"
             sans:
-              - "*.my.domain"
-              - "my.domain"
+              - "*.auth.local.ertia.cloud"
+              - "auth.local.ertia.cloud"
 
   # Add the service
   services:
