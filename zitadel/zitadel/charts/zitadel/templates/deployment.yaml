@@ -52,7 +52,7 @@ spec:
             - --masterkeyFile
             - /.secrets/masterkey
             - --tlsMode
-            - disabled
+            - external
           env:
             - name: POD_IP
               valueFrom:

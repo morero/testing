@@ -27,4 +27,7 @@ dependencies:
 - name: tyk-headless
   version: "0.12.0"
   repository: ""
+- name: tyk-operator
+  version: "0.11.0"
+  repository: ""
 
