@@ -35,7 +35,12 @@ zitadel:
     image:
       tag: v2.11.0
     configmapConfig:
-      ExternalDomain: auth.local.ertia.cloud
+      FirstInstance:
+        Org:
+          Human:
+            Username: 'ertia'
+            Password: 'replaced'      
+      ExternalDomain:'auth.local.ertia.cloud'
       ExternalSecure: true
       TLS:
         Enabled: false
