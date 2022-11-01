@@ -36,9 +36,9 @@ zitadel:
       tag: v2.11.0
     configmapConfig:
       ExternalDomain: auth.local.ertia.cloud
-      ExternalSecure: true
+      ExternalSecure: false
       TLS:
-        Enabled: false
+        Enabled: true
       Database:
         cockroach:
           Enabled: false
@@ -161,7 +161,6 @@ zitadel:
       traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
       #cert-manager.io/cluster-issuer: letsencrypt-production
       cert-manager.io/cluster-issuer: self-signed #mkcert
-      traefik.ingress.kubernetes.io/router.middlewares: traefik-redirect-https@kubernetescrd
     hosts:
       - host: auth.local.ertia.cloud #git.@DOMAIN@
         paths:
