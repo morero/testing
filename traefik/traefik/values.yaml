@@ -5,12 +5,3 @@ traefik:
   ports:
     web:
       redirectTo: websecure
- 
-
-  http:
-    services:
-      zitadel:
-        loadBalancer:
-          servers:
-          - url: h2c://zitadel:8080
-          passHostHeader: true
