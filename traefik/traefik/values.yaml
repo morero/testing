@@ -5,3 +5,10 @@ traefik:
   ports:
     web:
       redirectTo: websecure
+
+  services:
+    zitadel:
+      loadBalancer:
+        servers:
+        - url: h2c://localhost:8080
+        passHostHeader: true

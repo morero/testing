@@ -1,0 +1,106 @@
+# Source: zitadel/charts/zitadel/templates/deployment.yaml
+apiVersion: apps/v1 # Source: zitadel/charts/zitadel/templates/deployment.yaml
+kind: Deployment
+metadata:
+  name: release-name-zitadel
+  labels:
+    helm.sh/chart: zitadel-3.3.2
+    app.kubernetes.io/name: zitadel
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "v2.8.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: zitadel
+      app.kubernetes.io/instance: release-name
+  template:
+    metadata:
+      annotations:
+        checksum/configmap: f2e9f36c9046141ef823355944fafdbc1aa022d0e92f7fd74ea284892a1446e5
+        checksum/secret-db-ssl-root-crt: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        checksum/secret-zitadel-secrets: 493d2c41d55305a9e9d5bb89efcfbf6e9c2ba4e71f61c99b92228896457b8899
+      labels:
+        app.kubernetes.io/name: zitadel
+        app.kubernetes.io/instance: release-name
+    spec:
+      serviceAccountName: release-name-zitadel
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      enableServiceLinks: false
+      containers:
+      - name: zitadel
+        securityContext: {}
+        image: "ghcr.io/zitadel/zitadel:v2.8.3"
+        imagePullPolicy: IfNotPresent
+        args:
+        - start-from-init
+        - --config
+        - /config/zitadel-config-yaml
+        - --steps
+        - /config/zitadel-config-yaml
+        - --masterkeyFile
+        - /.secrets/masterkey
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        ports:
+        - containerPort: 8080
+          name: http2-server
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /debug/healthz
+            port: http2-server
+            httpHeaders:
+            - name: Host
+              value: auth.local.ertia.cloud
+          initialDelaySeconds: 60
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /debug/ready
+            port: http2-server
+            httpHeaders:
+            - name: Host
+              value: auth.local.ertia.cloud
+          initialDelaySeconds: 60
+          periodSeconds: 5
+        volumeMounts:
+        - name: zitadel-config-yaml
+          mountPath: /config
+        - name: chowned-secrets
+          mountPath: /.secrets
+        resources: {}
+      initContainers:
+      - args:
+        - "cp /masterkey/* /chowned-secrets/ &&  chown -R 1000:1000 /chowned-secrets/*
+          && chmod 400 /chowned-secrets/*"
+        command:
+        - sh
+        - -c
+        image: "alpine:3.11"
+        imagePullPolicy: IfNotPresent
+        name: chown
+        volumeMounts:
+        - name: chowned-secrets
+          mountPath: /chowned-secrets
+        - name: masterkey
+          mountPath: /masterkey
+        securityContext:
+          runAsNonRoot: false
+          runAsUser: 0
+      volumes:
+      - name: zitadel-config-yaml
+        configMap:
+          name: zitadel-config-yaml
+      - name: masterkey
+        secret:
+          secretName: zitadel-masterkey
+      - name: chowned-secrets
+        emptyDir: {}

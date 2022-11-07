@@ -1,0 +1,23 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: kpt
+packageMetadata:
+  shortDescription: sample description
+openAPI:
+  definitions:
+    io.k8s.cli.setters.domain:
+      x-k8s-cli:
+        setter:
+          name: domain
+          value: auth.cluster.local
+    io.k8s.cli.setters.zitadel-config:
+      x-k8s-cli:
+        setter:
+          name: zitadel-config
+          value: test-conf
+    io.k8s.cli.setters.zitadel-config2:
+      x-k8s-cli:
+        setter:
+          name: zitadel-config2
+          value: test-conf2

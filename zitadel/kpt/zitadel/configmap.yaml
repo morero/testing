@@ -1,0 +1,64 @@
+# Source: zitadel/charts/zitadel/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zitadel-config-yaml
+data:
+  zitadel-config-yaml: |-
+    Database:
+      cockroach:
+        Admin:
+          SSL:
+            Cert: null
+            Key: null
+            Mode: disable
+            RootCert: null
+        Enabled: false
+        Host: crdb-public
+        User:
+          SSL:
+            Cert: null
+            Key: null
+            Mode: disable
+            RootCert: null
+        enabled: false
+      postgres:
+        Admin:
+          Password: |=>{postgres.password}
+          SSL:
+            Cert: null
+            Key: null
+            Mode: disable
+            RootCert: null
+          Username: postgres
+        Database: zitadel
+        Enabled: true
+        Host: stolon-proxy.stolon
+        MaxConnIdleTime: 5m
+        MaxConnLifetime: 1h
+        MaxOpenConns: 25
+        Port: 5432
+        User:
+          Password: |=>{postgres.zitadel.password}
+          SSL:
+            Cert: null
+            Key: null
+            Mode: disable
+            RootCert: null
+          Username: zitadel
+    ExternalDomain: |=>{domain.auth}
+    ExternalPort: 443
+    ExternalSecure: true
+    FirstInstance:
+      Org:
+        Human:
+          Password: |=>{zitadel.ertia.password}
+          Username: ertia
+    Machine:
+      Identification:
+        Hostname:
+          Enabled: true
+        Webhook:
+          Enabled: false
+    TLS:
+      Enabled: false

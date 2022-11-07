@@ -1,0 +1,32 @@
+# Source: zitadel/charts/zitadel/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1 # Source: zitadel/charts/zitadel/templates/ingress.yaml
+kind: Ingress
+metadata:
+  name: release-name-zitadel
+  labels:
+    helm.sh/chart: zitadel-3.3.2
+    app.kubernetes.io/name: zitadel
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "v2.8.3"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    cert-manager.io/cluster-issuer: self-signed
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  tls:
+  - hosts:
+    - "auth.local.ertia.cloud"
+    secretName: zitadel-tls
+  rules:
+  - host: |=>{domain.auth}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: release-name-zitadel
+            port:
+              number: 8080
