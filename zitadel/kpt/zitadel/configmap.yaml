@@ -52,7 +52,7 @@ data:
     FirstInstance:
       Org:
         Human:
-          Password: #=>{zitadel.ertia.password}
+          Password: X#=>{zitadel.ertia.password}!
           Username: ertia
     Machine:
       Identification:
