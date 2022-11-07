@@ -24,7 +24,7 @@ data:
         enabled: false
       postgres:
         Admin:
-          Password: |=>{postgres.password}
+          Password: #=>{postgres.password}
           SSL:
             Cert: null
             Key: null
@@ -39,20 +39,20 @@ data:
         MaxOpenConns: 25
         Port: 5432
         User:
-          Password: |=>{postgres.zitadel.password}
+          Password: #=>{postgres.zitadel.password}
           SSL:
             Cert: null
             Key: null
             Mode: disable
             RootCert: null
           Username: zitadel
-    ExternalDomain: |=>{domain.auth}
+    ExternalDomain: #=>{domain.auth}
     ExternalPort: 443
     ExternalSecure: true
     FirstInstance:
       Org:
         Human:
-          Password: |=>{zitadel.ertia.password}
+          Password: #=>{zitadel.ertia.password}
           Username: ertia
     Machine:
       Identification:

@@ -20,7 +20,7 @@ spec:
     - "auth.local.ertia.cloud"
     secretName: zitadel-tls
   rules:
-  - host: |=>{domain.auth}
+  - host: #=>{domain.auth}
     http:
       paths:
       - path: /
