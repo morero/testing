@@ -2,11 +2,11 @@
 apiVersion: apps/v1 # Source: zitadel/charts/zitadel/templates/deployment.yaml
 kind: Deployment
 metadata:
-  name: release-name-zitadel
+  name: zitadel
   labels:
     helm.sh/chart: zitadel-3.3.2
     app.kubernetes.io/name: zitadel
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: zitadel 
     app.kubernetes.io/version: "v2.8.3"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -14,7 +14,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: zitadel
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/instance: zitadel
   template:
     metadata:
       annotations:
@@ -23,9 +23,9 @@ spec:
         checksum/secret-zitadel-secrets: 493d2c41d55305a9e9d5bb89efcfbf6e9c2ba4e71f61c99b92228896457b8899
       labels:
         app.kubernetes.io/name: zitadel
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/instance: zitadel
     spec:
-      serviceAccountName: release-name-zitadel
+      serviceAccountName: zitadel
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
