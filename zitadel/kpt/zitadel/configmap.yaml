@@ -50,9 +50,9 @@ data:
     ExternalPort: 443
     ExternalSecure: true
     FirstInstance:
-      InstanceName: auth
+      InstanceName: platform
       Org:
-        Name: auth
+        Name: platform
         Human:
           Password: X#=>{zitadel.ertia.password}!
           Username: ertia
