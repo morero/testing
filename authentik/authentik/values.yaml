@@ -9,6 +9,9 @@ authentik:
   postgresql:
     password: "@@AUTHENTIK_PASSWORD@@"
 
+  geoip:
+    image:""
+
 ingress:
   enabled: true
   hosts:
