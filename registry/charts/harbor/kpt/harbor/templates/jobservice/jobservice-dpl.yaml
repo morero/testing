@@ -1,0 +1,92 @@
+---
+# Source: harbor/templates/jobservice/jobservice-dpl.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "release-name-harbor-jobservice"
+  labels:
+    heritage: Helm
+    release: release-name
+    chart: harbor
+    app: "harbor"
+    component: jobservice
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      release: release-name
+      app: "harbor"
+      component: jobservice
+  template:
+    metadata:
+      labels:
+        heritage: Helm
+        release: release-name
+        chart: harbor
+        app: "harbor"
+        component: jobservice
+      annotations:
+        checksum/configmap: e12a3b1736a8d6466d5bc6f4991449ae69a793361742306cb1bfb8421b6ef900
+        checksum/configmap-env: fc5293d38623667582757ec2c9a2d17302e1e29e21719423151e921bb7094792
+        checksum/secret: 2f63e7aca8f5746f1a682af52900eaec0737532d32cd4866d69254121d742240
+        checksum/secret-core: a7bcc4cddd1fa90e2b17cb74d5a73466c3de39ced04b8df2c024e5b812927579
+    spec:
+      securityContext:
+        runAsUser: 10000
+        fsGroup: 10000
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 120
+      containers:
+      - name: jobservice
+        image: goharbor/harbor-jobservice:dev
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /api/v1/stats
+            scheme: HTTP
+            port: 8080
+          initialDelaySeconds: 300
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/v1/stats
+            scheme: HTTP
+            port: 8080
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        env:
+          - name: CORE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: release-name-harbor-core
+                key: secret
+        envFrom:
+        - configMapRef:
+            name: "release-name-harbor-jobservice-env"
+        - secretRef:
+            name: "release-name-harbor-jobservice"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: jobservice-config
+          mountPath: /etc/jobservice/config.yml
+          subPath: config.yml
+        - name: job-logs
+          mountPath: /var/log/jobs
+          subPath: 
+        - name: job-scandata-exports
+          mountPath: /var/scandata_exports
+          subPath: 
+      volumes:
+      - name: jobservice-config
+        configMap:
+          name: "release-name-harbor-jobservice"
+      - name: job-logs
+        persistentVolumeClaim:
+          claimName: release-name-harbor-jobservice
+      - name: job-scandata-exports
+        persistentVolumeClaim:
+          claimName: release-name-harbor-jobservice-scandata

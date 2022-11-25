@@ -3,8 +3,8 @@ harbor:
     type: ingress
     ingress:
       hosts:
-        core: registry.@DOMAIN@
-        notary: notary.@DOMAIN@
+        core: registry.local.ertia.cloud
+        notary: notary.local.ertia.cloud
       annotations:
         ingress.kubernetes.io/ssl-redirect: "true"
         ingress.kubernetes.io/proxy-body-size: "0"
@@ -17,7 +17,7 @@ harbor:
         secretName: registry-tls
         notarySecretName: notary-tls
 
-  externalURL: https://registry.@DOMAIN@
+  externalURL: https://registry.local.ertia.cloud
 
   persistence:
     enabled: true
@@ -40,7 +40,7 @@ harbor:
 
   ## An empty string generates a psuedo-random password
   ## Otherwise, this value is used
-  harborAdminPassword: ""
+  harborAdminPassword: "@HARBOR_ADMIN_PASSWORD@" 
 
   # The secret key used for encryption. Must be a string of 16 chars.
   ## An empty string generates a psuedo-random password
@@ -51,21 +51,17 @@ harbor:
     credentials:
       ## An empty string generates a psuedo-random password
       ## Otherwise, this value is used
-      password: ""
+      username: "registry"
+      password: "@REGISTRY_PASSWORD@"
 
   database:
-    type: internal
-    internal:
-      ## An empty string generates a psuedo-random password
-      ## Otherwise, this value is used
-      password: ""
+    type: external
 
-    # Not in use as there is DB migration "issue" when using Yugabyte DB.
     external:
-      host: "yb-tservers.database"
-      port: "5433"
-      username: "yugabyte"
-      password: ""
+      host: "stolon-proxy.stolon"
+      port: "5432"
+      username: "harbor"
+      password: "@POSTGRES_HARBOR_PASSWORD@"
       coreDatabase: "registry"
       notaryServerDatabase: "notary_server"
       notarySignerDatabase: "notary_signer"

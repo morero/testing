@@ -1,0 +1,48 @@
+apiVersion: tekton.dev/v1beta1
+kind: ClusterTask
+metadata:
+  name: devspace-deploy
+  labels:
+    app.kubernetes.io/version: "0.2"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.27.0"
+    tekton.dev/categories: Build Tools
+    tekton.dev/tags: annotations
+    tekton.dev/displayName: "devspace"
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    This task runs devspace.sh
+
+  params:
+    - name: BASE_IMAGE
+      description: |
+        The base image for the task.
+      type: string
+      default: docker.io/devspacesh/devspace
+  workspaces:
+  - name: source
+  - name: devspace
+  - name: sslcertdir
+    optional: true
+  - name: dockerconfig
+    description: >-
+      An optional workspace that allows providing a .docker/config.json file
+      for Buildah to access the container registry.
+      The file should be placed at the root of the Workspace with name config.json.
+    optional: true
+  steps:
+    - name: deploy
+      image: $(params.BASE_IMAGE)
+      workingDir: $(workspaces.source.path)
+      script: |
+        #!/usr/bin/env sh
+        set -eu
+
+        ls -ltra
+        ln -s $(workspaces.devspace.path) .devspace
+
+        cat devspace.yaml
+
+
+        devspace build

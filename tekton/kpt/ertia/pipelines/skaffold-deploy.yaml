@@ -1,0 +1,59 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: skaffold-deploy
+  namespace: tekton-pipelines
+  labels:
+    app.kubernetes.io/version: '0.1'
+  annotations:
+    tekton.dev/pipelines.minVersion: '0.34.1'
+    tekton.dev/categories: build, deploy
+    tekton.dev/tags: clone, build, deploy
+    tekton.dev/displayName: "Build and deploy pipeline"
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    Ertia pipeline for building with skaffold.
+  params:
+    - name: BASE_IMAGE
+      description: Image path
+      type: string
+      default: s12m/gcloud-skaffold:latest
+    - name: GIT_BASE_URL
+      type: string
+      default: "https://github.com"
+    - name: GIT_REPO
+      type: string
+      default: ertia-io/sample-golang
+    - name: GIT_SOURCE_REFERENCE
+      type: string
+      description: The branch, tag or SHA to checkout.
+      default: "main"
+  tasks:
+    - name: clone
+      taskRef:
+        kind: ClusterTask
+        name: git-cli
+      workspaces:
+        - name: output
+          workspace: pipeline
+      params:
+        - name: GIT_SCRIPT
+          value: | 
+            git clone -b $(params.GIT_SOURCE_REFERENCE) $(params.GIT_BASE_URL)/$(params.GIT_REPO)
+    - name: deploy
+      taskRef:
+        kind: ClusterTask
+        name: skaffold-deploy
+      workspaces:
+        - name: source
+          workspace: pipeline
+        - name: dockerconfig
+          workspace: dockerconfig
+      params:
+        - name: BASE_IMAGE
+          value: "$(params.BASE_IMAGE)"
+  workspaces:
+    - name: pipeline
+    - name: dockerconfig

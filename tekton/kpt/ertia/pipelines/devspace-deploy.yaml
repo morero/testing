@@ -1,0 +1,63 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: devspace-deploy
+  namespace: tekton-pipelines
+  labels:
+    app.kubernetes.io/version: '0.1'
+  annotations:
+    tekton.dev/pipelines.minVersion: '0.34.1'
+    tekton.dev/categories: build, deploy
+    tekton.dev/tags: clone, build, deploy
+    tekton.dev/displayName: "Build and deploy pipeline"
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    Ertia pipeline for building with devspace.
+  params:
+    - name: BASE_IMAGE
+      description: Image path
+      type: string
+    - name: GIT_BASE_URL
+      type: string
+      default: "http://git-gitea-http.git:3000"
+    - name: GIT_REPO
+      type: string
+    - name: GIT_SOURCE_REFERENCE
+      type: string
+      description: The branch, tag or SHA to checkout.
+      default: "main"
+  tasks:
+    - name: clone
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: pipeline
+      params:
+        - name: url
+          value: "$(params.GIT_BASE_URL)/$(params.GIT_REPO)"
+        - name: revision
+          value: $(params.GIT_SOURCE_REFERENCE)
+
+    - name: deploy
+      taskRef:
+        kind: ClusterTask
+        name: devspace-deploy
+      workspaces:
+        - name: source
+          workspace: pipeline
+        - name: devspace
+          workspace: devspace
+        - name: dockerconfig
+          workspace: dockerconfig
+      params:
+        - name: BASE_IMAGE
+          value: "$(params.BASE_IMAGE)"
+
+  workspaces:
+    - name: pipeline
+    - name: devspace
+    - name: dockerconfig
