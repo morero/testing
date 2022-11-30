@@ -26,5 +26,5 @@ appVersion: "0.0.1"
 # Registry dependencies
 dependencies:
 - name: harbor
-  version: "1.10.0"
+  version: "1.10.2"
   repository: ""
