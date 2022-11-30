@@ -82,3 +82,119 @@ spec:
           command: ["psql","-c", "GRANT ALL PRIVILEGES ON DATABASE $(REGISTRYDB) TO $(REGISTRYUSER)"]
       restartPolicy: Never
   backoffLimit: 10
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: registry-server-db-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: pg-client
+          image: postgres
+          env:
+            - name: PGDATABASE
+              value: postgres
+            - name: PGHOST
+              value: stolon-proxy.stolon
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              value: @PGPASSWORD@
+            - name: REGISTRYUSER
+              value: harbor
+            - name: REGISTRYDB
+              value: notary_server
+            - name: REGISTRYPASSWORD
+              value: @REGISTRY_PASSWORD@
+          command: ["psql","-c", "CREATE DATABASE $(REGISTRYDB) WITH OWNER $(REGISTRYUSER)"]
+      restartPolicy: Never
+  backoffLimit: 10
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: registry-server-db-grant-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: pg-client
+          image: postgres
+          env:
+            - name: PGDATABASE
+              value: postgres
+            - name: PGHOST
+              value: stolon-proxy.stolon
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              value: @PGPASSWORD@
+            - name: REGISTRYUSER
+              value: harbor
+            - name: REGISTRYDB
+              value: notary_server
+            - name: REGISTRYPASSWORD
+              value: @REGISTRY_PASSWORD@
+          command: ["psql","-c", "GRANT ALL PRIVILEGES ON DATABASE $(REGISTRYDB) TO $(REGISTRYUSER)"]
+      restartPolicy: Never
+  backoffLimit: 10
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: registry-signer-db-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: pg-client
+          image: postgres
+          env:
+            - name: PGDATABASE
+              value: postgres
+            - name: PGHOST
+              value: stolon-proxy.stolon
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              value: @PGPASSWORD@
+            - name: REGISTRYUSER
+              value: harbor
+            - name: REGISTRYDB
+              value: notary_signer
+            - name: REGISTRYPASSWORD
+              value: @REGISTRY_PASSWORD@
+          command: ["psql","-c", "CREATE DATABASE $(REGISTRYDB) WITH OWNER $(REGISTRYUSER)"]
+      restartPolicy: Never
+  backoffLimit: 10
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: registry-signer-db-grant-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: pg-client
+          image: postgres
+          env:
+            - name: PGDATABASE
+              value: postgres
+            - name: PGHOST
+              value: stolon-proxy.stolon
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              value: @PGPASSWORD@
+            - name: REGISTRYUSER
+              value: harbor
+            - name: REGISTRYDB
+              value: notary_signer
+            - name: REGISTRYPASSWORD
+              value: @REGISTRY_PASSWORD@
+          command: ["psql","-c", "GRANT ALL PRIVILEGES ON DATABASE $(REGISTRYDB) TO $(REGISTRYUSER)"]
+      restartPolicy: Never
+  backoffLimit: 10
