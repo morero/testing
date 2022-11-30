@@ -1,4 +1,6 @@
 harbor:
+  notary:
+    enabled: false
   expose:
     type: ingress
     ingress:
