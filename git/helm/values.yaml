@@ -1,0 +1,74 @@
+gitea:
+  service:
+    ssh:
+      type: LoadBalancer
+      port: 2222
+      externalTrafficPolicy: Local
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      cert-manager.io/cluster-issuer: letsencrypt-production
+    hosts:
+      - host: git.local.ertia.cloud
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: git-tls
+        hosts:
+          - git.local.ertia.cloud
+
+  persistence:
+    enabled: true
+    size: 10Gi
+
+  gitea:
+    admin:
+      existingSecret: gitea-admin-secret
+
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        additionalLabels:
+          release: monitoring
+
+    config:
+      admin:
+        DISABLE_REGULAR_ORG_CREATION: true
+      service:
+        DISABLE_REGISTRATION: true
+        REQUIRE_SIGNIN_VIEW: true
+        DEFAULT_USER_VISIBILITY: limited
+        ALLOWED_USER_VISIBILITY_MODES: limited
+        DEFAULT_ORG_VISIBILITY: limited
+        DEFAULT_ORG_MEMBER_VISIBLE: true
+        explore:
+          REQUIRE_SIGNIN_VIEW: true
+      picture:
+        DISABLE_GRAVATAR: true
+      server:
+        SSH_PORT: 2222
+        ENABLE_PPROF: false
+        LANDING_PAGE: login
+      cache:
+        ENABLED: true
+        ADAPTER: memory
+        INTERVAL: 60
+      database:
+        DB_TYPE: postgres
+        HOST: stolon-proxy.stolon:5432
+        NAME: gitea
+        USER: gitea
+        PASSWD: gitea # Replaced by deployment
+      other:
+        SHOW_FOOTER_VERSION: false
+        SHOW_FOOTER_TEMPLATE_LOAD_TIME: false
+
+  memcached:
+    enabled: false
+
+  postgresql:
+    enabled: false
