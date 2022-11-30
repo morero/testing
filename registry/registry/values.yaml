@@ -3,8 +3,8 @@ harbor:
     type: ingress
     ingress:
       hosts:
-        core: registry.local.ertia.cloud
-        notary: notary.local.ertia.cloud
+        core: 'registry.*'
+        notary: 'notary.*'
       annotations:
         ingress.kubernetes.io/ssl-redirect: "true"
         ingress.kubernetes.io/proxy-body-size: "0"
@@ -17,7 +17,7 @@ harbor:
         secretName: registry-tls
         notarySecretName: notary-tls
 
-  externalURL: https://registry.local.ertia.cloud
+  externalURL: https://registry.@DOMAIN@
 
   persistence:
     enabled: true
