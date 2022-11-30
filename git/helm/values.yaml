@@ -61,7 +61,7 @@ gitea:
         DB_TYPE: postgres
         HOST: stolon-proxy.stolon:5432
         NAME: gitea
-        USER: gitea
+        USER: stolon
         PASSWD: gitea # Replaced by deployment
       other:
         SHOW_FOOTER_VERSION: false
