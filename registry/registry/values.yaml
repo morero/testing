@@ -3,8 +3,8 @@ harbor:
     type: ingress
     ingress:
       hosts:
-        core: 'registry.*'
-        notary: 'notary.*'
+        core: 'registry.@DOMAIN@'
+        notary: 'notary.@DOMAIN@'
       annotations:
         ingress.kubernetes.io/ssl-redirect: "true"
         ingress.kubernetes.io/proxy-body-size: "0"
