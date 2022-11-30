@@ -20,7 +20,7 @@ spec:
             - name: REGISTRYUSER
               value: harbor
             - name: REGISTRYPASSWORD
-              value: @REGISTRYPASSWORD@
+              value: @REGISTRY_PASSWORD@
           command: ["psql","-c", "CREATE ROLE $(REGISTRYUSER) WITH LOGIN PASSWORD '$(REGISTRYPASSWORD)'"]
       restartPolicy: Never
   backoffLimit: 10
@@ -49,7 +49,7 @@ spec:
             - name: REGISTRYDB
               value: registry
             - name: REGISTRYPASSWORD
-              value: @REGISTRYPASSWORD@
+              value: @REGISTRY_PASSWORD@
           command: ["psql","-c", "CREATE DATABASE $(REGISTRYDB) WITH OWNER $(REGISTRYUSER)"]
       restartPolicy: Never
   backoffLimit: 10
@@ -78,7 +78,7 @@ spec:
             - name: REGISTRYDB
               value: registry
             - name: REGISTRYPASSWORD
-              value: @REGISTRYPASSWORD@
+              value: @REGISTRY_PASSWORD@
           command: ["psql","-c", "GRANT ALL PRIVILEGES ON DATABASE $(REGISTRYDB) TO $(REGISTRYUSER)"]
       restartPolicy: Never
   backoffLimit: 10
