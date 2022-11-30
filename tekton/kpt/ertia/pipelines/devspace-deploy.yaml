@@ -19,11 +19,13 @@ spec:
     - name: BASE_IMAGE
       description: Image path
       type: string
+      default: "devspacesh/devspace"
     - name: GIT_BASE_URL
       type: string
-      default: "http://git-gitea-http.git:3000"
+      default: "https://github.com"
     - name: GIT_REPO
       type: string
+      default: "ertia-io/sample-golang"
     - name: GIT_SOURCE_REFERENCE
       type: string
       description: The branch, tag or SHA to checkout.
@@ -42,15 +44,30 @@ spec:
         - name: revision
           value: $(params.GIT_SOURCE_REFERENCE)
 
+    - name: build
+      runAfter: 
+        - clone
+      taskRef:
+        kind: ClusterTask
+        name: devspace-build
+      workspaces:
+        - name: source
+          workspace: pipeline
+        - name: dockerconfig
+          workspace: dockerconfig
+      params:
+        - name: BASE_IMAGE
+          value: "$(params.BASE_IMAGE)"
+
     - name: deploy
+      runAfter: 
+        - build
       taskRef:
         kind: ClusterTask
         name: devspace-deploy
       workspaces:
         - name: source
           workspace: pipeline
-        - name: devspace
-          workspace: devspace
         - name: dockerconfig
           workspace: dockerconfig
       params:
@@ -59,5 +76,4 @@ spec:
 
   workspaces:
     - name: pipeline
-    - name: devspace
     - name: dockerconfig

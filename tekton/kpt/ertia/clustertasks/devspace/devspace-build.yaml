@@ -1,46 +1,44 @@
 apiVersion: tekton.dev/v1beta1
 kind: ClusterTask
 metadata:
-  name: skaffold-deploy
+  name: devspace-build
   labels:
     app.kubernetes.io/version: "0.2"
   annotations:
     tekton.dev/pipelines.minVersion: "0.27.0"
     tekton.dev/categories: Build Tools
     tekton.dev/tags: annotations
-    tekton.dev/displayName: "skaffold"
+    tekton.dev/displayName: "devspace"
     tekton.dev/platforms: "linux/amd64"
 spec:
   description: >-
-    This task runs skaffold
+    This task runs devspace.sh
 
   params:
     - name: BASE_IMAGE
       description: |
         The base image for the task.
       type: string
-      default: mdinnovate/skaffold
+      default: docker.io/devspacesh/devspace
   workspaces:
   - name: source
-  - name: kaniko-secret
-    mountPath: /kaniko/.secret
-  - name: sslcertdir
-    optional: true
+  #- name: kaniko-secret
+  #  mountPath: /kaniko/.secret
   - name: dockerconfig
     description: >-
       An optional workspace that allows providing a .docker/config.json file
       for Buildah to access the container registry.
       The file should be placed at the root of the Workspace with name config.json.
     optional: true
-    mountPath: /kaniko/.docker
+    mountPath: /root/.docker
   steps:
-    - name: deploy
+    - name: build
       image: $(params.BASE_IMAGE)
       workingDir: $(workspaces.source.path)
       script: |
         #!/usr/bin/env sh
         set -eu
+        cat /root/.docker/config.json
 
-        ls -ltra
-
-        skaffold -v debug build
+        echo "Build!"
+        devspace --debug build

@@ -22,15 +22,13 @@ spec:
       default: docker.io/devspacesh/devspace
   workspaces:
   - name: source
-  - name: devspace
-  - name: sslcertdir
-    optional: true
   - name: dockerconfig
     description: >-
       An optional workspace that allows providing a .docker/config.json file
       for Buildah to access the container registry.
       The file should be placed at the root of the Workspace with name config.json.
     optional: true
+    mountPath: /root/.docker
   steps:
     - name: deploy
       image: $(params.BASE_IMAGE)
@@ -38,11 +36,6 @@ spec:
       script: |
         #!/usr/bin/env sh
         set -eu
-
-        ls -ltra
-        ln -s $(workspaces.devspace.path) .devspace
-
-        cat devspace.yaml
-
-
-        devspace build
+        echo "Deploy!"
+        cat ~/.docker/config.json
+        devspace --debug deploy

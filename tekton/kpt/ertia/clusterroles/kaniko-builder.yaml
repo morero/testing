@@ -8,9 +8,18 @@ metadata:
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
   name: kaniko-builder
 rules:
-- apiGroups: [""]
+- apiGroups: ["","apps","networking.k8s.io"]
   resources:
   - pods
+  - nodes
+  - secrets
+  - configmaps
+  - pods/exec
+  - pods/log
+  - services
+  - deployments
+  - serviceaccounts
+  - ingresses
   verbs:
   - create
   - get
@@ -18,4 +27,5 @@ rules:
   - patch
   - update
   - watch
+  - delete
 ---

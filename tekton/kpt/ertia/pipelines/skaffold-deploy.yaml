@@ -36,24 +36,29 @@ spec:
         kind: ClusterTask
         name: git-cli
       workspaces:
-        - name: output
+        - name: source
           workspace: pipeline
       params:
         - name: GIT_SCRIPT
-          value: | 
-            git clone -b $(params.GIT_SOURCE_REFERENCE) $(params.GIT_BASE_URL)/$(params.GIT_REPO)
+          value: |
+            git clone -b $(params.GIT_SOURCE_REFERENCE) $(params.GIT_BASE_URL)/$(params.GIT_REPO) .
     - name: deploy
       taskRef:
         kind: ClusterTask
         name: skaffold-deploy
+      runAfter: 
+        - clone
       workspaces:
         - name: source
           workspace: pipeline
         - name: dockerconfig
           workspace: dockerconfig
+        - name: kaniko-secret
+          workspace: kaniko-secret
       params:
         - name: BASE_IMAGE
           value: "$(params.BASE_IMAGE)"
   workspaces:
     - name: pipeline
     - name: dockerconfig
+    - name: kaniko-secret
