@@ -364,6 +364,7 @@ _create_org_team() {
         "repo.ext_wiki":"none"
     }'
 
+    _log "info" "creating org team"
     local DATA
     DATA=$(jq --compact-output --null-input \
         --arg name "${TEAM_NAME}" \
@@ -388,9 +389,10 @@ _create_org_team() {
             "units_map": $permissions
         }'
     )
+    _log "info" "creating org team 2"
 
     _check "${TEAM_NAME}" "/orgs/${ORG_NAME}/teams/search?q=${TEAM_NAME}" EXISTS \
-        "data[] | select(.name == \"${TEAM_NAME}\") | .id" RETURN_ID
+        "try data[] | select(.name == \"${TEAM_NAME}\") | .id" RETURN_ID
 
     if [[ "${EXISTS}" == "NO" ]]; then
         local RESPONSE
