@@ -1,4 +1,6 @@
 gitea:
+  image:
+    tag: 1.17.3
   service:
     ssh:
       type: LoadBalancer
