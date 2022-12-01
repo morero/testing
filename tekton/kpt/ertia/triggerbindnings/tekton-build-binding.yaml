@@ -1,0 +1,15 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: tekton-build-bindning
+  namespace: tekton-pipelines
+spec:
+  params:
+    - name: GIT_URL
+      value: "$(body.repository.clone_url)"
+    - name: GIT_BRANCH
+      value: "$(body.repository.default_branch)"
+    - name: GIT_REVISION
+      value: "$(body.head_commit.id)"
+    - name: NAMESPACE
+      value: "$(body.repository.owner.username)"

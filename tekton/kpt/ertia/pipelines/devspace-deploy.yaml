@@ -20,29 +20,37 @@ spec:
       description: Image path
       type: string
       default: "devspacesh/devspace"
-    - name: GIT_BASE_URL
+    - name: GIT_URL
       type: string
-      default: "https://github.com"
-    - name: GIT_REPO
-      type: string
-      default: "ertia-io/sample-golang"
-    - name: GIT_SOURCE_REFERENCE
+      default: "https://github.com/rmorero/sample-golang"
+    - name: GIT_BRANCH
       type: string
       description: The branch, tag or SHA to checkout.
       default: "main"
+    - name: GIT_REVISION
+      type: string
+      description: CommitID, tag, or similar
+      default: "latest"
+    - name: RELEASE_NAMESPACE
+      type: string
+      description: Namespace to deploy to
+      default: "apps"
   tasks:
     - name: clone
       taskRef:
         kind: ClusterTask
-        name: git-clone
+        name: git-cli
       workspaces:
         - name: output
           workspace: pipeline
       params:
-        - name: url
-          value: "$(params.GIT_BASE_URL)/$(params.GIT_REPO)"
-        - name: revision
-          value: $(params.GIT_SOURCE_REFERENCE)
+        - name: GIT_SCRIPT
+          value: |
+            if [ -n "$GIT_REVISION" ]; then
+              git clone -b $(params.GIT_REVISION) $(params.GIT_URL) .
+            else
+              git clone -b $(params.GIT_BRANCH) $(params.GIT_URL) .
+            fi
 
     - name: build
       runAfter: 
