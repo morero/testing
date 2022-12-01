@@ -6,4 +6,4 @@ ertia:
     - default
     - demo
 
-  saRobotName: tekton-robot
+  saRobotName: tekton-robot-none
