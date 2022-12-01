@@ -4,7 +4,7 @@ set -euo pipefail
 
 NAMESPACE="${1:?}"
 
-GITEA_USERNAME="gitea_admin"
+GITEA_USERNAME="gitea"
 GITEA_PASSWORD="${2:?}"
 
 TEKTON_USERNAME="tekton"
