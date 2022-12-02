@@ -133,6 +133,7 @@ _check() {
     else
         _log "error" "${BODY}" "JSON"
         _log "error" "${HTTP_STATUS}"
+        _log "error" "${RESPONSE}"
         exit 1
     fi
 }
