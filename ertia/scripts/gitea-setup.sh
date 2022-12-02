@@ -131,8 +131,8 @@ _check() {
         eval "${__RETURN}"="NO"
         eval "${__RETURN_ID}"="0"
     else
-        _log "error" "BODY" "BODY"
         _log "error" "${BODY}" "JSON"
+        _log "error" "${HTTP_STATUS}"
         exit 1
     fi
 }
