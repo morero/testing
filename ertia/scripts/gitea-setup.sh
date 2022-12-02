@@ -132,8 +132,6 @@ _check() {
         eval "${__RETURN_ID}"="0"
     else
         _log "error" "${BODY}" "JSON"
-        _log "error" "${HTTP_STATUS}"
-        _log "error" "${RESPONSE}"
         exit 1
     fi
 }
@@ -310,6 +308,8 @@ _create_org() {
     local ORG_FULLNAME="${2:?}"
     local ORG_DESC="${3:?}"
 
+    _log "info" "Creating organization: ${ORG_NAME}"
+
     local DATA
     DATA=$(jq --compact-output --null-input \
         --arg name "${ORG_NAME}" \
@@ -353,6 +353,8 @@ _create_org_team() {
     local ORG_NAME=${1:?}
     local TEAM_NAME=${2:?}
     local TEAM_DESC=${3:?}
+
+    _log "info" "Creating team ${TEAM_NAME} in: ${ORG_NAME}"
 
     local PERMISSIONS
     PERMISSIONS='{
