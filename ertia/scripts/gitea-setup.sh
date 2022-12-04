@@ -392,10 +392,12 @@ _create_org_team() {
             "units_map": $permissions
         }'
     )
-    _log "info" "creating org team"
+    _log "info" "creating org team: ${TEAM_NAME}"
 
     _check "${TEAM_NAME}" "/orgs/${ORG_NAME}/teams/search?q=${TEAM_NAME}" EXISTS \
-        "data[] | select(.name == \"${TEAM_NAME}\") | .id" RETURN_ID
+        " | echo"
+    _check "${TEAM_NAME}" "/orgs/${ORG_NAME}/teams/search?q=${TEAM_NAME}" EXISTS \
+        " data[] | select(.name == \"${TEAM_NAME}\") | .id" RETURN_ID
 
     _log "info" "creating org team:checked"
 
