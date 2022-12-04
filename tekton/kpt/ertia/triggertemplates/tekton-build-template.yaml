@@ -36,7 +36,7 @@ spec:
           - name: RELEASE_NAMESPACE
             value:  $(tt.params.NAMESPACE)
         workspaces:
-          - name: pipeline
+          - name: source
             volumeClaimTemplate:
               spec:
                 accessModes:
