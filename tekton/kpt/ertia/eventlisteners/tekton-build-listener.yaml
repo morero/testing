@@ -8,6 +8,7 @@ spec:
   serviceAccountName: kaniko-builder
   triggers:
     - name: tekton-build-trigger
+      serviceAccountName: kaniko-builder
       bindings:
         - ref: tekton-build-binding
       template:

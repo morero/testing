@@ -30,3 +30,6 @@ rules:
   - update
   - watch
   - delete
+- apiGroups: [""]
+  resources: ["serviceaccounts"]
+  verbs: ["impersonate"]

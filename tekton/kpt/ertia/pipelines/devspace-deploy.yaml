@@ -41,15 +41,17 @@ spec:
         kind: ClusterTask
         name: git-cli
       workspaces:
-        - name: output
-          workspace: pipeline
+        - name: source
+          workspace: source
       params:
         - name: GIT_SCRIPT
           value: |
-            if [ -n "$GIT_REVISION" ]; then
-              git clone -b $(params.GIT_REVISION) $(params.GIT_URL) .
-            else
+            if [ -z "$(params.GIT_REVISION)" ]; then
               git clone -b $(params.GIT_BRANCH) $(params.GIT_URL) .
+            elif [ "$(params.GIT_REVISION)" = "0000000000000000000000000000000000000000" ]; then
+              git clone -b $(params.GIT_BRANCH) $(params.GIT_URL) .
+            else
+              git clone -b $(params.GIT_REVISION) $(params.GIT_URL) .
             fi
 
     - name: build
@@ -60,7 +62,7 @@ spec:
         name: devspace-build
       workspaces:
         - name: source
-          workspace: pipeline
+          workspace: source
         - name: dockerconfig
           workspace: dockerconfig
       params:
@@ -75,7 +77,7 @@ spec:
         name: devspace-deploy
       workspaces:
         - name: source
-          workspace: pipeline
+          workspace: source
         - name: dockerconfig
           workspace: dockerconfig
       params:
