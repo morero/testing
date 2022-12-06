@@ -131,7 +131,7 @@ _check() {
         eval "${__RETURN}"="NO"
         eval "${__RETURN_ID}"="0"
     else
-        _log "error" "Body: ${BODY}" "JSON"
+        _log "error" "${BODY}" "JSON"
         exit 1
     fi
 }
@@ -395,9 +395,7 @@ _create_org_team() {
     _log "info" "creating org team: ${TEAM_NAME}"
 
     _check "${TEAM_NAME}" "/orgs/${ORG_NAME}/teams/search?q=${TEAM_NAME}" EXISTS \
-        " | echo"
-    _check "${TEAM_NAME}" "/orgs/${ORG_NAME}/teams/search?q=${TEAM_NAME}" EXISTS \
-        " data[] | select(.name == \"${TEAM_NAME}\") | .id" RETURN_ID
+        "data[] | select(.name == \"${TEAM_NAME}\") | .id" RETURN_ID
 
     _log "info" "creating org team:checked"
 
