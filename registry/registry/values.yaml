@@ -42,7 +42,7 @@ harbor:
 
   ## An empty string generates a psuedo-random password
   ## Otherwise, this value is used
-  harborAdminPassword: "@HARBOR_ADMIN_PASSWORD@" 
+  harborAdminPassword: "@REGISTRY_ADMIN_PASSWORD@" 
 
   # The secret key used for encryption. Must be a string of 16 chars.
   ## An empty string generates a psuedo-random password
@@ -53,8 +53,8 @@ harbor:
     credentials:
       ## An empty string generates a psuedo-random password
       ## Otherwise, this value is used
-      username: "registry"
-      password: "@REGISTRY_PASSWORD@"
+      username: "ertia"
+      password: "@REGISTRY_ERTIA_PASSWORD@"
 
   database:
     type: external
