@@ -108,6 +108,8 @@ _check() {
     local RESPONSE
     RESPONSE=$(_request "${END_POINT}" "N/A" "N/A" "${HEADER_BASIC_AUTH}" )
 
+    _log "info" "Res: ${RESPONSE}"
+
     local HTTP_STATUS
     HTTP_STATUS=$(printf "%s" "${RESPONSE}" | jq --compact-output '.status')
 
@@ -394,8 +396,12 @@ _create_org_team() {
     )
     _log "info" "creating org team: ${TEAM_NAME}"
 
-    _check "${TEAM_NAME}" "/orgs/${ORG_NAME}/teams/search?q=${TEAM_NAME}" EXISTS \
-        "data[] | select(.name == \"${TEAM_NAME}\") | .id" RETURN_ID
+
+#    _check "${TEAM_NAME}" "/orgs/${ORG_NAME}/teams/search?q=${TEAM_NAME}" EXISTS \
+#        "data[] | select(.name == \"${TEAM_NAME}\") | .id" RETURN_ID
+
+    _check "${TEAM_NAME}" "/orgs/${ORG_NAME}/teams" EXISTS \
+        "[] | select(.name == \"${TEAM_NAME}\") | .id" RETURN_ID
 
     _log "info" "creating org team:checked"
 

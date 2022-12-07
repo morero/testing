@@ -5,9 +5,10 @@ set -euo pipefail
 HARBOR_PASSWORD="${1:?}"
 TEKTON_TOKEN="${2:?}"
 
-HARBOR_USER="admin"
+#HARBOR_USER="admin"
+HARBOR_USER="ertia"
 HARBOR_API="http://registry-harbor-core.registry/api/v2.0"
-
+echo "${HARBOR_USER} : ${HARBOR_PASSWORD}"
 BASIC_AUTH=$(printf "%s:%s" "${HARBOR_USER}" "${HARBOR_PASSWORD}" | base64)
 HARBOR_BASIC_AUTH="Authorization: Basic ${BASIC_AUTH}"
 
