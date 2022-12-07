@@ -290,7 +290,7 @@ _log "info" "project"
 }
 
 _main() {
-    _create_robot_user "tekton" "$TEKTON_TOKEN"
+    _create_robot_user "tekton" "x0X$TEKTON_TOKEN" # x0X to fulfill non-configurable password policy
 _log "info" "1"
     _delete_project "library"
 _log "info" "1"
