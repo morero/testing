@@ -4,7 +4,7 @@ set -euo pipefail
 
 HARBOR_PASSWORD="${1:?}"
 TEKTON_TOKEN="${2:?}"
-HARBOR_USER="ertia"
+HARBOR_USER="admin"
 HARBOR_API="http://registry-harbor-core.registry/api/v2.0"
 BASIC_AUTH=$(printf "%s:%s" "${HARBOR_USER}" "${HARBOR_PASSWORD}" | base64)
 HARBOR_BASIC_AUTH="Authorization: Basic ${BASIC_AUTH}"
@@ -208,6 +208,7 @@ _create_robot_user() {
 
     if [[ "${EXISTS}" == "NO" ]]; then
         local RESPONSE
+_log "info" "robots"
         RESPONSE=$(_request "/robots" "${DATA}")
 
         local HTTP_STATUS
@@ -256,6 +257,7 @@ _delete_project() {
 _create_project() {
     local NAME="${1:?}"
 
+_log "info" "project"
     local DATA
     DATA=$(jq --compact-output --null-input \
         --arg name "${NAME}" \
@@ -289,8 +291,11 @@ _create_project() {
 
 _main() {
     _create_robot_user "tekton" "$TEKTON_TOKEN"
+_log "info" "1"
     _delete_project "library"
+_log "info" "1"
     _create_project "demo"
+_log "info" "1"
 }
 
 _main "$@"
