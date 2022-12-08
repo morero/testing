@@ -37,5 +37,7 @@ spec:
         #!/usr/bin/env sh
         set -eu
         echo "Deploy!"
-        ls -ltra /root/.docker
+        #ls -ltra /root/.docker
+        cat /root/.docker/config.json
+        
         devspace --debug deploy
