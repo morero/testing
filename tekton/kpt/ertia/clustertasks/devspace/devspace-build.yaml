@@ -41,4 +41,5 @@ spec:
         cat /root/.docker/config.json
 
         echo "Build!"
+        docker login
         devspace --debug build
