@@ -7,3 +7,4 @@ metadata:
     app.kubernetes.io/part-of: tekton-pipelines
   name: kaniko-builder
   namespace: tekton-pipelines
+automountServiceAccountToken: true
