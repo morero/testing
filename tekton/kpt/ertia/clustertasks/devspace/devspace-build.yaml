@@ -39,8 +39,8 @@ spec:
         #!/usr/bin/env sh
         set -eu
 
-        #ls -ltra /root/.docker
-        cat /root/.docker/config.json
+        ls -ltra ~/.docker
+        #cat ~/.docker/config.json
         
         echo "Build!"
         devspace --debug build
