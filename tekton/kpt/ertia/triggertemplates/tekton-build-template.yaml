@@ -26,6 +26,7 @@ spec:
         serviceAccountName: tekton-pipelines-webhook
         pipelineRef:
           name: devspace-deploy
+          namespace: ertia
         params:
           - name: GIT_URL
             value: $(tt.params.GIT_URL)

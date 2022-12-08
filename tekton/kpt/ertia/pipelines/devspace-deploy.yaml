@@ -3,7 +3,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: devspace-deploy
-  namespace: tekton-pipelines
+  namespace: ertia
   labels:
     app.kubernetes.io/version: '0.1'
   annotations:
