@@ -44,6 +44,3 @@ spec:
                 resources:
                   requests:
                     storage: 1Gi
-          - name: dockerconfig
-            secret:
-              secretName: docker

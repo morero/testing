@@ -63,8 +63,6 @@ spec:
       workspaces:
         - name: source
           workspace: source
-        - name: dockerconfig
-          workspace: dockerconfig
       params:
         - name: BASE_IMAGE
           value: "$(params.BASE_IMAGE)"
@@ -78,12 +76,9 @@ spec:
       workspaces:
         - name: source
           workspace: source
-        - name: dockerconfig
-          workspace: dockerconfig
       params:
         - name: BASE_IMAGE
           value: "$(params.BASE_IMAGE)"
 
   workspaces:
     - name: source
-    - name: dockerconfig
