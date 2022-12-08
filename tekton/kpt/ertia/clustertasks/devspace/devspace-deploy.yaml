@@ -30,5 +30,4 @@ spec:
         #!/usr/bin/env sh
         set -eu
         echo "Deploy!"
-        cat ~/.docker/config.json
         devspace --debug deploy
