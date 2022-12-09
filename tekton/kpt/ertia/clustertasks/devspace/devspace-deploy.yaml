@@ -38,8 +38,8 @@ spec:
         set -eu
         echo "Deploy!"
 
-        ls -ltra ~/.docker
-        #cat ~/.docker/config.json
+        #ls -ltra ~/.docker
+        cat ~/.docker/config.json
 
         
         devspace --debug deploy
