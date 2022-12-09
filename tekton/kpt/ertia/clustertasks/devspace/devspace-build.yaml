@@ -42,7 +42,5 @@ spec:
         #ls -ltra ~/.docker
         cat ~/.docker/config.json
 
-        docker login registry-harbor-registry.registry:5000
-        
         echo "Build!"
         devspace --debug build
