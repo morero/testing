@@ -38,4 +38,4 @@ spec:
 
         ls -ltra
 
-        skaffold -v debug build
+        skaffold -v debug run
