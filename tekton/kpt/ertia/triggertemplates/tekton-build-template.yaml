@@ -25,7 +25,7 @@ spec:
       spec:
         serviceAccountName: tekton-pipelines-webhook
         pipelineRef:
-          name: devspace-deploy
+          name: skaffold-deploy
         params:
           - name: GIT_URL
             value: $(tt.params.GIT_URL)
