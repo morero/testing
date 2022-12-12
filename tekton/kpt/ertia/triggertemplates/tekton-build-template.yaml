@@ -23,7 +23,8 @@ spec:
         generateName: tekton-tr-build-run-
         namespace: tekton-pipelines
       spec:
-        serviceAccountName: tekton-pipelines-webhook
+        #serviceAccountName: tekton-pipelines-webhook
+        serviceAccountName: kaniko-builder
         pipelineRef:
           name: skaffold-deploy
         params:
