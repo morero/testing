@@ -1,0 +1,10 @@
+apiVersion: v1
+appVersion: 0.3.7
+description: oci-registry is an implementation of the OCI Registry spec with filesystem
+  and S3 storage back-ends.  Currently it only supports being a pull-through cache
+  (a mirror); pushing is not yet implemented.
+maintainers:
+- email: mike@cronce.io
+  name: Mike Cronce
+name: oci-registry
+version: 0.3.7

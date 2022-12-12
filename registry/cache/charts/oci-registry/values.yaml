@@ -1,0 +1,75 @@
+image:
+  registry: mcronce
+  name: oci-registry
+  tag: v0.3.7
+  pullPolicy: IfNotPresent
+  pullSecret:
+
+replicas: 2
+
+registry:
+  upstream:
+    config:
+      deploy: true
+      name_override:
+      contents: []
+        #- namespace: docker.io
+        #  host: registry-1.docker.io
+        #  tls: true
+        #  accept_invalid_certs: false
+        #  user_agent: null
+        #  username: null
+        #  password: null
+        #  manifest_invalidation_time: 14d
+        #  blob_invalidation_time: 14d
+        #- namespace: quay.io
+        #  host: quay.io
+        #- namespace: gcr.io
+        #  host: gcr.io
+    default_namespace: docker.io
+  storage:
+    mode: filesystem
+    filesystem:
+      path: /data
+    s3:
+      # Leave blank to use AWS
+      host:
+      auth_secret:
+        name_override:
+        deploy: true
+        access_key:
+        secret_key:
+      region: us-east-1
+      bucket: oci-registry
+
+service:
+  port: 80
+  type: ClusterIP
+  clusterIP:
+  annotations: {}
+  externalIPs: []
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+
+extraLabels: {}
+
+ingress:
+  enabled: false
+  class:
+  annotations: {}
+  path: /
+  hosts:
+    - oci-registry
+  tls: []
+  #  - secretName: oci-registry-tls
+  #    hosts:
+  #      oci-registry
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 16Mi
+  limits:
+    cpu: 2
+    memory: 64Mi
+

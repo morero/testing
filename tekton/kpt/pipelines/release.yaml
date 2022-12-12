@@ -1771,6 +1771,12 @@ metadata:
     app.kubernetes.io/instance: default
     app.kubernetes.io/part-of: tekton-pipelines
 data:
+    metrics.backend-destination: prometheus
+    metrics.taskrun.level: "task"
+    metrics.taskrun.duration-type: "histogram"
+    metrics.pipelinerun.level: "pipeline"
+    metrics.pipelinerun.duration-type: "histogram"
+
   _example: |
     ################################
     #                              #
@@ -2494,6 +2500,8 @@ metadata:
     app.kubernetes.io/instance: default
     app.kubernetes.io/part-of: tekton-pipelines
 data:
+    metrics.backend-destination: prometheus
+    metrics.request-metrics-backend-destination: prometheus
   _example: |
     ################################
     #                              #

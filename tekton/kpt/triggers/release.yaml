@@ -1245,6 +1245,7 @@ metadata:
     app.kubernetes.io/instance: default
     app.kubernetes.io/part-of: tekton-triggers
 data:
+    metrics.backend-destination: prometheus
   _example: |
     ################################
     #                              #
