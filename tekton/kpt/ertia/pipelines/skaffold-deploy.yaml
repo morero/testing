@@ -20,16 +20,21 @@ spec:
       description: Image path
       type: string
       default: s12m/gcloud-skaffold:latest
-    - name: GIT_BASE_URL
+    - name: GIT_URL
       type: string
-      default: "https://github.com"
-    - name: GIT_REPO
-      type: string
-      default: ertia-io/sample-golang
-    - name: GIT_SOURCE_REFERENCE
+      default: "https://github.com/morero/sample-golang"
+    - name: GIT_BRANCH
       type: string
       description: The branch, tag or SHA to checkout.
       default: "main"
+    - name: GIT_REVISION
+      type: string
+      description: CommitID, tag, or similar
+      default: "latest"
+    - name: RELEASE_NAMESPACE
+      type: string
+      description: Namespace to deploy to
+      default: "apps"
   tasks:
     - name: clone
       taskRef:
@@ -37,11 +42,17 @@ spec:
         name: git-cli
       workspaces:
         - name: source
-          workspace: pipeline
+          workspace: source
       params:
         - name: GIT_SCRIPT
           value: |
-            git clone -b $(params.GIT_SOURCE_REFERENCE) $(params.GIT_BASE_URL)/$(params.GIT_REPO) .
+            if [ -z "$(params.GIT_REVISION)" ]; then
+              git clone -b $(params.GIT_BRANCH) $(params.GIT_URL) .
+            elif [ "$(params.GIT_REVISION)" = "0000000000000000000000000000000000000000" ]; then
+              git clone -b $(params.GIT_BRANCH) $(params.GIT_URL) .
+            else
+              git clone -b $(params.GIT_REVISION) $(params.GIT_URL) .
+            fi
     - name: deploy
       taskRef:
         kind: ClusterTask
@@ -50,15 +61,12 @@ spec:
         - clone
       workspaces:
         - name: source
-          workspace: pipeline
+          workspace: source
         - name: dockerconfig
           workspace: dockerconfig
-        - name: kaniko-secret
-          workspace: kaniko-secret
       params:
         - name: BASE_IMAGE
           value: "$(params.BASE_IMAGE)"
   workspaces:
-    - name: pipeline
+    - name: source
     - name: dockerconfig
-    - name: kaniko-secret
