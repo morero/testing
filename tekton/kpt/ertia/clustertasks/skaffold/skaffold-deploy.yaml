@@ -28,6 +28,7 @@ spec:
       for Buildah to access the container registry.
       The file should be placed at the root of the Workspace with name config.json.
     optional: true
+    mountPath: /root/.docker
   steps:
     - name: deploy
       image: $(params.BASE_IMAGE)
