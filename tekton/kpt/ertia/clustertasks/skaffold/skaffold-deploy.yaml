@@ -22,17 +22,12 @@ spec:
       default: mdinnovate/skaffold
   workspaces:
   - name: source
-  - name: kaniko-secret
-    mountPath: /kaniko/.secret
-  - name: sslcertdir
-    optional: true
   - name: dockerconfig
     description: >-
       An optional workspace that allows providing a .docker/config.json file
       for Buildah to access the container registry.
       The file should be placed at the root of the Workspace with name config.json.
     optional: true
-    mountPath: /kaniko/.docker
   steps:
     - name: deploy
       image: $(params.BASE_IMAGE)
