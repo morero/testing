@@ -19,7 +19,7 @@ spec:
     - name: BASE_IMAGE
       description: Image path
       type: string
-      default: s12m/gcloud-skaffold:latest
+      default: mirror.gcr.io/s12m/gcloud-skaffold:latest
     - name: GIT_URL
       type: string
       default: "https://github.com/morero/sample-golang"

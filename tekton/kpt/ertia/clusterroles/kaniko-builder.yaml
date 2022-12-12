@@ -22,6 +22,8 @@ rules:
   - ingresses
   - pipelineruns
   - taskruns
+  - statefulsets
+  - replicasets
   verbs:
   - create
   - get
