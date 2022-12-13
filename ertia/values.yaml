@@ -2,6 +2,7 @@
 
 ertia:
   domain: "@DOMAIN@"
+  providedDomain: "@PROVIDED_DOMAIN@"
 
 gitea:
   script:

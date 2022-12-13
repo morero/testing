@@ -17,10 +17,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - "auth.local.ertia.cloud"
+    - "auth.@DOMAIN@"
     secretName: zitadel-tls
   rules:
-  - host: #=>{domain.auth}
+  - host: "auth.@DOMAIN@"
     http:
       paths:
       - path: /

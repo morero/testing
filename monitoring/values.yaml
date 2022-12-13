@@ -20,10 +20,12 @@ kube-prometheus-stack:
         cert-manager.io/cluster-issuer: letsencrypt-production
       hosts:
         - grafana.@DOMAIN@
+        - grafana.@PROVIDED_DOMAIN@
       tls:
         - secretName: grafana-tls
           hosts:
             - grafana.@DOMAIN@
+            - grafana.@PROVIDED_DOMAIN@
 
     persistence:
       enabled: true
@@ -81,10 +83,14 @@ loki:
       - host: loki.@DOMAIN@
         paths:
           - /
+      - host: loki.@PROVIDED_DOMAIN@
+        paths:
+          - /
     tls:
       - secretName: loki-tls
         hosts:
           - loki.@DOMAIN@
+          - loki.@PROVIDED_DOMAIN@
     basicAuth:
       removeHeader: true
       secret: loki-auth-secret

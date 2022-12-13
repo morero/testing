@@ -19,14 +19,19 @@ gitea:
       #cert-manager.io/cluster-issuer: letsencrypt-production
       cert-manager.io/cluster-issuer: self-signed #mkcert    
     hosts:
-      - host: git.local.ertia.cloud #git.@DOMAIN@
+      - host: "git.@DOMAIN@"
+        paths:
+          - path: /
+            pathType: Prefix
+      - host: "git.@PROVIDED_DOMAIN@"
         paths:
           - path: /
             pathType: Prefix
     tls:
       - secretName: git-tls
         hosts:
-          - git.local.ertia.cloud #git.@DOMAIN@
+          - git.@DOMAIN@
+          - git.@PROVIDED_DOMAIN@
 
   persistence:
     enabled: true

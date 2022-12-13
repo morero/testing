@@ -30,7 +30,7 @@ spec:
       default: ./.ertia/build/Dockerfile
     - name: CONTAINER_REGISTRY
       type: string
-      default: "registry.local.ertia.cloud"
+      default: "registry.@DOMAIN@"
     - name: CONTAINER_IMAGE
       type: string
     - name: BUILD_EXTRA_ARGS

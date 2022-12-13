@@ -59,7 +59,7 @@ spec:
             port: http2-server
             httpHeaders:
             - name: Host
-              value: auth.local.ertia.cloud
+              value: "auth.@DOMAIN@"
           initialDelaySeconds: 60
           periodSeconds: 5
         readinessProbe:
@@ -68,7 +68,7 @@ spec:
             port: http2-server
             httpHeaders:
             - name: Host
-              value: auth.local.ertia.cloud
+              value: "auth.@DOMAIN@"
           initialDelaySeconds: 60
           periodSeconds: 5
         volumeMounts:

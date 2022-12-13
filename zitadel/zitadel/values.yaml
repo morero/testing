@@ -40,7 +40,7 @@ zitadel:
           Human:
             Username: 'ertia'
             Password: 'replaceMeLater100!'      
-      ExternalDomain: 'auth.local.ertia.cloud'
+      ExternalDomain: "auth.@DOMAIN@"
       ExternalSecure: true
       ExternalPort: 443
       TLS:
@@ -172,14 +172,19 @@ zitadel:
       #cert-manager.io/cluster-issuer: letsencrypt-production
       cert-manager.io/cluster-issuer: self-signed #mkcert
     hosts:
-      - host: auth.local.ertia.cloud #git.@DOMAIN@
+      - host: auth.@DOMAIN@
+        paths:
+          - path: /
+            pathType: Prefix
+      - host: auth.@PROVIDED_DOMAIN@
         paths:
           - path: /
             pathType: Prefix
     tls:
       - secretName: zitadel-tls
         hosts:
-          - auth.local.ertia.cloud #git.@DOMAIN@            
+          - auth.@DOMAIN@            
+          - auth.@PROVIDED_DOMAIN@            
           
 
   resources: {}
