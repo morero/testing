@@ -47,4 +47,4 @@ spec:
                     storage: 1Gi
           - name: dockerconfig
             secret:
-              secretName: registry-docker-config
+              secretName: tekton-docker-config

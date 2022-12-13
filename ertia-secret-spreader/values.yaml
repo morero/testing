@@ -5,6 +5,6 @@ ertia:
   namespaces:
     - default
     - demo
-    - tekton-pipelines
+#    - tekton-pipelines
 
   saRobotName: tekton-robot-none
