@@ -11,7 +11,7 @@ harbor:
         ingress.kubernetes.io/ssl-redirect: "true"
         ingress.kubernetes.io/proxy-body-size: "0"
         kubernetes.io/ingress.class: traefik
-        cert-manager.io/cluster-issuer: letsencrypt-production
+        cert-manager.io/cluster-issuer: letsencrypt-selfsigned
     tls:
       enabled: true
       certSource: secret

@@ -33,6 +33,14 @@ data:
     http: 8222
     server_name: {{- if .Values.nats.serverNamePrefix  }}$SERVER_NAME{{- else }}$POD_NAME{{- end }}
 
+    {{- if .Values.nats.serverTags }}
+    server_tags: [
+      {{- range .Values.nats.serverTags }}
+        "{{ . }}",
+      {{- end }}
+    ]
+    {{- end }}
+
     {{- if .Values.nats.tls }}
     #####################
     #                   #
@@ -48,7 +56,7 @@ data:
     {{- if .Values.nats.tls.allowNonTLS }}
     allow_non_tls: {{ .Values.nats.tls.allowNonTLS }}
     {{- end }}
-   
+
     {{- end }}
 
     {{- if .Values.nats.jetstream.enabled }}
@@ -83,6 +91,10 @@ data:
       {{- else }}
       {{- .Values.nats.jetstream.fileStorage.size }}
       {{- end }}
+      {{- end }}
+
+      {{- if .Values.nats.jetstream.uniqueTag }}
+      unique_tag: {{ .Values.nats.jetstream.uniqueTag }}
       {{- end }}
     }
     {{- end }}
@@ -177,7 +189,7 @@ data:
     #################
     leafnodes {
       {{- if .Values.leafnodes.enabled }}
-      listen: "0.0.0.0:7422"
+      listen: "0.0.0.0:{{ .Values.leafnodes.port }}"
       {{- end }}
 
       {{- if and .Values.nats.advertise .Values.nats.externalAccess }}
@@ -204,9 +216,9 @@ data:
         {{- end }}
         {{- with .users }}
         users: [
-        {{- range . }}
-        {{- toRawJson . | nindent 10 }},
-        {{- end }}
+          {{- range . }}
+          {{- toRawJson . | nindent 10 }},
+          {{- end }}
         ]
         {{- end }}
       }
@@ -277,7 +289,7 @@ data:
     #################
     gateway {
       name: {{ .Values.gateway.name }}
-      port: 7522
+      port: {{ .Values.gateway.port }}
 
       {{- if .Values.gateway.advertise }}
       advertise: {{ .Values.gateway.advertise }}
@@ -384,6 +396,10 @@ data:
     write_deadline: {{ . }}
     {{- end }}
 
+    {{- with .Values.nats.limits.lameDuckGracePeriod }}
+    lame_duck_grace_period: {{ . }}
+    {{- end }}
+
     {{- with .Values.nats.limits.lameDuckDuration }}
     lame_duck_duration: {{ . }}
     {{- end }}
@@ -417,6 +433,12 @@ data:
       same_origin: {{ .Values.websocket.sameOrigin }}
       {{- with .Values.websocket.allowedOrigins }}
       allowed_origins: {{ toRawJson . }}
+      {{- end }}
+      {{- with .Values.websocket.advertise }}
+      advertise: {{ . }}
+      {{- end }}
+      {{- with .Values.websocket.handshakeTimeout }}
+      handshake_timeout: {{ . | quote }}
       {{- end }}
     }
     {{- end }}
@@ -501,9 +523,9 @@ data:
       {{- end }}
 
       users: [
-      {{- range . }}
-      {{- toRawJson . | nindent 4 }},
-      {{- end }}
+        {{- range . }}
+        {{- toRawJson . | nindent 8 }},
+        {{- end }}
       ]
     }
     {{- end }}
@@ -522,9 +544,9 @@ data:
       {{- end }}
 
       users: [
-      {{- range . }}
-      {{- toRawJson . | nindent 4 }},
-      {{- end }}
+        {{- range . }}
+        {{- toRawJson . | nindent 8 }},
+        {{- end }}
       ]
     }
     {{- end }}

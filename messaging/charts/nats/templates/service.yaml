@@ -8,17 +8,16 @@ metadata:
     {{- include "nats.labels" . | nindent 4 }}
   {{- if .Values.serviceAnnotations}}
   annotations:
-  {{- range $key, $value := .Values.serviceAnnotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
+    {{- toYaml .Values.serviceAnnotations | nindent 4 }}
   {{- end }}
 spec:
   selector:
     {{- include "nats.selectorLabels" . | nindent 4 }}
   clusterIP: None
+  publishNotReadyAddresses: true
   {{- if .Values.topologyKeys }}
   topologyKeys:
-     {{- .Values.topologyKeys | toYaml | nindent 4 }}
+    {{- toYaml .Values.topologyKeys | nindent 4 }}
   {{- end }}
   ports:
   {{- if .Values.websocket.enabled }}
@@ -56,12 +55,12 @@ spec:
     appProtocol: http
     {{- end }}
   - name: leafnodes
-    port: 7422
+    port: {{ .Values.leafnodes.port }}
     {{- if .Values.appProtocol.enabled }}
     appProtocol: tcp
     {{- end }}
   - name: gateways
-    port: 7522
+    port: {{ .Values.gateway.port }}
     {{- if .Values.appProtocol.enabled }}
     appProtocol: tcp
     {{- end }}

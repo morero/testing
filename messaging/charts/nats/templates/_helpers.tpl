@@ -51,7 +51,7 @@ Selector labels
 {{- define "nats.selectorLabels" -}}
 {{- if .Values.nats.selectorLabels }}
 {{ tpl (toYaml .Values.nats.selectorLabels) . }}
-{{- else }}
+{{- else -}}
 app.kubernetes.io/name: {{ include "nats.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
@@ -70,16 +70,27 @@ Return the proper NATS image name
 {{- end }}
 
 {{/*
+Return the NATS cluster auth.
+*/}}
+{{- define "nats.clusterAuth" -}}
+{{- if $.Values.cluster.authorization }}
+{{- printf "%s:%s@" (urlquery $.Values.cluster.authorization.user) (urlquery $.Values.cluster.authorization.password) -}}
+{{- else }}
+{{- end }}
+{{- end }}
+
+{{/*
 Return the NATS cluster routes.
 */}}
 {{- define "nats.clusterRoutes" -}}
 {{- $name := (include "nats.fullname" . ) -}}
 {{- $namespace := (include "nats.namespace" . ) -}}
+{{- $clusterAuth := (include "nats.clusterAuth" . ) -}}
 {{- range $i, $e := until (.Values.cluster.replicas | int) -}}
 {{- if $.Values.useFQDN }}
-{{- printf "nats://%s-%d.%s.%s.svc.%s:6222," $name $i $name $namespace $.Values.k8sClusterDomain -}}
+{{- printf "nats://%s%s-%d.%s.%s.svc.%s:6222," $clusterAuth $name $i $name $namespace $.Values.k8sClusterDomain -}}
 {{- else }}
-{{- printf "nats://%s-%d.%s.%s:6222," $name $i $name $namespace -}}
+{{- printf "nats://%s%s-%d.%s.%s:6222," $clusterAuth $name $i $name $namespace -}}
 {{- end }}
 {{- end -}}
 {{- end }}
@@ -122,6 +133,65 @@ tls {
 }
 {{- end }}
 
+{{- define "nats.tlsReloaderArgs" -}}
+{{ $secretName := .secret.name }}
+{{ $secretPath := .secretPath }}
+{{- with .ca }}
+- -config
+- {{ $secretPath }}/{{ $secretName }}/{{ . }}
+{{- end }}
+{{- with .cert }}
+- -config
+- {{ $secretPath }}/{{ $secretName }}/{{ . }}
+{{- end }}
+{{- with .key }}
+- -config
+- {{ $secretPath }}/{{ $secretName }}/{{ . }}
+{{- end }}
+{{- end }}
+
+{{- define "nats.tlsVolumeMounts" -}}
+{{- with .Values.nats.tls }}
+#######################
+#                     #
+#  TLS Volumes Mounts #
+#                     #
+#######################
+{{ $secretName := tpl .secret.name $ }}
+- name: {{ $secretName }}-clients-volume
+  mountPath: /etc/nats-certs/clients/{{ $secretName }}
+{{- end }}
+{{- with .Values.mqtt.tls }}
+{{ $secretName := tpl .secret.name $ }}
+- name: {{ $secretName }}-mqtt-volume
+  mountPath: /etc/nats-certs/mqtt/{{ $secretName }}
+{{- end }}
+{{- with .Values.cluster.tls }}
+{{- if not .custom }}
+{{ $secretName := tpl .secret.name $ }}
+- name: {{ $secretName }}-cluster-volume
+  mountPath: /etc/nats-certs/cluster/{{ $secretName }}
+{{- end }}
+{{- end }}
+{{- with .Values.leafnodes.tls }}
+{{- if not .custom }}
+{{ $secretName := tpl .secret.name $ }}
+- name: {{ $secretName }}-leafnodes-volume
+  mountPath: /etc/nats-certs/leafnodes/{{ $secretName }}
+{{- end }}
+{{- end }}
+{{- with .Values.gateway.tls }}
+{{ $secretName := tpl .secret.name $ }}
+- name: {{ $secretName }}-gateways-volume
+  mountPath: /etc/nats-certs/gateways/{{ $secretName }}
+{{- end }}
+{{- with .Values.websocket.tls }}
+{{ $secretName := tpl .secret.name $ }}
+- name: {{ $secretName }}-ws-volume
+  mountPath: /etc/nats-certs/ws/{{ $secretName }}
+{{- end }}
+{{- end }}
+
 {{/*
 Return the appropriate apiVersion for networkpolicy.
 */}}
@@ -142,6 +212,18 @@ Usage:
   {{- if typeIs "string" .value }}
     {{- tpl .value .context }}
   {{- else }}
-    {{- tpl (.value | toYaml) .context }}
+    {{- tpl (toYaml .value) .context }}
   {{- end }}
 {{- end -}}
+
+
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "nats.serviceAccountName" -}}
+{{- if .Values.nats.serviceAccount.create }}
+{{- default (include "nats.fullname" .) .Values.nats.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.nats.serviceAccount.name }}
+{{- end }}
+{{- end }}

@@ -1,3 +1,6 @@
+ertia:
+  domain: "@DOMAIN@"
+
 nats:
   nats:
     jetstream:
@@ -9,11 +12,19 @@ nats:
 
       fileStorage:
         enabled: true
-        size: 5Gi
+        size: 10Gi
+
+    tls:
+      allowNonTLS: false
+      secret:
+        name: nats-client-tls
+      cert: "tls.crt"
+      key: "tls.key"
 
   cluster:
     enabled: true
     replicas: 3
+    noAdvertise: true
 
   natsbox:
     enabled: false
@@ -28,7 +39,8 @@ nats:
       path: /metrics
 
   auth:
-    enabled: false
+    enabled: true
+    token: "$2a$11$.qsDK8xtgn8BQwMgwzQhTerqlWcgt1mH8Ja6s1a2PljL5soAkqdT."
 
   networkPolicy:
     enabled: true

@@ -4,12 +4,17 @@
 #                             #
 ###############################
 nats:
-  image: nats:2.7.2-alpine
+  image: nats:2.8.2-alpine
   pullPolicy: IfNotPresent
 
   # The servers name prefix, must be used for example when we want a NATS cluster
   # spanning multiple Kubernetes clusters.
   serverNamePrefix: ""
+
+  # Server Tags
+  serverTags:
+  # - "foo"
+  # - "bar"
 
   # Toggle profiling.
   # This enables nats-server pprof (profiling) port, so you can see goroutines
@@ -20,8 +25,10 @@ nats:
 
   # Toggle using health check probes to better detect failures.
   healthcheck:
-    # NOTE: Only works on NATS Server +2.7.1.
-    # This is recommended to be enabled for NATS JetStream deployments upgrades.
+    # /healthz health check endpoint was introduced in NATS Server 2.7.1
+    # Attempt to detect /healthz support by inspecting if tag is >=2.7.1
+    detectHealthz: true
+    # Enable /healthz startupProbe for controlled upgrades of NATS JetStream
     enableHealthz: true
 
     # Enable liveness checks.  If this fails, then the NATS Server will restarted.
@@ -43,7 +50,7 @@ nats:
       #  https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#probe-level-terminationgraceperiodseconds
       #  https://github.com/kubernetes/kubernetes/issues/64715
       #
-      periodSeconds: 60
+      periodSeconds: 30
       successThreshold: 1
       failureThreshold: 3
       # Only for Kubernetes +1.22 that have pod level probes enabled.
@@ -74,6 +81,10 @@ nats:
       successThreshold: 1
       failureThreshold: 30
 
+  # Adds a hash of the ConfigMap as a pod annotation
+  # This will cause the StatefulSet to roll when the ConfigMap is updated
+  configChecksumAnnotation: true
+
   # securityContext for the nats container
   securityContext: {}
 
@@ -82,14 +93,21 @@ nats:
   externalAccess: false
 
   # Toggle to disable client advertisements (connect_urls),
-  # in case of running behind a load balancer (which is not recommended)
+  # in case of running behind a load balancer
   # it might be required to disable advertisements.
   advertise: true
 
   # In case both external access and advertise are enabled
   # then a service account would be required to be able to
   # gather the public ip from a node.
-  serviceAccount: "nats-server"
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
 
   # The number of connect attempts against discovered routes.
   connectRetries: 120
@@ -120,12 +138,15 @@ nats:
     # to a client that has no activity.
     pingInterval:
 
-    # NOTE: this should be at least the same as 'terminationGracePeriodSeconds'
-    lameDuckDuration: "120s"
+    # grace period after pod begins shutdown before starting to close client connections
+    lameDuckGracePeriod: "10s"
 
-  # terminationGracePeriodSeconds determines how long to allow for a pod
-  # to be restarted.
-  terminationGracePeriodSeconds: 120
+    # duration over which to slowly close close client connections after lameDuckGracePeriod has passed
+    lameDuckDuration: "30s"
+
+  # terminationGracePeriodSeconds determines how long to wait for graceful shutdown
+  # this should be at least `lameDuckGracePeriod` + `lameDuckDuration` + 20s shutdown overhead
+  terminationGracePeriodSeconds: 60
 
   logging:
     debug:
@@ -169,6 +190,9 @@ nats:
     # Jetstream Domain
     domain:
 
+    # Jetstream Unique Tag prevent placing a stream in the same availability zone twice.
+    uniqueTag:
+
     ##########################
     #                        #
     #  Jetstream Encryption  #
@@ -198,16 +222,16 @@ nats:
     #                          #
     ############################
     fileStorage:
-      enabled: false
+      enabled: true
       storageDirectory: /data
 
       # Set for use with existing PVC
       # existingClaim: jetstream-pvc
-      # claimStorageSize: 1Gi
+      # claimStorageSize: 10Gi
 
       # Use below block to create new persistent volume
       # only used if existingClaim is not specified
-      size: 1Gi
+      size: 10Gi
       # storageClassName: ""
       accessModes:
         - ReadWriteOnce
@@ -299,8 +323,9 @@ podAnnotations: {}
 # Define a Pod Disruption Budget for the stateful set
 # ref: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
 podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1
   # minAvailable: 1
-  # maxUnavailable: 1
 
 # Node labels for pod assignment
 # Ref: https://kubernetes.io/docs/user-guide/node-selection/
@@ -353,6 +378,7 @@ cluster:
 #
 leafnodes:
   enabled: false
+  port: 7422
   noAdvertise: false
   # remotes:
   #   - url: "tls://connect.ngs.global:7422"
@@ -382,6 +408,7 @@ leafnodes:
 #
 gateway:
   enabled: false
+  port: 7522
   name: "default"
   # authorization:
   #   user: foo
@@ -423,7 +450,7 @@ gateway:
 # enabled, an initializer container will be used to gather
 # the public ips.
 bootconfig:
-  image: natsio/nats-boot-config:0.5.4
+  image: natsio/nats-boot-config:0.7.0
   pullPolicy: IfNotPresent
   securityContext: {}
 
@@ -433,7 +460,7 @@ bootconfig:
 #
 natsbox:
   enabled: true
-  image: natsio/nats-box:0.8.1
+  image: natsio/nats-box:0.11.0
   pullPolicy: IfNotPresent
   securityContext: {}
 
@@ -477,7 +504,7 @@ natsbox:
   #    operator: "Equal|Exists"
   #    value: "value"
   #    effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
-  
+
   # Additional nats-box server Volume mounts
   extraVolumeMounts: []
 
@@ -487,7 +514,7 @@ natsbox:
 # The NATS config reloader image to use.
 reloader:
   enabled: true
-  image: natsio/nats-server-config-reloader:0.6.2
+  image: natsio/nats-server-config-reloader:0.7.0
   pullPolicy: IfNotPresent
   securityContext: {}
   extraConfigs: []
@@ -495,7 +522,7 @@ reloader:
 # Prometheus NATS Exporter configuration.
 exporter:
   enabled: true
-  image: natsio/prometheus-nats-exporter:0.9.1
+  image: natsio/prometheus-nats-exporter:0.9.3
   pullPolicy: IfNotPresent
   securityContext: {}
   resources: {}
@@ -576,6 +603,9 @@ auth:
       # Size of the account JWT storage.
       size: 1Gi
 
+      # StorageClass of JWT storage claim.
+      # storageClassName: ""
+
     ##############################
     #                            #
     # Memory resolver settings   #
@@ -605,6 +635,13 @@ websocket:
 
   sameOrigin: false
   allowedOrigins: []
+
+  # This will optionally specify what host:port for websocket
+  # connections to be advertised in the cluster.
+  # advertise: "host:port"
+
+  # Set the handshake timeout for websocket connections
+  # handshakeTimeout: 5s
 
 appProtocol:
   enabled: false
@@ -667,7 +704,3 @@ commonLabels: {}
 # podManagementPolicy controls how pods are created during initial scale up,
 # when replacing pods on nodes, or when scaling down.
 podManagementPolicy: Parallel
-
-# Toggle that this is an upgrade to enable healthz, in case not
-# using `helm upgrade` command to apply upgrades.
-upgrade: false

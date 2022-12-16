@@ -9,13 +9,31 @@ helm repo add nats https://nats-io.github.io/k8s/helm/charts/
 helm install my-nats nats/nats
 ```
 
+## Breaking Change Log
+
+- **0.15.0**: For users with JetStream enabled (`nats.jetstream.enabled = true`): `nats.jetstream.fileStorage.enabled` now defaults to `true` and `nats.jetstream.fileStorage.size` now defaults to `10Gi`.  This updates the StatefulSet `spec.volumeClaimTemplates` field, which is immutable and cannot be changed on an existing StatefulSet; to upgrade from an older chart version, add the value:
+  ```yaml
+  nats:
+    jetstream:
+      fileStorage:
+        # add if enabled was previously the default setting
+        # not recommended; it would be better to migrate to a StatefulSet with storage enabled
+        enabled: false
+        # add if size was previously the default setting
+        size: 1Gi
+  ```
+- **0.12.0**: The `podManagementPolicy` value was introduced and set to `Parallel` by default, which controls the StatefulSet `spec.podManagementPolicy` field.  This field is immutable and cannot be changed on an existing StatefulSet; to upgrade from an older chart version, add the value:
+  ```yaml
+  podManagementPolicy: OrderedReady
+  ```
+
 ## Configuration
 
 ### Server Image
 
 ```yaml
 nats:
-  image: nats:2.6.5-alpine
+  image: nats:2.8.0-alpine
   pullPolicy: IfNotPresent
 ```
 
@@ -156,7 +174,7 @@ nats:
   externalAccess: true
 
   # Toggle to disable client advertisements (connect_urls),
-  # in case of running behind a load balancer (which is not recommended)
+  # in case of running behind a load balancer
   # it might be required to disable advertisements.
   advertise: true
 
@@ -262,6 +280,8 @@ A super cluster can be formed by pointing to remote gateways.
 You can find more about gateways in the NATS documentation:
 https://docs.nats.io/nats-server/configuration/gateways
 
+> ⚠️ Note: When using Gateways and JetStream make sure that the deployment name is different so that the generated server names do not collide.
+
 ```yaml
 gateway:
   enabled: false
@@ -357,6 +377,8 @@ auth:
 
 ### Setting up Memory and File Storage
 
+File Storage is **always** recommended, since JetStream's RAFT Meta Group will be persisted to file storage.  The Storage Class used should be block storage.  NFS is not recommended.
+
 ```yaml
 nats:
   image: nats:alpine
@@ -370,9 +392,8 @@ nats:
 
     fileStorage:
       enabled: true
-      size: 1Gi
-      storageDirectory: /data/
-      storageClassName: default
+      size: 10Gi
+      # storageClassName: gp2 # NOTE: AWS setup but customize as needed for your infra.
 ```
 
 ### Using with an existing PersistentVolumeClaim
@@ -427,9 +448,7 @@ nats:
 
     fileStorage:
       enabled: true
-      size: "1Gi"
-      storageDirectory: /data/
-      storageClassName: default
+      size: "10Gi"
 
 cluster:
   enabled: true
@@ -453,9 +472,8 @@ nats:
 
     fileStorage:
       enabled: true
-      size: "8Gi"
-      storageDirectory: /data/
-      storageClassName: gp2
+      size: "10Gi"
+      # storageClassName: gp2 # NOTE: AWS setup but customize as needed for your infra.
 
 cluster:
   enabled: true
@@ -557,7 +575,7 @@ Now we start the server with the NATS Account Resolver (`auth.resolver.type=full
 
 ```yaml
 nats:
-  image: nats:2.6.1-alpine
+  image: nats:2.8.0-alpine
 
   logging:
     debug: false
@@ -572,9 +590,8 @@ nats:
 
     fileStorage:
       enabled: true
-      size: "4Gi"
-      storageDirectory: /data/
-      storageClassName: gp2 # NOTE: AWS setup but customize as needed for your infra.
+      size: "10Gi"
+      # storageClassName: gp2 # NOTE: AWS setup but customize as needed for your infra.
 
 cluster:
   enabled: true
@@ -640,9 +657,18 @@ natsbox:
   #     key: sys.creds
 ```
 
+### Configuration Checksum
+
+A configuration checksum annotation is enabled by default on StatefulSet Pods in order to force a rollout when the NATS configuration changes.  This checksum is only applied by `helm` commands, and will not change if configuration is modified outside of setting `helm` values.
+
+```yaml
+nats:
+  configChecksumAnnotation: true
+```
+
 ### Configuration Reload sidecar
 
-The NATS config reloader image to use:
+The NATS configuration reload sidecar is enabled by default; it passes the configuration reload signal to the NATS server when it detects configuration changes:
 
 ```yaml
 reloader:
@@ -653,7 +679,7 @@ reloader:
 
 ### Prometheus Exporter sidecar
 
-You can toggle whether to start the sidecar that can be used to feed metrics to Prometheus:
+The Prometheus Exporter sidecar is enabled by default; it can be used to feed metrics to Prometheus:
 
 ```yaml
 exporter:
@@ -736,14 +762,14 @@ Sets the pods cpu/memory requests/limits
 nats:
   resources:
     requests:
-      cpu: 2
-      memory: 4Gi
-    limits:
       cpu: 4
-      memory: 6Gi
+      memory: 8Gi
+    limits:
+      cpu: 6
+      memory: 10Gi
 ```
 
-No resources are set by default.
+No resources are set by default. It is recommended for NATS JetStream deployments to allocate at least 8Gi of memory and 4 cpus.
 
 #### Annotations
 

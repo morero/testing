@@ -16,8 +16,7 @@ gitea:
       traefik.ingress.kubernetes.io/router.tls: 'true'
       kubernetes.io/ingress.class: traefik
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
-      #cert-manager.io/cluster-issuer: letsencrypt-production
-      cert-manager.io/cluster-issuer: self-signed #mkcert    
+      cert-manager.io/cluster-issuer: letsencrypt-selfsigned #mkcert    
     hosts:
       - host: "git.@DOMAIN@"
         paths:

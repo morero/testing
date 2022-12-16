@@ -1,6 +1,6 @@
 dependencies:
 - name: nats
   repository: ""
-  version: 0.13.1
-digest: sha256:f4d56a398d27afca543f533fcfc712435de3a6b1ab0f780bec0d85946bf7c124
-generated: "2022-03-28T21:16:58.338277081+02:00"
+  version: 0.17.0
+digest: sha256:927fb95b7fa61a07e7a679ac943da619f6ca2d25c371df48a3eeacb17ef8879a
+generated: "2022-05-18T18:11:11.072254602+02:00"

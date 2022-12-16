@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/version: "v2.8.3"
     app.kubernetes.io/managed-by: Helm
   annotations:
-    cert-manager.io/cluster-issuer: self-signed
+    cert-manager.io/cluster-issuer: letsencrypt-selfsigned
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.tls: "true"

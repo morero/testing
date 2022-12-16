@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "messaging.fullname" . }}-nats-lb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "messaging.labels" . | nindent 4 }}
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: nats
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  externalTrafficPolicy: Cluster
+  ports:
+    - name: nats
+      port: 4222
+      protocol: TCP
+      targetPort: 4222
