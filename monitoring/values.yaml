@@ -21,7 +21,7 @@ kube-prometheus-stack:
         ingress.kubernetes.io/ssl-redirect: "false"
       hosts:
         - grafana.@DOMAIN@
-        - grafana.@PROVIDED_DOMAIN@
+        #- grafana.@PROVIDED_DOMAIN@
       tls:
         - secretName: grafana-tls
           hosts:
