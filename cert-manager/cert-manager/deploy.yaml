@@ -1133,6 +1133,7 @@ spec:
         - --v=2
         - --cluster-resource-namespace=$(POD_NAMESPACE)
         - --leader-election-namespace=kube-system
+        - --feature-gates=ExperimentalGatewayAPISupport=true
         env:
         - name: POD_NAMESPACE
           valueFrom:
