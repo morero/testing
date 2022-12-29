@@ -92,9 +92,9 @@ loki:
         hosts:
           - loki.@DOMAIN@
           - loki.@PROVIDED_DOMAIN@
-    basicAuth:
-      removeHeader: true
-      secret: loki-auth-secret
+#    basicAuth:
+#      removeHeader: true
+#      secret: loki-auth-secret
 
   persistence:
     enabled: true
