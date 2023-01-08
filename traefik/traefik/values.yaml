@@ -12,3 +12,7 @@ traefik:
         servers:
         - url: h2c://localhost:8080
         passHostHeader: true
+  additionalArguments:
+    - "--serverstransport.insecureskipverify=true"
+    - "--log.level=DEBUG"
+
