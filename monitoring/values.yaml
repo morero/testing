@@ -78,7 +78,7 @@ loki:
     enabled: true
     annotations:
       kubernetes.io/ingress.class: traefik
-      cert-manager.io/cluster-issuer: @CLUSTER_ISSUER@
+      cert-manager.io/cluster-issuer: "@CERT_ISSUER@"
       traefik.ingress.kubernetes.io/router.middlewares: monitoring-loki-basic-auth@kubernetescrd
     hosts:
       - host: loki.@DOMAIN@
