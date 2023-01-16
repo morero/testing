@@ -1,0 +1,10 @@
+#!/bin/bash
+#cat <&0 > all.yaml
+cat > base.yaml
+mv base.yaml yaml/
+cd  yaml/
+yq -s '.metadata.name' base.yaml
+rm base.yaml
+cd ../
+#kustomize edit add resource yaml/*
+exec kubectl kustomize

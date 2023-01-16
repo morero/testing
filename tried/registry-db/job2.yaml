@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: registry-db-user-job
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+spec:
+  template:
+    spec:
+      containers:
+              {{- $adminSecret := (lookup "v1" "Secret" "stolon" "stolon2") | default dict }}
+              {{- $adminSecretData := ($adminSecret.data) | default dict }}
+              {{- $adminConnection := ($adminSecretData.uri) | b64dec }}
+              {{- $secret := (lookup "v1" "Secret" "registry" "registry-postgres") | default dict }}
+              {{- $secretData := ($secret.data) | default dict }}
+              {{- $user := ($secretData.username) | b64dec }}
+              {{- $pass := ($secretData.password) | b64dec }}
+              {{- $database := ($secretData.database) | b64dec }}
+        - name: create-role
+          image: postgres
+          env:
+            - name: PGCONN
+              value: "{{- ($adminConnection) }}"
+            - name: DB_USER
+              value: "{{- ($user) }}"
+            - name: DB_PASSWORD
+              value: "{{- ($pass) }}"
+          command: ["psql", "$(PGCONN)", "-c", "CREATE ROLE $(DB_USER) WITH LOGIN PASSWORD '$(DB_PASSWORD)'"]
+        - name: create-database
+          image: postgres
+          env:
+            - name: PGCONN
+              value: "{{- ($adminConnection) }}"
+            - name: DB_USER
+              value: "{{- ($user) }}"
+            - name: DB_NAME
+              value: "{{- ($database) }}"
+          command: ["psql", "$(PGCONN)", "-c", "CREATE DATABASE $(DB_NAME) WITH OWNER $(DB_USER)"]
+        - name: grant-privileges
+          image: postgres
+          env:
+            - name: PGCONN
+              value: "{{- ($adminConnection) }}"
+            - name: DB_USER
+              value: "{{- ($user) }}"
+            - name: DB_NAME
+              value: "{{- ($database) }}"
+          command: ["psql", "$(PGCONN)", "-c","GRANT ALL PRIVILEGES ON DATABASE $(DB_NAME) TO $(DB_USER)"]
+      restartPolicy: Never
+  backoffLimit: 10
