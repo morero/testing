@@ -1,0 +1,114 @@
+---
+# Source: registry/charts/harbor/templates/core/core-dpl.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry-main-harbor-core
+  labels:
+    heritage: Helm
+    release: registry-main
+    chart: harbor
+    app: "harbor"
+    component: core
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      release: registry-main
+      app: "harbor"
+      component: core
+  template:
+    metadata:
+      labels:
+        release: registry-main
+        app: "harbor"
+        component: core
+      annotations:
+        checksum/configmap: 2a95a6c12ac6a963b5b04469f08c3d92861f1402e65f14c04ecc01831370768d
+        checksum/secret: 1e18a3b21b172f0085046a3ff25b5205e612dcb26ae3cf4c2f4ce8b6480b5668
+        checksum/secret-jobservice: 21bebfc52372b63ceec70450fd0ab9f16530f5b7482dda70117ed35f753eccee
+    spec:
+      securityContext:
+        runAsUser: 10000
+        fsGroup: 10000
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 120
+      containers:
+        - name: core
+          image: goharbor/harbor-core:v2.6.2
+          imagePullPolicy: IfNotPresent
+          startupProbe:
+            httpGet:
+              path: /api/v2.0/ping
+              scheme: HTTP
+              port: 8080
+            failureThreshold: 360
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/v2.0/ping
+              scheme: HTTP
+              port: 8080
+            failureThreshold: 2
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/v2.0/ping
+              scheme: HTTP
+              port: 8080
+            failureThreshold: 2
+            periodSeconds: 10
+          envFrom:
+            - configMapRef:
+                name: "registry-main-harbor-core"
+            - secretRef:
+                name: "registry-main-harbor-core"
+          env:
+            - name: CORE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: registry-main-harbor-core
+                  key: secret
+            - name: JOBSERVICE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: "registry-main-harbor-jobservice"
+                  key: JOBSERVICE_SECRET
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config
+              mountPath: /etc/core/app.conf
+              subPath: app.conf
+            - name: secret-key
+              mountPath: /etc/core/key
+              subPath: key
+            - name: token-service-private-key
+              mountPath: /etc/core/private_key.pem
+              subPath: tls.key
+            - name: ca-download
+              mountPath: /etc/core/ca
+            - name: psc
+              mountPath: /etc/core/token
+      volumes:
+        - name: config
+          configMap:
+            name: registry-main-harbor-core
+            items:
+              - key: app.conf
+                path: app.conf
+        - name: secret-key
+          secret:
+            secretName: registry-main-harbor-core
+            items:
+              - key: secretKey
+                path: key
+        - name: token-service-private-key
+          secret:
+            secretName: registry-main-harbor-core
+        - name: ca-download
+          secret:
+        - name: psc
+          emptyDir: {}

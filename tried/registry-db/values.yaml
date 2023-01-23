@@ -1,5 +1,0 @@
-database:
- postgres:
-   database: "registry"
-   username: "registry"
-   password: "registry"

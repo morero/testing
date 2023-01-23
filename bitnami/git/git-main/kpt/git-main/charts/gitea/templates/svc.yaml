@@ -1,0 +1,26 @@
+---
+# Source: git-main/charts/gitea/templates/svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: git-kpt-gitea
+  namespace: "git"
+  labels:
+    app.kubernetes.io/name: gitea
+    helm.sh/chart: gitea-0.1.6
+    app.kubernetes.io/instance: git-kpt
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: LoadBalancer
+  sessionAffinity: None
+  externalTrafficPolicy: "Cluster"
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+    - name: ssh
+      port: 22
+      targetPort: ssh
+  selector:
+    app.kubernetes.io/name: gitea
+    app.kubernetes.io/instance: git-kpt

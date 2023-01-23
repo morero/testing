@@ -1,0 +1,13 @@
+---
+# Source: registry/templates/tekton-user-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/part-of: ertia
+  name: tekton-robot
+  namespace: registry
+type: Opaque
+data:
+  token: "OHpoMXNZMWR6SmtXcHRTdVhKUFdON3NJSU5lTmhQQXBLcTRUQ3JoOTY5WG9RT3VjUTJOTGpTU00wcTVFVm1yU0FjQWlkb0tmUThGa3VhcXFyaXhISlBvRXl5cWRheDVQdEtLR1FWWlk3N3RIMGk0cDE2TFdCaVE3VVpzbFduM1I="

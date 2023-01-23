@@ -1,0 +1,21 @@
+---
+# Source: registry/charts/harbor/templates/core/core-cm.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registry-harbor-core
+  namespace: "registry"
+  labels:
+    app.kubernetes.io/name: harbor
+    helm.sh/chart: harbor-16.3.0
+    app.kubernetes.io/instance: registry
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: core
+data:
+  app.conf: |+
+    appname = Harbor
+    runmode = prod
+    enablegzip = true
+
+    [prod]
+    httpport = "8080"

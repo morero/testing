@@ -1,0 +1,85 @@
+---
+# Source: certs/charts/cert-manager/templates/controller/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cert-manager-controller
+  namespace: "cert-manager"
+  labels:
+    app.kubernetes.io/name: cert-manager
+    helm.sh/chart: cert-manager-0.8.12
+    app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cert-manager
+      app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/component: controller
+  strategy:
+    rollingUpdate: {}
+    type: RollingUpdate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cert-manager
+        helm.sh/chart: cert-manager-0.8.12
+        app.kubernetes.io/instance: cert-manager
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: controller
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: '9402'
+        prometheus.io/scrape: "true"
+    spec:
+      
+      securityContext:
+        fsGroup: 1001
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: cert-manager
+                    app.kubernetes.io/instance: cert-manager
+                namespaces:
+                  - "cert-manager"
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      initContainers:
+      serviceAccountName: cert-manager-controller
+      containers:
+        - name: cert-manager
+          image: docker.io/bitnami/cert-manager:1.11.0-debian-11-r0
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --v=2
+            - --cluster-resource-namespace=$(POD_NAMESPACE)
+            - --leader-election-namespace=kube-system
+            - --acme-http01-solver-image=docker.io/bitnami/acmesolver:1.10.2-debian-11-r0
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+          env:
+            - name: BITNAMI_DEBUG
+              value: "false"
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          envFrom:
+          ports:
+            - protocol: TCP
+              containerPort: 9402
+          resources:
+            limits: {}
+            requests: {}
+          volumeMounts:
+      volumes:

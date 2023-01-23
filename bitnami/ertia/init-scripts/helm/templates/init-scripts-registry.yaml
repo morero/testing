@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-scripts-registry
+  annotations:
+    replicator.v1.mittwald.de/replicate-to: "tekton-pipelines"
+data:
+{{ (.Files.Glob "scripts/registry/create_project.sh").AsConfig | indent 2 }}
+{{ (.Files.Glob "scripts/registry/delete_project.sh").AsConfig | indent 2 }}
+{{ (.Files.Glob "scripts/registry/create_robot_user.sh").AsConfig | indent 2 }}

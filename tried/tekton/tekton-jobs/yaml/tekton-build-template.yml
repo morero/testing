@@ -1,0 +1,52 @@
+---
+# Source: tekton/templates/ertia/triggertemplates/tekton-build-template.yaml
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: tekton-build-template
+  namespace: tekton-pipelines
+spec:
+  params:
+    - name: GIT_URL
+      description: "Git repo url"
+    - name: GIT_BRANCH
+      description: The git revision
+      default: main
+    - name: GIT_REVISION
+      description: The git revision
+      default: latest
+    - name: NAMESPACE
+      description: The namespace to create the resources
+      default: apps
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: tekton-tr-build-run-
+        namespace: tekton-pipelines
+      spec:
+        #serviceAccountName: tekton-pipelines-webhook
+        serviceAccountName: kaniko-builder
+        pipelineRef:
+          name: devspace-deploy
+        params:
+          - name: GIT_URL
+            value: $(tt.params.GIT_URL)
+          - name: GIT_BRANCH
+            value: $(tt.params.GIT_BRANCH)
+          - name: GIT_REVISION
+            value: $(tt.params.GIT_REVISION)
+          - name: RELEASE_NAMESPACE
+            value: $(tt.params.NAMESPACE)
+        workspaces:
+          - name: source
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce # access mode may affect how you can use this volume in parallel tasks
+                resources:
+                  requests:
+                    storage: 1Gi
+          - name: dockerconfig
+            secret:
+              secretName: tekton-harbor-regcred

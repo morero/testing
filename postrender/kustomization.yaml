@@ -1,0 +1,9 @@
+resources:
+  - postrender-secret.yml
+#patchesStrategicMerge:
+#  - postrender/templates/secret-patch.yaml
+patches:
+  - path: postrender-secret-kustomize.yml
+    target:
+      kind: Secret
+      name: "postrender-secret"

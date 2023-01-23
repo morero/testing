@@ -1,0 +1,15 @@
+#!/bin/bash
+#cat <&0 > all.yaml
+kustomize edit remove resource yaml/*
+rm -rf yaml/ && rm -rf patches/
+mkdir yaml && mkdir patches
+cat > base.yaml
+mv base.yaml yaml/
+cd  yaml/
+yq -s '.metadata.name' base.yaml
+rm base.yaml
+mv *kustomize* ../patches/
+cd ../
+kustomize edit add resource yaml/*
+exec kubectl kustomize
+kustomize edit remove resource yaml/*

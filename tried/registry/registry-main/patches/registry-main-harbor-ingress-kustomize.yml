@@ -1,0 +1,14 @@
+---
+# Source: registry/templates/harbor-ingress-kustomize.yaml
+# Source: registry/charts/harbor/templates/ingress/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "registry-main-harbor-ingress-kustomize"
+spec:
+  tls:
+    - secretName: registry-tls
+      hosts: ["registry.local.ertia.cloud"]
+  rules:
+    - http:
+      host: "registry.local.ertia.cloud"

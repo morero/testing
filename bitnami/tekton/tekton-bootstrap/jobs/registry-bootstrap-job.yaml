@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: registry-bootstrap-job
+spec:
+  parallelism: 1    
+  completions: 1    
+  template:         
+    metadata:
+      name: registry-bootstrap-job
+    spec:
+      volumes:
+      - name: registry-scripts
+        configMap:
+          name: init-scripts-registry
+      containers:
+      - name: init-scripts-registry
+        image: alpine
+        volumeMounts:
+          - mountPath: /registry-scripts
+            name: registry-scripts
+        env:
+          - name: HOME
+            value: /tmp
+          - name: "REGISTRY_USER"
+            value: "registry"
+          - name: "REGISTRY_PASSWORD" # valueFrom!!! ertia-harbor-admin:secret .password
+            value: "registry"
+          - name: DELETE_PROJECT_NAME
+            value: "library"
+          - name: CREATE_PROJECT_NAME
+            value: "default"
+          - name: ROBOT_NAME
+            value: "tekton-robot"
+          - name: ROBOT_PASSWORD
+            value: ""
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "scripts in /registry-scripts"
+          ls -lh /registry-scripts
+          echo "copy scripts to /tmp"
+          cp /registry-scripts/*.sh /tmp
+          echo "apply 'chmod +x' to /tmp/*.sh"
+          chmod +x /tmp/*.sh
+          echo "execute scripts now"
+
+          REGISTRY_TOKEN=$(printf "%s:%s" "${REGISTRY_USER}" "${REGISTRY_PASSWORD}" | base64)
+
+
+          
+          PROJECT_NAME=$(DELETE_PROJECT_NAME) /tmp/delete_project.sh
+          PROJECT_NAME=$(CREATE_PROJECT_NAME) /tmp/create_project.sh
+          /tmp/create_robot_user.sh
+      restartPolicy: Never

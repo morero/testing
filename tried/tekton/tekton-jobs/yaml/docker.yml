@@ -1,0 +1,21 @@
+---
+# Source: tekton/templates/ertia/secrets/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: docker
+  namespace: tekton-pipelines
+type: Opaque
+stringData:
+  username: "registry"
+  password: "292b840f219d43dfca0cb1be36f01119" #@REGISTRY_PASSWORD@
+  config.json: |
+    {
+      "auths": {
+        "registry.@DOMAIN@":{
+          "username": "ertia",
+          "password": "@REGISTRY_ERTIA_PASSWORD@"
+          "email": "tekton@ertia.io"
+        }
+      }
+    }

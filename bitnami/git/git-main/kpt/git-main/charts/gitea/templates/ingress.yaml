@@ -1,0 +1,31 @@
+---
+# Source: git-main/charts/gitea/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: git-kpt-gitea
+  namespace: "git"
+  labels:
+    app.kubernetes.io/name: gitea
+    helm.sh/chart: gitea-0.1.6
+    app.kubernetes.io/instance: git-kpt
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+    - host: gitea.local
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: git-kpt-gitea
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - "gitea.local"
+      secretName: gitea.local-tls

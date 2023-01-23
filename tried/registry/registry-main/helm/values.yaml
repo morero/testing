@@ -1,0 +1,112 @@
+tektonRobotToken: ""
+
+subDomain: "registry"
+
+urls:
+  base: "https://registry.local.ertia.cloud"
+
+users:
+  admin:
+    username: "admin"
+    password: ""
+
+
+databases:
+  postgres:
+    admin:
+      connection:
+        uri: "postgresql://postgres:postgres@stolon-proxy.stolon:5432"
+    default:
+      connection:
+        uri: "postgresql://registry:registry@stolon-proxy.stolon:5432/registry"
+
+
+database:
+ postgres:
+   database: "registry"
+   username: "registry"
+   password: "registry"
+
+
+harbor:
+  ingress:
+    enabled: true
+
+replicaCount: 1
+
+harbor:
+  notary:
+    enabled: false
+  expose:
+    type: ingress
+    ingress:
+      hosts:
+        core: 'registry.local'
+        notary: 'notary.local'
+      annotations:
+        ingress.kubernetes.io/ssl-redirect: "true"
+        ingress.kubernetes.io/proxy-body-size: "0"
+        kubernetes.io/ingress.class: traefik
+        cert-manager.io/cluster-issuer: letsencrypt-production
+    tls:
+      enabled: true
+      certSource: secret
+      secret:
+        secretName: registry-tls
+        notarySecretName: notary-tls
+
+  externalURL: https://registry.local
+
+  persistence:
+    enabled: true
+    resourcePolicy: "keep"
+    persistentVolumeClaim:
+      registry:
+        size: 10Gi
+      chartmuseum:
+        size: 1Gi
+      jobservice:
+        size: 1Gi
+      database:
+        size: 1Gi
+      redis:
+        size: 1Gi
+      trivy:
+        size: 10Gi
+
+  logLevel: info
+
+  ## An empty string generates a psuedo-random password
+  ## Otherwise, this value is used
+  harborAdminPassword: "REGISTRY_ADMIN_PASSWORD" 
+
+  # The secret key used for encryption. Must be a string of 16 chars.
+  ## An empty string generates a psuedo-random password
+  ## Otherwise, this value is used
+  secretKey: ""
+
+  registry:
+    credentials:
+      ## An empty string generates a psuedo-random password
+      ## Otherwise, this value is used
+      username: "ertia"
+      password: "REGISTRY_ERTIA_PASSWORD"
+
+  database:
+    type: external
+
+    external:
+      host: "stolon-proxy.stolon"
+      port: "5432"
+      username: "harbor"
+      password: "POSTGRES_HARBOR_PASSWORD"
+      coreDatabase: "registry"
+      notaryServerDatabase: "notary_server"
+      notarySignerDatabase: "notary_signer"
+
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        #release: monitoring

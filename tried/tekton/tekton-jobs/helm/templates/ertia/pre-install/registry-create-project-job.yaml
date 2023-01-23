@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: registry-create-project-job
+  namespace: tekton-pipelines
+  annotations:
+#    "helm.sh/hook": pre-install, pre-upgrade
+#    "helm.sh/hook-weight": "-2"
+#    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+{{- $scriptCM := (lookup "v1" "Secret" "registry" "registry-scripts") | default dict }}
+{{- $cmData := ($scriptCM.data) | default dict }}
+{{- $script := ($cmData.create_project_sh) | default "" }}
+
+{{- $registrySecret := (lookup "v1" "Secret" "registry" "registry-harbor-core") | default dict }}
+{{- $secretData := ($registrySecret.data) | default dict }}
+{{- $registry_username := ($secretData.HARBOR_ADMIN_USER) | default "admin" }}
+{{- $registry_password := ($secretData.HARBOR_ADMIN_PASSWORD) | default "" }}
+{{- $projectName := (.Values.registryProjectName) | default "ertia" }}
+
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-project
+          image: alpine
+          env:
+            - name: PROJECT_NAME
+              value: "{{- $projectName}}"
+            - name: REGISTRY_TOKEN
+              value: "{{- ( printf "%s:%s" $registry_username $registry_password) | b64enc }}"
+          command:
+            - /bin/sh
+            - -c
+            - |
+              {{ $script | indent 16}}
+                
+                
+      restartPolicy: Never
+  backoffLimit: 10

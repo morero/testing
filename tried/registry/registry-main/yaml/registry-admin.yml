@@ -1,0 +1,14 @@
+---
+# Source: registry/templates/admin-user-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/part-of: ertia
+  name: registry-admin
+  namespace: registry
+type: Opaque
+data:
+  username: "YWRtaW4="
+  password: "VEhwd2tFWkpWUE44NUQ1eHhNRG1hNTg3elpkTzNuODRnYkdjS21nSjZRbHg5RVF3b0hWbW41VXVxYTRGRnhkODJtQ3NuZHNOQnNheFhDQ29oZkZGTDRqM3pwU1pTWUw1NDY5RUYzY3V5Vm9QSU13TXc5ck0xV1RKYWhEcklDUk4="

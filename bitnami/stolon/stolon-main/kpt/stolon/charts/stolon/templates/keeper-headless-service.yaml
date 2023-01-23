@@ -1,0 +1,23 @@
+---
+# Source: stolon/charts/stolon/templates/keeper-headless-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: stolon-keeper-headless
+  labels:
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
+  annotations:
+spec:
+  type: ClusterIP
+  ports:
+    - name: keeper
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    app: stolon
+    release: stolon
+    component: stolon-keeper

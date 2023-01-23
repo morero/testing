@@ -1,0 +1,48 @@
+---
+# Source: registry-db/templates/ensure-db-job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ensure-db-registry
+  namespace: db
+spec:
+  template:
+    spec:
+      containers:
+        - name: ensure-db-registry
+          image: postgres
+          env:
+            - name: PGCONN
+              value: "postgresql://postgres:postgres@stolon-proxy.stolon:5432"
+            - name: DB_USER
+              value: "registry"
+            - name: DB_PASSWORD
+              value: "registry"
+            - name: DB_NAME
+              value: "registry"
+            - name: PLSQL
+              value: |
+                DO 
+                $$$
+                   BEGIN
+                      -- Connect as a superuser
+                      IF NOT EXISTS (SELECT * FROM pg_roles WHERE rolname = '$(DB_USER)') THEN
+                      -- Create the role if it does not exist
+                      CREATE ROLE $(DB_USER) LOGIN PASSWORD '$(DB_PASSWORD)';
+                      END IF;
+    
+                      IF NOT EXISTS (SELECT datname FROM pg_database WHERE datname='$(DB_NAME)') THEN
+                      -- Create the database if it does not exist
+                      CREATE DATABASE $(DB_NAME) OWNER $(DB_USER);
+                      END IF;
+
+                      --revoke all existing privileges
+                      REVOKE ALL PRIVILEGES ON DATABASE $(DB_NAME) FROM $(DB_USER);
+                      -- grant new privileges
+                      GRANT ALL PRIVILEGES ON DATABASE $(DB_NAME) TO $(DB_USER);
+                    END
+                $$$;
+
+          command: ["psql", "$(PGCONN)", "-c", "$(PLSQL)"]
+      restartPolicy: Never
+  backoffLimit: 10

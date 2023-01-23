@@ -1,0 +1,4 @@
+robots:
+  registry:
+    username: "tekton"
+    password: "tekton"

@@ -1,0 +1,7 @@
+---
+# Source: stolon/charts/stolon/templates/hooks/init-db-job.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stolon-init-scripts
+data:

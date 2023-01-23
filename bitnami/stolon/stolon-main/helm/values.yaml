@@ -1,0 +1,111 @@
+stolon:
+
+  # Overrides
+
+#  superuserUsername: "postgres"
+#  superuserPassword: "defaultPassword" # Replaced by deployment
+
+#  replicationUsername: "postgres-repl"
+#  replicationPassword: "defaultPassword" # Replaced by deployment
+
+
+
+  superuserSecret:
+    name: "stolon-auth"
+    usernameKey: username
+    passwordKey: password
+
+  replicationSecret:
+    name: "stolon-auth"
+    usernameKey: repl_username
+    passwordKey: repl_password
+
+  keeper:
+    replicaCount: 1
+  proxy:
+    replicaCount: 1
+  sentinel:
+    replicaCount: 1
+
+
+
+  # clusterName:
+  image:
+    repository: sorintlab/stolon
+    tag: master-pg14
+    pullPolicy: IfNotPresent
+    ## Add secrets manually via kubectl on kubernetes cluster and reference here
+    # pullSecrets:
+    #   - name: "myKubernetesSecret"
+
+  # used by create-cluster-job when store.backend is etcd
+  etcdImage:
+    repository: k8s.gcr.io/etcd-amd64
+    tag: 2.3.7
+    pullPolicy: IfNotPresent
+
+  debug: false
+
+  # Enable the creation of a shm volume
+  shmVolume:
+    enabled: false
+
+  persistence:
+    enabled: true
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    storageClassName: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+
+  rbac:
+    create: true
+
+  serviceAccount:
+    create: true
+    # The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template
+    name:
+
+
+
+#  superuserPasswordFile:
+
+    superuserUsername: "postgres"
+  ## password for the superuser (REQUIRED if superuserSecret and superuserPasswordFile are not set)
+#  superuserPassword: "postgres"
+
+#  replicationPasswordFile:
+
+    replicationUsername: "postgres-repl"
+  ## password for the replication user (REQUIRED if replicationSecret and replicationPasswordFile are not set)
+#  replicationPassword: "repluser"
+
+
+
+  serviceMonitor:
+    # When set to true then use a ServiceMonitor to collect metrics
+    enabled: false
+    # Custom labels to use in the ServiceMonitor to be matched with a specific Prometheus
+    labels: {}
+    # Set the namespace the ServiceMonitor should be deployed to
+    # namespace: default
+    # Set how frequently Prometheus should scrape
+    # interval: 30s
+    # Set timeout for scrape
+    # scrapeTimeout: 10s
+  ## Enable support ssl into postgres, you must specify the certs.
+  ## ref: https://www.postgresql.org/docs/10/ssl-tcp.html
+  ##
+  tls:
+    enabled: false
+    rootCaFile: "/certs/rootCa.crt"
+    serverCrtFile: "/certs/serverCrt.crt"
+    serverKeyFile: "/certs/serverKey.key"
+    rootCa: |-
+    serverCrt: |-
+    serverKey: |-

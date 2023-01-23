@@ -1,0 +1,20 @@
+---
+# Source: registry/charts/harbor/templates/metrics/metrics-svcmon.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: registry-main-harbor
+  labels:
+    heritage: Helm
+    release: registry-main
+    chart: harbor
+    app: "harbor"
+spec:
+  jobLabel: app.kubernetes.io/name
+  endpoints:
+    - port: http-metrics
+      honorLabels: true
+  selector:
+    matchLabels:
+      release: registry-main
+      app: "harbor"

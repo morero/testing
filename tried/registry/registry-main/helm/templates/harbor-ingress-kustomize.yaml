@@ -1,0 +1,20 @@
+---
+# Source: registry/charts/harbor/templates/ingress/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "registry-main-harbor-ingress-kustomize"
+              {{- $cm := (lookup "v1" "ConfigMap" "ertia" "ertia") | default dict }}
+              {{- $cmData := ($cm.data) | default dict }}
+              {{- $primaryDomain := ($cmData.primaryDomain) | default "local.ertia.cloud" }}
+              {{- $host := (printf "registry.%s" $primaryDomain) }}
+              {{- $httpRule := printf "registry.%s" $primaryDomain }}
+
+spec:
+  tls:
+    - secretName: registry-tls
+      hosts:
+        ["{{- $host }}"]
+  rules:
+    - http:
+      host: "{{- $httpRule }}"

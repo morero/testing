@@ -1,0 +1,81 @@
+---
+# Source: registry/charts/harbor/templates/chartmuseum/chartmuseum-dpl.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "registry-main-harbor-chartmuseum"
+  labels:
+    heritage: Helm
+    release: registry-main
+    chart: harbor
+    app: "harbor"
+    component: chartmuseum
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      release: registry-main
+      app: "harbor"
+      component: chartmuseum
+  template:
+    metadata:
+      labels:
+        heritage: Helm
+        release: registry-main
+        chart: harbor
+        app: "harbor"
+        component: chartmuseum
+      annotations:
+        checksum/configmap: a49badc562d6f5831710d26bc520b078337af236e3ad941dc3ba4a7ecdcdc537
+        checksum/secret: d3ee710a5612f9c9f1f72b6a7b3ccb0b3f573d2a0cf7df2593eb9adcf00af297
+        checksum/secret-core: 498cb95c7d3c9dc1393a78ff7ef480650b6d8f404b65000be6c5a778bf93cdd9
+    spec:
+      securityContext:
+        runAsUser: 10000
+        fsGroup: 10000
+      automountServiceAccountToken: false
+      containers:
+        - name: chartmuseum
+          image: goharbor/chartmuseum-photon:v2.6.2
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health
+              scheme: HTTP
+              port: 9999
+            initialDelaySeconds: 300
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              scheme: HTTP
+              port: 9999
+            initialDelaySeconds: 1
+            periodSeconds: 10
+          envFrom:
+            - configMapRef:
+                name: "registry-main-harbor-chartmuseum"
+            - secretRef:
+                name: "registry-main-harbor-chartmuseum"
+          env:
+            - name: BASIC_AUTH_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: registry-main-harbor-core
+                  key: secret
+            - # Needed to make AWS' client connect correctly (see https://github.com/helm/chartmuseum/issues/280)
+              name: AWS_SDK_LOAD_CONFIG
+              value: "1"
+          ports:
+            - containerPort: 9999
+          volumeMounts:
+            - name: chartmuseum-data
+              mountPath: /chart_storage
+              subPath:
+      volumes:
+        - name: chartmuseum-data
+          persistentVolumeClaim:
+            claimName: registry-main-harbor-chartmuseum

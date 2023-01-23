@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: registry-create-project-job
+#  namespace: tekton-pipelines
+  annotations:
+
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-project
+          image: alpine
+          env:
+            - name: PROJECT_NAME
+              value: "{{- $projectName}}"
+            - name: REGISTRY_TOKEN
+              value: "{{- ( printf "%s:%s" $registry_username $registry_password) | b64enc }}"
+          command:
+            - /bin/sh
+            - -c
+            - |
+              {{ $script | indent 16}}
+                
+                
+      restartPolicy: Never
+  backoffLimit: 10

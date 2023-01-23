@@ -1,0 +1,32 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: kpt
+packageMetadata:
+  shortDescription: sample description
+openAPI:
+  definitions:
+    io.k8s.cli.setters.password:
+      x-k8s-cli:
+        setter:
+          name: password
+          value: "git"
+          isSet: true
+    io.k8s.cli.setters.username:
+      x-k8s-cli:
+        setter:
+          name: username
+          value: "git"
+          isSet: true
+    io.k8s.cli.setters.database:
+      x-k8s-cli:
+        setter:
+          name: database
+          value: "git"
+          isSet: true
+    io.k8s.cli.setters.generate-password-fields:
+      x-k8s-cli:
+        setter:
+          name: generate-password-fields
+          value: "password"
+          isSet: true

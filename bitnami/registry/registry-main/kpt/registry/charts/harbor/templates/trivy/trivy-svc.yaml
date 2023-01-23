@@ -1,0 +1,23 @@
+---
+# Source: registry/charts/harbor/templates/trivy/trivy-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry-harbor-trivy
+  namespace: "registry"
+  labels:
+    app.kubernetes.io/name: harbor
+    helm.sh/chart: harbor-16.3.0
+    app.kubernetes.io/instance: registry
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: trivy
+spec:
+  ports:
+    - name: api-server
+      protocol: TCP
+      port: 8080
+      targetPort: api-server
+  selector:
+    app.kubernetes.io/name: harbor
+    app.kubernetes.io/instance: registry
+    app.kubernetes.io/component: trivy

@@ -1,0 +1,66 @@
+---
+# Source: stolon/charts/stolon/templates/proxy-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stolon-proxy
+  labels:
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stolon
+      release: stolon
+      component: stolon-proxy
+  template:
+    metadata:
+      labels:
+        app: stolon
+        release: stolon
+        component: stolon-proxy
+        stolon-cluster: stolon
+      annotations:
+    spec:
+      serviceAccountName: stolon
+      containers:
+        - name: stolon
+          image: "sorintlab/stolon:master-pg14"
+          imagePullPolicy: IfNotPresent
+          command:
+            - "/bin/bash"
+            - "-ec"
+            - |
+              exec gosu stolon stolon-proxy
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: STPROXY_CLUSTER_NAME
+              value: stolon
+            - name: STPROXY_STORE_BACKEND
+              value: "kubernetes"
+            - name: STPROXY_KUBE_RESOURCE_KIND
+              value: "configmap"
+            - name: STPROXY_LISTEN_ADDRESS
+              value: "0.0.0.0"
+            - name: STPROXY_METRICS_LISTEN_ADDRESS
+              value: "0.0.0.0:8080"
+            - name: STPROXY_DEBUG
+              value: "false"
+          ports:
+            - name: metrics
+              containerPort: 8080
+            - name: stolon
+              containerPort: 5432
+          resources:
+            {}
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 10
+            timeoutSeconds: 5

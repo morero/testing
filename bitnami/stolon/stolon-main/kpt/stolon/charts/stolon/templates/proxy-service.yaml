@@ -1,0 +1,23 @@
+---
+# Source: stolon/charts/stolon/templates/proxy-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: stolon-proxy
+  labels:
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
+  annotations:
+spec:
+  type: ClusterIP
+  ports:
+    - name: proxy
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    app: stolon
+    release: stolon
+    component: stolon-proxy

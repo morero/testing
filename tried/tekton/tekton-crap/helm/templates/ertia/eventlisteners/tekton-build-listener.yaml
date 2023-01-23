@@ -1,0 +1,15 @@
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: tekton-build-el
+  namespace: tekton-pipelines
+spec:
+  serviceAccountName: kaniko-builder
+  triggers:
+    - name: tekton-build-trigger
+      serviceAccountName: kaniko-builder
+      bindings:
+        - ref: tekton-build-binding
+      template:
+        ref: tekton-build-template

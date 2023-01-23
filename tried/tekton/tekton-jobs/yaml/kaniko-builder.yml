@@ -1,0 +1,39 @@
+---
+# Source: tekton/templates/ertia/clusterroles/kaniko-builder.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/part-of: tekton-pipelines
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+  name: kaniko-builder
+rules:
+  - apiGroups: ["", "apps", "networking.k8s.io", "tekton.dev"]
+    resources:
+      - pods
+      - nodes
+      - secrets
+      - configmaps
+      - pods/exec
+      - pods/log
+      - services
+      - deployments
+      - serviceaccounts
+      - ingresses
+      - pipelineruns
+      - taskruns
+      - statefulsets
+      - replicasets
+    verbs:
+      - create
+      - get
+      - list
+      - patch
+      - update
+      - watch
+      - delete
+  - apiGroups: [""]
+    resources: ["serviceaccounts"]
+    verbs: ["impersonate"]

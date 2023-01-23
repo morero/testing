@@ -1,0 +1,39 @@
+# Default values for git-main.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+gitea:
+  replicaCount: 1
+
+
+
+  # Modifications of bitnami values
+
+  postgresql:
+    enabled: false
+
+  externalDatabase:
+    existingSecret: "git-external-postgres"
+    existingSecretPasswordKey: "db-password"
+    host: "stolon-proxy.stolon"
+    port: 5432
+    database: gitea
+  
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      cert-manager.io/cluster-issuer: letsencrypt-production
+    hosts:
+      - host: "git.@DOMAIN"
+        paths:
+          - path: /
+            pathType: Prefix
+      - host: "git.@PROVIDED_DOMAIN@"
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: git-tls
+        hosts:
+          - "git.@DOMAIN@"
+

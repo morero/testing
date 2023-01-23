@@ -1,0 +1,9 @@
+domains:
+  primary: "local.ertia.cloud"
+
+certs:
+  issuer: "letsencrypt-selfsigned"
+
+sauce:
+  #seed:      "verySecretSeed"
+  #password:  "verySecretPassword"

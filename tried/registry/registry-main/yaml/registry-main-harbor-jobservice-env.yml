@@ -1,0 +1,22 @@
+---
+# Source: registry/charts/harbor/templates/jobservice/jobservice-cm-env.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "registry-main-harbor-jobservice-env"
+  labels:
+    heritage: Helm
+    release: registry-main
+    chart: harbor
+    app: "harbor"
+data:
+  CORE_URL: "http://registry-main-harbor-core:80"
+  TOKEN_SERVICE_URL: "http://registry-main-harbor-core:80/service/token"
+  REGISTRY_URL: "http://registry-main-harbor-registry:5000"
+  REGISTRY_CONTROLLER_URL: "http://registry-main-harbor-registry:8080"
+  REGISTRY_CREDENTIAL_USERNAME: "ertia"
+  HTTP_PROXY: ""
+  HTTPS_PROXY: ""
+  NO_PROXY: "registry-main-harbor-core,registry-main-harbor-jobservice,registry-main-harbor-database,registry-main-harbor-chartmuseum,registry-main-harbor-notary-server,registry-main-harbor-notary-signer,registry-main-harbor-registry,registry-main-harbor-portal,registry-main-harbor-trivy,registry-main-harbor-exporter,127.0.0.1,localhost,.local,.internal"
+  METRIC_NAMESPACE: harbor
+  METRIC_SUBSYSTEM: jobservice

@@ -1,3 +1,5 @@
+tektonRobotToken: "testarrobottoken"
+
 harbor:
   notary:
     enabled: false

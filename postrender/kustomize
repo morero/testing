@@ -1,0 +1,6 @@
+#!/bin/bash
+#cat <&0 > all.yaml
+cat > base.yaml
+yq -s '.metadata.name' base.yaml
+rm base.yaml
+exec kubectl kustomize

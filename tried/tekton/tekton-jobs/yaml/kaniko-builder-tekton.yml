@@ -1,0 +1,19 @@
+---
+# Source: tekton/templates/ertia/clusterrolebindings/kaniko-builder.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: kaniko
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/part-of: tekton-pipelines
+    rbac.dashboard.tekton.dev/subject: kaniko
+  name: kaniko-builder-tekton
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tekton-triggers-admin
+subjects:
+  - kind: ServiceAccount
+    name: kaniko-builder
+    namespace: tekton-pipelines

@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: registry-robot-job
+  namespace: tekton-pipelines
+  annotations:
+#    "helm.sh/hook": pre-install, pre-upgrade
+#    "helm.sh/hook-weight": "-1"
+#    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+{{- $scriptCM := (lookup "v1" "Secret" "registry" "registry-scripts") | default dict }}
+{{- $cmData := ($scriptCM.data) | default dict }}
+{{- $script := ($cmData.create_robot_user_sh) | default "" }}
+
+{{- $registrySecret := (lookup "v1" "Secret" "registry" "registry-harbor-core") | default dict }}
+{{- $secretData := ($registrySecret.data) | default dict }}
+{{- $registry_username := ($secretData.HARBOR_ADMIN_USER) | default "admin" }}
+{{- $registry_password := ($secretData.HARBOR_ADMIN_PASSWORD) | default "" }}
+
+{{- $robotUsername := (.Values.robots.registry.username) | default "tekton" }}
+{{- $robotPassword := (.Values.robots.registry.password) | default (randAlphaNum 128) | b64enc }}
+
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-robot
+          image: alpine
+          env:
+            - name: "ROBOT_USERNAME"
+              value: "{{- $robotUsername }}"
+            - name: "ROBOT_PASSWORD"
+              value: "{{- $robotPassword }}"
+            - name: "REGISTRY_TOKEN"
+              value: "{{( printf "%s:%s" $registry_username $registry_password) | b64enc }}"
+          command:
+          - /bin/sh
+          - -c
+          - |
+          {{ $script | indent 12}}
+      restartPolicy: Never
+  backoffLimit: 10

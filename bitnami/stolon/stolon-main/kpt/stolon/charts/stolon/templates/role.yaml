@@ -1,0 +1,21 @@
+---
+# Source: stolon/charts/stolon/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: stolon
+  labels:
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
+rules:
+- apiGroups:
+    - ""
+  resources:
+    - pods
+    - endpoints
+    - configmaps
+    - events
+  verbs:
+    - "*"

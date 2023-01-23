@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+
+configMapGenerator:
+- files:
+  - scripts/create_robot_user_sh
+  - scripts/create_project_sh
+  - scripts/delete_project_sh
+  name: registry-scripts
+generatorOptions:
+  disableNameSuffixHash: true
+
+patches:
+- path: patches/registry-main-harbor-ingress-kustomize.yml
+  target:
+    kind: Ingress
+    name: registry-main-harbor-ingress
+resources:
+- yaml/registry-admin.yml
+- yaml/registry-main-harbor-chartmuseum.yml
+- yaml/registry-main-harbor-core.yml
+- yaml/registry-main-harbor-exporter-env.yml
+- yaml/registry-main-harbor-exporter.yml
+- yaml/registry-main-harbor-ingress.yml
+- yaml/registry-main-harbor-jobservice-env.yml
+- yaml/registry-main-harbor-jobservice-scandata.yml
+- yaml/registry-main-harbor-jobservice.yml
+- yaml/registry-main-harbor-portal.yml
+- yaml/registry-main-harbor-redis.yml
+- yaml/registry-main-harbor-registryctl.yml
+- yaml/registry-main-harbor-registry-htpasswd.yml
+- yaml/registry-main-harbor-registry.yml
+- yaml/registry-main-harbor-trivy.yml
+- yaml/registry-main-harbor.yml
+- yaml/tekton-robot.yml

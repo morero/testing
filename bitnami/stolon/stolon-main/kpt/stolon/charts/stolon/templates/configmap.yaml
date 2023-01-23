@@ -1,0 +1,12 @@
+---
+# Source: stolon/charts/stolon/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stolon
+  labels:
+    app: stolon
+    chart: stolon-1.7.2
+    release: stolon
+    heritage: Helm
+data:

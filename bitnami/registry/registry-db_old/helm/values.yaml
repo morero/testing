@@ -1,0 +1,10 @@
+
+databases:
+  postgres:
+    admin:
+      connection:
+        uri: "postgresql://postgres:postgres@stolon-proxy.stolon:5432"
+    default:
+      database: "registry"
+      username: "registry"
+      password: "registry"

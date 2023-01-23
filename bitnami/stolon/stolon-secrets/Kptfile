@@ -1,0 +1,38 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: redis-secrets
+packageMetadata:
+  shortDescription: sample description
+openAPI:
+  definitions:
+    io.k8s.cli.setters.password:
+      x-k8s-cli:
+        setter:
+          name: password
+          value: "stolon"
+          isSet: true
+    io.k8s.cli.setters.username:
+      x-k8s-cli:
+        setter:
+          name: username
+          value: "stolon"
+          isSet: true
+    io.k8s.cli.setters.repl-password:
+      x-k8s-cli:
+        setter:
+          name: repl-password
+          value: "repl"
+          isSet: true
+    io.k8s.cli.setters.repl-username:
+      x-k8s-cli:
+        setter:
+          name: repl-username
+          value: "repl"
+          isSet: true
+    io.k8s.cli.setters.generate-password-fields:
+      x-k8s-cli:
+        setter:
+          name: generate-password-fields
+          value: "password,repl_password"
+          isSet: true

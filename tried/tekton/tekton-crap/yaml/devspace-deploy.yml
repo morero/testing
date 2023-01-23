@@ -1,0 +1,87 @@
+---
+# Source: tekton/templates/ertia/pipelines/devspace-deploy.yaml
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: devspace-deploy
+  namespace: tekton-pipelines
+  labels:
+    app.kubernetes.io/version: '0.1'
+  annotations:
+    tekton.dev/pipelines.minVersion: '0.34.1'
+    tekton.dev/categories: build, deploy
+    tekton.dev/tags: clone, build, deploy
+    tekton.dev/displayName: "Build and deploy pipeline"
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    Ertia pipeline for building with devspace.
+  params:
+    - name: BASE_IMAGE
+      description: Image path
+      type: string
+      default: "devspacesh/devspace"
+    - name: GIT_URL
+      type: string
+      default: "https://github.com/rmorero/sample-golang"
+    - name: GIT_BRANCH
+      type: string
+      description: The branch, tag or SHA to checkout.
+      default: "main"
+    - name: GIT_REVISION
+      type: string
+      description: CommitID, tag, or similar
+      default: "latest"
+    - name: RELEASE_NAMESPACE
+      type: string
+      description: Namespace to deploy to
+      default: "apps"
+  tasks:
+    - name: clone
+      taskRef:
+        kind: ClusterTask
+        name: git-cli
+      workspaces:
+        - name: source
+          workspace: source
+      params:
+        - name: GIT_SCRIPT
+          value: |
+            if [ -z "$(params.GIT_REVISION)" ]; then
+              git clone -b $(params.GIT_BRANCH) $(params.GIT_URL) .
+            elif [ "$(params.GIT_REVISION)" = "0000000000000000000000000000000000000000" ]; then
+              git clone -b $(params.GIT_BRANCH) $(params.GIT_URL) .
+            else
+              git clone -b $(params.GIT_REVISION) $(params.GIT_URL) .
+            fi
+    - name: build
+      runAfter:
+        - clone
+      taskRef:
+        kind: ClusterTask
+        name: devspace-build
+      workspaces:
+        - name: source
+          workspace: source
+        - name: dockerconfig
+          workspace: dockerconfig
+      params:
+        - name: BASE_IMAGE
+          value: "$(params.BASE_IMAGE)"
+    - name: deploy
+      runAfter:
+        - build
+      taskRef:
+        kind: ClusterTask
+        name: devspace-deploy
+      workspaces:
+        - name: source
+          workspace: source
+        - name: dockerconfig
+          workspace: dockerconfig
+      params:
+        - name: BASE_IMAGE
+          value: "$(params.BASE_IMAGE)"
+  workspaces:
+    - name: source
+    - name: dockerconfig

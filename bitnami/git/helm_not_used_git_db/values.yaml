@@ -1,0 +1,10 @@
+
+databases:
+  postgres:
+    admin:
+      connection:
+        uri: "postgresql://postgres:d79dbde5cc51304156306ff6a966bf9d@stolon-proxy.stolon:5432"
+    default:
+      database: "git-db"
+      username: "git"
+      password: "git"

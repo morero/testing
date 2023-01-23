@@ -1,0 +1,77 @@
+---
+# Source: certs/charts/cert-manager/templates/cainjector/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cert-manager-cainjector
+  namespace: "cert-manager"
+  labels:
+    app.kubernetes.io/name: cert-manager
+    helm.sh/chart: cert-manager-0.8.12
+    app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: cainjector
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cert-manager
+      app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/component: cainjector
+  strategy:
+    rollingUpdate: {}
+    type: RollingUpdate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cert-manager
+        helm.sh/chart: cert-manager-0.8.12
+        app.kubernetes.io/instance: cert-manager
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: cainjector
+      annotations:
+    spec:
+      
+      securityContext:
+        fsGroup: 1001
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: cert-manager
+                    app.kubernetes.io/instance: cert-manager
+                namespaces:
+                  - "cert-manager"
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      initContainers:
+      serviceAccountName: cert-manager-cainjector
+      containers:
+        - name: cainjector
+          image: docker.io/bitnami/cainjector:1.10.2-debian-11-r0
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --v=2
+            - --leader-election-namespace=kube-system
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+          env:
+            - name: BITNAMI_DEBUG
+              value: "false"
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          envFrom:
+          resources:
+            limits: {}
+            requests: {}
+          volumeMounts:
+      volumes:

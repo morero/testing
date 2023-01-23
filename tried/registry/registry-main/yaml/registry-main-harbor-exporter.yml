@@ -1,0 +1,64 @@
+---
+# Source: registry/charts/harbor/templates/exporter/exporter-dpl.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry-main-harbor-exporter
+  labels:
+    heritage: Helm
+    release: registry-main
+    chart: harbor
+    app: "harbor"
+    component: exporter
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      release: registry-main
+      app: "harbor"
+      component: exporter
+  template:
+    metadata:
+      labels:
+        heritage: Helm
+        release: registry-main
+        chart: harbor
+        app: "harbor"
+        component: exporter
+      annotations:
+    spec:
+      securityContext:
+        runAsUser: 10000
+        fsGroup: 10000
+      automountServiceAccountToken: false
+      containers:
+        - name: exporter
+          image: goharbor/harbor-exporter:v2.6.2
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8001
+            initialDelaySeconds: 300
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8001
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          args: ["-log-level", "info"]
+          envFrom:
+            - configMapRef:
+                name: "registry-main-harbor-exporter-env"
+            - secretRef:
+                name: "registry-main-harbor-exporter"
+          env:
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+      volumes:
+        - name: config
+          secret:
+            secretName: "registry-main-harbor-exporter"
