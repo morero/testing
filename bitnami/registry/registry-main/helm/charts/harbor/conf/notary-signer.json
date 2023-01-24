@@ -1,13 +1,8 @@
 {
   "server": {
     "grpc_addr": ":7899",
-{{- if not .Values.notary.secretName }}
-    "tls_cert_file": "/etc/notary/notary-signer.crt",
-    "tls_key_file": "/etc/notary/notary-signer.key"
-{{- else }}
-    "tls_cert_file": "/etc/ssl/notary/cert/notary-signer.crt",
-    "tls_key_file": "/etc/ssl/notary/cert/notary-signer.key"
-{{- end }}
+    "tls_cert_file": "/etc/ssl/notary/tls.crt",
+    "tls_key_file": "/etc/ssl/notary/tls.key"
   },
   "logging": {
     "level": "{{ .Values.logLevel }}"

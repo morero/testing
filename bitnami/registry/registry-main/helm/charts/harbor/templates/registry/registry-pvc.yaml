@@ -1,36 +1,32 @@
 {{- if .Values.persistence.enabled }}
-{{- if and (not .Values.persistence.persistentVolumeClaim.registry.existingClaim) (eq .Values.persistence.imageChartStorage.type "filesystem") }}
+{{- $registry := .Values.persistence.persistentVolumeClaim.registry -}}
+{{- if and (not $registry.existingClaim) (eq .Values.persistence.imageChartStorage.type "filesystem") }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ include "harbor.registry" . }}
-  namespace: {{ .Release.Namespace | quote }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
-    {{- if .Values.commonLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/component: registry
+  name: {{ template "harbor.registry" . }}
   annotations:
-    {{- if eq .Values.persistence.resourcePolicy "keep" }}
-    helm.sh/resource-policy: keep
-    {{- end }}
-    {{- if .Values.commonAnnotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
-    {{- end }}
-    {{- if .Values.persistence.persistentVolumeClaim.registry.annotations }}
-    {{- toYaml .Values.persistence.persistentVolumeClaim.registry.annotations | nindent 4 }}
-    {{- end }}
-spec:
-  accessModes:
-  {{- range .Values.persistence.persistentVolumeClaim.registry.accessModes }}
-    - {{ . | quote }}
+  {{- range $key, $value := $registry.annotations }}
+    {{ $key }}: {{ $value | quote }}
   {{- end }}
+  {{- if eq .Values.persistence.resourcePolicy "keep" }}
+    helm.sh/resource-policy: keep
+  {{- end }}
+  labels:
+{{ include "harbor.labels" . | indent 4 }}
+    component: registry
+spec:
+  accessModes: 
+    - {{ $registry.accessMode }}
   resources:
     requests:
-      storage: {{ .Values.persistence.persistentVolumeClaim.registry.size }}
-  {{- if .Values.persistence.persistentVolumeClaim.registry.selector }}
-  selector: {{- include "common.tplvalues.render" (dict "value" .Values.persistence.persistentVolumeClaim.registry.selector "context" $) | nindent 2 }}
+      storage: {{ $registry.size }}
+  {{- if $registry.storageClass }}
+    {{- if eq "-" $registry.storageClass }}
+  storageClassName: ""
+    {{- else }}
+  storageClassName: {{ $registry.storageClass }}
+    {{- end }}
   {{- end }}
-  {{- include "common.storage.class" ( dict "persistence" .Values.persistence.persistentVolumeClaim.registry "global" .Values.global ) | nindent 2 }}
 {{- end }}
 {{- end }}

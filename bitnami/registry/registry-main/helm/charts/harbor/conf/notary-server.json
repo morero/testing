@@ -6,11 +6,7 @@
     "type": "remote",
     "hostname": "{{ template "harbor.notary-signer" . }}",
     "port": "7899",
-{{- if not .Values.notary.secretName }}
-    "tls_ca_file": "/etc/notary/notary-signer-ca.crt",
-{{- else }}
-    "tls_ca_file": "/etc/ssl/notary/cert/notary-signer-ca.crt",
-{{- end }}
+    "tls_ca_file": "/etc/ssl/notary/ca.crt",
     "key_algorithm": "ecdsa"
   },
   "logging": {
@@ -21,12 +17,12 @@
     "db_url": "{{ template "harbor.database.notaryServer" . }}"
   },
   "auth": {
-      "type": "token",
-      "options": {
-          "realm": "{{ template "harbor.externalUrl" . }}/service/token",
-          "service": "harbor-notary",
-          "issuer": "harbor-token-issuer",
-          "rootcertbundle": "/root.crt"
-      }
+    "type": "token",
+    "options": {
+      "realm": "{{ .Values.externalURL }}/service/token",
+      "service": "harbor-notary",
+      "issuer": "harbor-token-issuer",
+      "rootcertbundle": "/root.crt"
+    }
   }
 }
