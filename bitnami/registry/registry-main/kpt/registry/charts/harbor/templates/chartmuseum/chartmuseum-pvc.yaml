@@ -4,18 +4,17 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: registry-harbor-chartmuseum
-  namespace: "registry"
-  labels:
-    app.kubernetes.io/name: harbor
-    helm.sh/chart: harbor-16.3.0
-    app.kubernetes.io/instance: registry
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: chartmuseum
   annotations:
     helm.sh/resource-policy: keep
+  labels:
+    heritage: Helm
+    release: registry
+    chart: harbor
+    app: "harbor"
+    component: chartmuseum
 spec:
-  accessModes:
-    - "ReadWriteOnce"
+  accessModes: 
+    - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi

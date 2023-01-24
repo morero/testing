@@ -19,7 +19,7 @@ data:
   POSTGRESQL_USERNAME: "postgres"
   POSTGRESQL_DATABASE: "registry"
   POSTGRESQL_SSLMODE: "disable"
-  EXT_ENDPOINT: "https://core.harbor.domain"
+  EXT_ENDPOINT: "https://core.harbor.domain" # {"$kpt-set":"ext-endpoint"}
   CORE_URL: "http://registry-harbor-core:80"
   JOBSERVICE_URL: "http://registry-harbor-jobservice:80"
   REGISTRY_URL: "http://registry-harbor-registry:5000"

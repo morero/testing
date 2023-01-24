@@ -4,100 +4,73 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: registry-harbor-notary-signer
-  namespace: "registry"
   labels:
-    app.kubernetes.io/name: harbor
-    helm.sh/chart: harbor-16.3.0
-    app.kubernetes.io/instance: registry
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: notary-signer
+    heritage: Helm
+    release: registry
+    chart: harbor
+    app: "harbor"
+    component: notary-signer
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: harbor
-      app.kubernetes.io/instance: registry
-      app.kubernetes.io/component: notary-signer
-  strategy:
-    type: RollingUpdate
+      release: registry
+      app: "harbor"
+      component: notary-signer
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: harbor
-        helm.sh/chart: harbor-16.3.0
-        app.kubernetes.io/instance: registry
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/component: notary-signer
+        heritage: Helm
+        release: registry
+        chart: harbor
+        app: "harbor"
+        component: notary-signer
       annotations:
-        checksum/secret: 7eda95c78f114ee77c073370552903286048dc63336c349904e41ddf9ea99a14
+        checksum/secret: a1a79da56fa6f07ffb32dc4fcf1bf7cc760b233293cf03ee9260a59a26048637
     spec:
-      
-      automountServiceAccountToken: false
-      affinity:
-        podAffinity:
-          
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/name: harbor
-                    app.kubernetes.io/instance: registry
-                    app.kubernetes.io/component: notary-signer
-                namespaces:
-                  - "registry"
-                topologyKey: kubernetes.io/hostname
-              weight: 1
-        nodeAffinity:
-          
       securityContext:
-        fsGroup: 1001
+        runAsUser: 10000
+        fsGroup: 10000
+      automountServiceAccountToken: false
       containers:
-        - name: notary-signer
-          image: docker.io/bitnami/harbor-notary-signer:2.7.0-debian-11-r8
-          imagePullPolicy: "IfNotPresent"
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1001
-          env:
-            - name: BITNAMI_DEBUG
-              value: "false"
-            - name: MIGRATIONS_PATH
-              value: migrations/signer/postgresql
-            - name: DB_URL
-              valueFrom:
-                secretKeyRef:
-                  name: registry-harbor-notary-server-envvars
-                  key: signer_db_url
-            - name: NOTARY_SIGNER_DEFAULTALIAS
-              value: defaultalias
-          envFrom:
-          ports:
-            - containerPort: 7899
-              name: notary-signer
-          livenessProbe:
-            failureThreshold: 6
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
-            tcpSocket:
-              port: notary-signer
-          readinessProbe:
-            failureThreshold: 6
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
-            tcpSocket:
-              port: notary-signer
-          resources:
-            limits: {}
-            requests: {}
-          volumeMounts:
-            - name: notary-config
-              mountPath: /etc/notary
+      - name: notary-signer
+        image: goharbor/notary-signer-photon:v2.5.5
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /
+            scheme: "HTTPS"
+            port: 7899
+          initialDelaySeconds: 300
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            scheme: "HTTPS"
+            port: 7899
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        env:
+        - name: MIGRATIONS_PATH
+          value: migrations/signer/postgresql
+        - name: DB_URL
+          value: postgres://postgres:changeit@registry-harbor-database:5432/notarysigner?sslmode=disable
+        - name: NOTARY_SIGNER_DEFAULTALIAS
+          value: defaultalias
+        volumeMounts:
+        - name: config
+          mountPath: /etc/notary/signer-config.postgres.json
+          subPath: signer.json
+        - name: signer-certificate
+          mountPath: /etc/ssl/notary/tls.crt
+          subPath: tls.crt
+        - name: signer-certificate
+          mountPath: /etc/ssl/notary/tls.key
+          subPath: tls.key
       volumes:
-        - name: notary-config
-          secret:
-            secretName: registry-harbor-notary-server
+      - name: config
+        secret:
+          secretName: "registry-harbor-notary-server"
+      - name: signer-certificate
+        secret:
+          secretName: registry-harbor-notary-server

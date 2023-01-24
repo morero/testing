@@ -1,7 +1,7 @@
 # Default values for git-main.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-registry:
+harbor:
   replicaCount: 1
 
 
@@ -16,6 +16,9 @@ registry:
     host: redis-master.redis
     port: 6379
 
+  # Default user: admin
+  existingSecretAdminPassword: registry-admin
+  existingSecretAdminPasswordKey: password
     
 
     
@@ -30,23 +33,28 @@ registry:
     host: "stolon-proxy.stolon"
     port: 5432
     database: registry 
-  
-  ingress:
-    enabled: true
-    annotations:
-      kubernetes.io/ingress.class: traefik
-      cert-manager.io/cluster-issuer: letsencrypt-production
-    hosts:
-      - host: "registry.@DOMAIN"
-        paths:
-          - path: /
-            pathType: Prefix
-      - host: "registry.@PROVIDED_DOMAIN@"
-        paths:
-          - path: /
-            pathType: Prefix
+
+  expose:
+    type: ingress
     tls:
-      - secretName: registry-tls
-        hosts:
-          - "registry.@DOMAIN@"
+      enabled: true
+      certSource: secret
+      secret:
+        secretName: "registry-tls"
+        notarySecretName: "registry-tls"
+    ingress:
+      hosts:
+        core: core.local.ertia.cloud
+        notary: notary.local.ertia.cloud
+
+      annotations:
+        ingress.kubernetes.io/ssl-redirect: "true"
+        ingress.kubernetes.io/proxy-body-size: "0"
+        kubernetes.io/ingress.class: traefik
+        cert-manager.io/cluster-issuer: letsencrypt-staging
+  internalTLS:
+    enabled: false
+
+  externalURL: https://core.local.ertia.cloud
+
 

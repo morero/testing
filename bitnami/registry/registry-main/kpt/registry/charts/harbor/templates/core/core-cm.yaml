@@ -4,13 +4,11 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: registry-harbor-core
-  namespace: "registry"
   labels:
-    app.kubernetes.io/name: harbor
-    helm.sh/chart: harbor-16.3.0
-    app.kubernetes.io/instance: registry
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: core
+    heritage: Helm
+    release: registry
+    chart: harbor
+    app: "harbor"
 data:
   app.conf: |+
     appname = Harbor
@@ -18,4 +16,38 @@ data:
     enablegzip = true
 
     [prod]
-    httpport = "8080"
+    httpport = 8080
+  PORT: "8080"
+  DATABASE_TYPE: "postgresql"
+  POSTGRESQL_HOST: "registry-harbor-database"
+  POSTGRESQL_PORT: "5432"
+  POSTGRESQL_USERNAME: "postgres"
+  POSTGRESQL_DATABASE: "registry"
+  POSTGRESQL_SSLMODE: "disable"
+  POSTGRESQL_MAX_IDLE_CONNS: "100"
+  POSTGRESQL_MAX_OPEN_CONNS: "900"
+  EXT_ENDPOINT: "https://core.local.ertia.cloud"
+  CORE_URL: "http://registry-harbor-core:80"
+  JOBSERVICE_URL: "http://registry-harbor-jobservice"
+  REGISTRY_URL: "http://registry-harbor-registry:5000"
+  TOKEN_SERVICE_URL: "http://registry-harbor-core:80/service/token"
+  WITH_NOTARY: "true"
+  NOTARY_URL: "http://registry-harbor-notary-server:4443"
+  CORE_LOCAL_URL: "http://127.0.0.1:8080"
+  WITH_TRIVY: "true"
+  TRIVY_ADAPTER_URL: "http://registry-harbor-trivy:8080"
+  REGISTRY_STORAGE_PROVIDER_NAME: "filesystem"
+  WITH_CHARTMUSEUM: "true"
+  CHART_REPOSITORY_URL: "http://registry-harbor-chartmuseum"
+  LOG_LEVEL: "info"
+  CONFIG_PATH: "/etc/core/app.conf"
+  CHART_CACHE_DRIVER: "redis"
+  _REDIS_URL_CORE: "redis://registry-harbor-redis:6379/0?idle_timeout_seconds=30"
+  _REDIS_URL_REG: "redis://registry-harbor-redis:6379/2?idle_timeout_seconds=30"
+  PORTAL_URL: "http://registry-harbor-portal"
+  REGISTRY_CONTROLLER_URL: "http://registry-harbor-registry:8080"
+  REGISTRY_CREDENTIAL_USERNAME: "harbor_registry_user"
+  HTTP_PROXY: ""
+  HTTPS_PROXY: ""
+  NO_PROXY: "registry-harbor-core,registry-harbor-jobservice,registry-harbor-database,registry-harbor-chartmuseum,registry-harbor-notary-server,registry-harbor-notary-signer,registry-harbor-registry,registry-harbor-portal,registry-harbor-trivy,registry-harbor-exporter,127.0.0.1,localhost,.local,.internal"
+  PERMITTED_REGISTRY_TYPES_FOR_PROXY_CACHE: "docker-hub,harbor,azure-acr,aws-ecr,google-gcr,quay,docker-registry"

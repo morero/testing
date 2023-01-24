@@ -3,184 +3,135 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: registry-harbor-registry
-  namespace: "registry"
+  name: "registry-harbor-registry"
   labels:
-    app.kubernetes.io/name: harbor
-    helm.sh/chart: harbor-16.3.0
-    app.kubernetes.io/instance: registry
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: registry
+    heritage: Helm
+    release: registry
+    chart: harbor
+    app: "harbor"
+    component: registry
 spec:
   replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: harbor
-      app.kubernetes.io/instance: registry
-      app.kubernetes.io/component: registry
+  revisionHistoryLimit: 10
   strategy:
     type: RollingUpdate
+  selector:
+    matchLabels:
+      release: registry
+      app: "harbor"
+      component: registry
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: harbor
-        helm.sh/chart: harbor-16.3.0
-        app.kubernetes.io/instance: registry
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/component: registry
+        heritage: Helm
+        release: registry
+        chart: harbor
+        app: "harbor"
+        component: registry
       annotations:
-        checksum/configmap: 7b5ebf14640588e5d17a05d9061fb710d238b51d5b46a2ceb5a51ff9844a0932
-        checksum/secret: d73f6ca0bd248eb55ec2ceee00f9af1bace84c3b49d71ce0e313beab1079230a
-        checksum/secret-jobservice: 3d531f9734f0fa84ebcf2c871bc8b1511d00a39e5176a9b3d7014380a3e9b2d1
-        checksum/secret-core: 45e90d800176689fe7b26e2c337bbebaca8887f0554a7b64c82d19a130d6942e
+        checksum/configmap: 4d3eae339d490effc25aab89165bf9b849a5729bc606b2a95dffe4aeb86bf584
+        checksum/secret: 5ea39b40cc646e36ad651055ea58a4eac5c0cbc870194bf284c79c79f4ef5569
+        checksum/secret-jobservice: 8c8a363a660acaca0c87cbefc5026923dc0cf3788784164c652ec4ed2d753875
+        checksum/secret-core: fec87a44f65bd0e51391e069d870016e26eab24f6c0107a155837ba7c6bdc463
     spec:
-      
-      automountServiceAccountToken: false
-      affinity:
-        podAffinity:
-          
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/name: harbor
-                    app.kubernetes.io/instance: registry
-                    app.kubernetes.io/component: registry
-                namespaces:
-                  - "registry"
-                topologyKey: kubernetes.io/hostname
-              weight: 1
-        nodeAffinity:
-          
       securityContext:
-        fsGroup: 1001
-      initContainers:
+        runAsUser: 10000
+        fsGroup: 10000
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 120
       containers:
-        - name: registry
-          image: docker.io/bitnami/harbor-registry:2.7.0-debian-11-r8
-          imagePullPolicy: "IfNotPresent"
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1001
-          env:
-            - name: BITNAMI_DEBUG
-              value: "false"
-          envFrom:
-            - secretRef:
-                name: registry-harbor-registry
-          ports:
-            - containerPort: 5000
-              name: registry
-            - containerPort: 5001
-              name: debug
-          livenessProbe:
-            failureThreshold: 6
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
-            httpGet:
-              path: /
-              scheme: HTTP
-              port: registry
-          readinessProbe:
-            failureThreshold: 6
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
-            httpGet:
-              path: /
-              scheme: HTTP
-              port: registry
-          resources:
-            limits: {}
-            requests: {}
-          volumeMounts:
-            - name: registry-data
-              mountPath: /storage
-              subPath: 
-            - name: registry-root-certificate
-              mountPath: /etc/registry/root.crt
-              subPath: tls.crt
-            - name: registry-htpasswd
-              mountPath: /etc/registry/passwd
-              subPath: passwd
-            - name: registry-config
-              mountPath: /etc/registry/config.yml
-              subPath: config.yml
-        - name: registryctl
-          image: docker.io/bitnami/harbor-registryctl:2.7.0-debian-11-r8
-          imagePullPolicy: "IfNotPresent"
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1001
-          envFrom:
-            - secretRef:
-                name: registry-harbor-registry
-          env:
-            - name: BITNAMI_DEBUG
-              value: "false"
-            - name: CORE_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: registry-harbor-core
-                  key: secret
-            - name: JOBSERVICE_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: registry-harbor-jobservice
-                  key: secret
-          ports:
-            - containerPort: 8080
-              name: registryctl
-          livenessProbe:
-            failureThreshold: 6
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
-            httpGet:
-              path: /api/health
-              scheme: HTTP
-              port: registryctl
-          readinessProbe:
-            failureThreshold: 6
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
-            httpGet:
-              path: /api/health
-              scheme: HTTP
-              port: registryctl
-          resources:
-            limits: {}
-            requests: {}
-          volumeMounts:
-            - name: registry-data
-              mountPath: /storage
-              subPath: 
-            - name: registry-config
-              mountPath: /etc/registry/config.yml
-              subPath: config.yml
-            - name: registry-config
-              mountPath: /etc/registryctl/config.yml
-              subPath: ctl-config.yml
-      volumes:
-        - name: registry-htpasswd
-          secret:
-            secretName: registry-harbor-registry
-            items:
-              - key: REGISTRY_HTPASSWD
-                path: passwd
-        - name: registry-root-certificate
-          secret:
-            secretName: registry-harbor-core
-        - name: registry-config
-          configMap:
-            name: registry-harbor-registry
+      - name: registry
+        image: goharbor/registry-photon:v2.5.5
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /
+            scheme: HTTP
+            port: 5000
+          initialDelaySeconds: 300
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            scheme: HTTP
+            port: 5000
+          initialDelaySeconds: 1
+          periodSeconds: 10
+        args: ["serve", "/etc/registry/config.yml"]
+        envFrom:
+        - secretRef:
+            name: "registry-harbor-registry"
+        env:
+        ports:
+        - containerPort: 5000
+        - containerPort: 5001
+        volumeMounts:
         - name: registry-data
-          persistentVolumeClaim:
-            claimName: registry-harbor-registry
+          mountPath: /storage
+          subPath: 
+        - name: registry-htpasswd
+          mountPath: /etc/registry/passwd
+          subPath: passwd
+        - name: registry-config
+          mountPath: /etc/registry/config.yml
+          subPath: config.yml
+      - name: registryctl
+        image: goharbor/harbor-registryctl:v2.5.5
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            scheme: HTTP
+            port: 8080
+          initialDelaySeconds: 300
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            scheme: HTTP
+            port: 8080
+          initialDelaySeconds: 1
+          periodSeconds: 10
+        envFrom:
+        - configMapRef:
+            name: "registry-harbor-registryctl"
+        - secretRef:
+            name: "registry-harbor-registry"
+        - secretRef:
+            name: "registry-harbor-registryctl"
+        env:
+        - name: CORE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: registry-harbor-core
+              key: secret
+        - name: JOBSERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: registry-harbor-jobservice
+              key: JOBSERVICE_SECRET
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: registry-data
+          mountPath: /storage
+          subPath: 
+        - name: registry-config
+          mountPath: /etc/registry/config.yml
+          subPath: config.yml
+        - name: registry-config
+          mountPath: /etc/registryctl/config.yml
+          subPath: ctl-config.yml
+      volumes:
+      - name: registry-htpasswd
+        secret:
+          secretName: registry-harbor-registry-htpasswd
+          items:
+            - key: REGISTRY_HTPASSWD
+              path: passwd
+      - name: registry-config
+        configMap:
+          name: "registry-harbor-registry"
+      - name: registry-data
+        persistentVolumeClaim:
+          claimName: registry-harbor-registry

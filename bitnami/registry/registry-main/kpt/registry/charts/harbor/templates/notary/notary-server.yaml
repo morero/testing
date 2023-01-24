@@ -4,105 +4,75 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: registry-harbor-notary-server
-  namespace: "registry"
   labels:
-    app.kubernetes.io/name: harbor
-    helm.sh/chart: harbor-16.3.0
-    app.kubernetes.io/instance: registry
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: notary-server
+    heritage: Helm
+    release: registry
+    chart: harbor
+    app: "harbor"
+    component: notary-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: harbor
-      app.kubernetes.io/instance: registry
-      app.kubernetes.io/component: notary-server
-  strategy:
-    type: RollingUpdate
+      release: registry
+      app: "harbor"
+      component: notary-server
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: harbor
-        helm.sh/chart: harbor-16.3.0
-        app.kubernetes.io/instance: registry
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/component: notary-server
+        heritage: Helm
+        release: registry
+        chart: harbor
+        app: "harbor"
+        component: notary-server
       annotations:
-        checksum/secret: 40fd1233ad3076513058beff83b6b74c09b3e389ea539c8f55e317b9655956f0
-        checksum/secret-core: c2e2afbf683a52f43ef525417f314dadca5838fa9a33dfa35e00c94e7e5735cf
+        checksum/secret: 63db0f9374ee98b2913329633794b105e7cf532ccf98a44f1234122fc9ebe3ee
+        checksum/secret-core: 090092dd40d1da450d72fc9b2635d513ea6d9833c4dd0374c8583bb8f13a2885
     spec:
-      
-      automountServiceAccountToken: false
-      affinity:
-        podAffinity:
-          
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/name: harbor
-                    app.kubernetes.io/instance: registry
-                    app.kubernetes.io/component: notary-server
-                namespaces:
-                  - "registry"
-                topologyKey: kubernetes.io/hostname
-              weight: 1
-        nodeAffinity:
-          
       securityContext:
-        fsGroup: 1001
+        runAsUser: 10000
+        fsGroup: 10000
+      automountServiceAccountToken: false
       containers:
-        - name: notary-server
-          image: "docker.io/bitnami/harbor-notary-server:2.7.0-debian-11-r8"
-          imagePullPolicy: "IfNotPresent"
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1001
-          env:
-            - name: BITNAMI_DEBUG
-              value: "false"
-            - name: MIGRATIONS_PATH
-              value: migrations/server/postgresql
-            - name: DB_URL
-              valueFrom:
-                secretKeyRef:
-                  name: registry-harbor-notary-server-envvars
-                  key: server_db_url
-          envFrom:
-          ports:
-            - containerPort: 4443
-              name: notary-server
-          livenessProbe:
-            failureThreshold: 6
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
-            tcpSocket:
-              port: notary-server
-          readinessProbe:
-            failureThreshold: 6
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
-            tcpSocket:
-              port: notary-server
-          resources:
-            limits: {}
-            requests: {}
-          volumeMounts:
-            - name: notary-config
-              mountPath: /etc/notary
-            - name: root-certificate
-              mountPath: /root.crt
-              subPath: tls.crt
+      - name: notary-server
+        image: goharbor/notary-server-photon:v2.5.5
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /_notary_server/health
+            scheme: "HTTP"
+            port: 4443
+          initialDelaySeconds: 300
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /_notary_server/health
+            scheme: "HTTP"
+            port: 4443
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        env:
+        - name: MIGRATIONS_PATH
+          value: migrations/server/postgresql
+        - name: DB_URL
+          value: postgres://postgres:changeit@registry-harbor-database:5432/notaryserver?sslmode=disable
+        volumeMounts:
+        - name: config
+          mountPath: /etc/notary/server-config.postgres.json
+          subPath: server.json
+        - name: token-service-certificate
+          mountPath: /root.crt
+          subPath: tls.crt
+        - name: signer-certificate
+          mountPath: /etc/ssl/notary/ca.crt
+          subPath: ca.crt
       volumes:
-        - name: notary-config
-          secret:
-            secretName: registry-harbor-notary-server
-        - name: root-certificate
-          secret:
-            secretName: registry-harbor-core
+      - name: config
+        secret:
+          secretName: "registry-harbor-notary-server"
+      - name: token-service-certificate
+        secret:
+          secretName: registry-harbor-core
+      - name: signer-certificate
+        secret:
+          secretName: registry-harbor-notary-server

@@ -3,107 +3,79 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: registry-harbor-chartmuseum
-  namespace: "registry"
+  name: "registry-harbor-chartmuseum"
   labels:
-    app.kubernetes.io/name: harbor
-    helm.sh/chart: harbor-16.3.0
-    app.kubernetes.io/instance: registry
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: chartmuseum
+    heritage: Helm
+    release: registry
+    chart: harbor
+    app: "harbor"
+    component: chartmuseum
 spec:
   replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: harbor
-      app.kubernetes.io/instance: registry
-      app.kubernetes.io/component: chartmuseum
+  revisionHistoryLimit: 10
   strategy:
     type: RollingUpdate
+  selector:
+    matchLabels:
+      release: registry
+      app: "harbor"
+      component: chartmuseum
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: harbor
-        app.kubernetes.io/instance: registry
-        app.kubernetes.io/component: chartmuseum
+        heritage: Helm
+        release: registry
+        chart: harbor
+        app: "harbor"
+        component: chartmuseum
       annotations:
-        checksum/configmap-envvars: be14e2f63532efbe1c512b87fb6da0b62843a95d39de62109fef1974f618bc5e
-        checksum/secret: ca1b06f5122a2d7295af89175bf71ec8d7290345f47f7c69111a5d51167844a5
-        checksum/secret-core: e00b9c1ac796c4fa556d3b64a29dda8ad54a07b444bb4bbaa36b9ce87e23f009
+        checksum/configmap: 23c26e12ded30e12d7b0a4a68120e8a383d1ad7bca55a3385a066a1daee65535
+        checksum/secret: 1f31738d069828d7a38d3fc5377467e919ae6cedabd9fbfd7ea223e576ec2273
+        checksum/secret-core: 9d2bd9fed335936551d989e09f46205d6f7cb9deef5811ec4cc934c225d67962
     spec:
-      
-      automountServiceAccountToken: false
-      affinity:
-        podAffinity:
-          
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/name: harbor
-                    app.kubernetes.io/instance: registry
-                    app.kubernetes.io/component: chartmuseum
-                namespaces:
-                  - "registry"
-                topologyKey: kubernetes.io/hostname
-              weight: 1
-        nodeAffinity:
-          
       securityContext:
-        fsGroup: 1001
+        runAsUser: 10000
+        fsGroup: 10000
+      automountServiceAccountToken: false
       containers:
-        - name: chartmuseum
-          image: docker.io/bitnami/chartmuseum:0.15.0-debian-11-r59
-          imagePullPolicy: "IfNotPresent"
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1001
-          env:
-            - name: DEBUG
-              value: "0"
-            - name: BASIC_AUTH_PASS
-              valueFrom:
-                secretKeyRef:
-                  # Take the password from the core component secret
-                  name: registry-harbor-core
-                  key: secret
-          envFrom:
-            - configMapRef:
-                name: registry-harbor-chartmuseum-envvars
-            - secretRef:
-                name: registry-harbor-chartmuseum-secret
-          ports:
-            - containerPort: 9999
-              name: http
-          livenessProbe:
-            failureThreshold: 6
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
-            httpGet:
-              path: /health
-              port: http
-              scheme: HTTP
-          readinessProbe:
-            failureThreshold: 6
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
-            httpGet:
-              path: /health
-              port: http
-              scheme: HTTP
-          resources:
-            limits: {}
-            requests: {}
-          volumeMounts:
-            - name: chartmuseum-data
-              mountPath: /bitnami/data
-              subPath: 
-      volumes:
+      - name: chartmuseum
+        image: goharbor/chartmuseum-photon:v2.5.5
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /health
+            scheme: HTTP
+            port: 9999
+          initialDelaySeconds: 300
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            scheme: HTTP
+            port: 9999
+          initialDelaySeconds: 1
+          periodSeconds: 10
+        envFrom:
+        - configMapRef:
+            name: "registry-harbor-chartmuseum"
+        - secretRef:
+            name: "registry-harbor-chartmuseum"
+        env:
+          - name: BASIC_AUTH_PASS
+            valueFrom:
+              secretKeyRef:
+                name: registry-harbor-core
+                key: secret
+          - # Needed to make AWS' client connect correctly (see https://github.com/helm/chartmuseum/issues/280)
+            name: AWS_SDK_LOAD_CONFIG
+            value: "1"
+        ports:
+        - containerPort: 9999
+        volumeMounts:
         - name: chartmuseum-data
-          persistentVolumeClaim:
-            claimName: registry-harbor-chartmuseum
+          mountPath: /chart_storage
+          subPath: 
+      volumes:
+      - name: chartmuseum-data
+        persistentVolumeClaim:
+          claimName: registry-harbor-chartmuseum

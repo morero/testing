@@ -1,0 +1,29 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: kpt
+packageMetadata:
+  shortDescription: sample description
+openAPI:
+  definitions:
+    io.k8s.cli.setters.core-domain:
+      x-k8s-cli:
+        setter:
+          name: core-domain
+          value: "core.local.ertia.cloud"
+    io.k8s.cli.setters.notary-domain:
+      x-k8s-cli:
+        setter:
+          name: notary-domain
+          value: "notary.local.ertia.cloud"
+    io.k8s.cli.setters.ext-endpoint:
+      x-k8s-cli:
+        setter:
+          name: ext-endpoint
+          value: "https://core.local.ertia.cloud"
+    io.k8s.cli.setters.generate-password-fields:
+      x-k8s-cli:
+        setter:
+          name: generate-password-fields
+          value: "password"
+

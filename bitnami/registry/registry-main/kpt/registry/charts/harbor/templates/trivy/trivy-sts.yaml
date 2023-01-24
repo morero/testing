@@ -4,95 +4,119 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: registry-harbor-trivy
-  namespace: "registry"
   labels:
-    app.kubernetes.io/name: harbor
-    helm.sh/chart: harbor-16.3.0
-    app.kubernetes.io/instance: registry
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: trivy
+    heritage: Helm
+    release: registry
+    chart: harbor
+    app: "harbor"
+    component: trivy
 spec:
   replicas: 1
   serviceName: registry-harbor-trivy
-  updateStrategy:
-    type: RollingUpdate
   selector:
     matchLabels:
-      app.kubernetes.io/name: harbor
-      app.kubernetes.io/instance: registry
-      app.kubernetes.io/component: trivy
+      release: registry
+      app: "harbor"
+      component: trivy
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: harbor
-        helm.sh/chart: harbor-16.3.0
-        app.kubernetes.io/instance: registry
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/component: trivy
+        heritage: Helm
+        release: registry
+        chart: harbor
+        app: "harbor"
+        component: trivy
       annotations:
-        checksum/configmap-env: fa166c9afcc8798f7fe82a142a07708e2f0834d8f47d4be1c4ba080c35c5e427
-        checksum/secret-env: 3e03fb190d7290d18d4893c4d7a0bd9ccf34b2c5cec484082dd9723204e14913
+        checksum/secret: 789fe3b923a481e179463acdcf8eb6a12a329656ef53182c03ce28b8bc81e8ff
     spec:
-      
-      affinity:
-        podAffinity:
-          
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/name: harbor
-                    app.kubernetes.io/instance: registry
-                    app.kubernetes.io/component: trivy
-                namespaces:
-                  - "registry"
-                topologyKey: kubernetes.io/hostname
-              weight: 1
-        nodeAffinity:
-          
       securityContext:
-        fsGroup: 1001
+        runAsUser: 10000
+        fsGroup: 10000
       automountServiceAccountToken: false
-      initContainers:
       containers:
         - name: trivy
-          image: docker.io/bitnami/harbor-adapter-trivy:2.7.0-debian-11-r7
-          imagePullPolicy: "IfNotPresent"
+          image: goharbor/trivy-adapter-photon:v2.5.5
+          imagePullPolicy: IfNotPresent
           securityContext:
-            runAsNonRoot: true
-            runAsUser: 1001
+            privileged: false
+            allowPrivilegeEscalation: false
           env:
-            - name: BITNAMI_DEBUG
+            - name: HTTP_PROXY
+              value: ""
+            - name: HTTPS_PROXY
+              value: ""
+            - name: NO_PROXY
+              value: "registry-harbor-core,registry-harbor-jobservice,registry-harbor-database,registry-harbor-chartmuseum,registry-harbor-notary-server,registry-harbor-notary-signer,registry-harbor-registry,registry-harbor-portal,registry-harbor-trivy,registry-harbor-exporter,127.0.0.1,localhost,.local,.internal"
+            - name: "SCANNER_LOG_LEVEL"
+              value: "info"
+            - name: "SCANNER_TRIVY_CACHE_DIR"
+              value: "/home/scanner/.cache/trivy"
+            - name: "SCANNER_TRIVY_REPORTS_DIR"
+              value: "/home/scanner/.cache/reports"
+            - name: "SCANNER_TRIVY_DEBUG_MODE"
               value: "false"
-          envFrom:
-            - configMapRef:
-                name: registry-harbor-trivy-envvars
-            - secretRef:
-                name: registry-harbor-trivy-envvars
+            - name: "SCANNER_TRIVY_VULN_TYPE"
+              value: "os,library"
+            - name: "SCANNER_TRIVY_TIMEOUT"
+              value: "5m0s"
+            - name: "SCANNER_TRIVY_GITHUB_TOKEN"
+              valueFrom:
+                secretKeyRef:
+                  name: registry-harbor-trivy
+                  key: gitHubToken
+            - name: "SCANNER_TRIVY_SEVERITY"
+              value: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
+            - name: "SCANNER_TRIVY_IGNORE_UNFIXED"
+              value: "false"
+            - name: "SCANNER_TRIVY_SKIP_UPDATE"
+              value: "false"
+            - name: "SCANNER_TRIVY_OFFLINE_SCAN"
+              value: "false"
+            - name: "SCANNER_TRIVY_INSECURE"
+              value: "false"
+            - name: SCANNER_API_SERVER_ADDR
+              value: ":8080"
+            - name: "SCANNER_REDIS_URL"
+              valueFrom:
+                secretKeyRef:
+                  name: registry-harbor-trivy
+                  key: redisURL
+            - name: "SCANNER_STORE_REDIS_URL"
+              valueFrom:
+                secretKeyRef:
+                  name: registry-harbor-trivy
+                  key: redisURL
+            - name: "SCANNER_JOB_QUEUE_REDIS_URL"
+              valueFrom:
+                secretKeyRef:
+                  name: registry-harbor-trivy
+                  key: redisURL
           ports:
             - name: api-server
               containerPort: 8080
+          volumeMounts:
+          - name: data
+            mountPath: /home/scanner/.cache
+            subPath: 
+            readOnly: false
           livenessProbe:
-            failureThreshold: 6
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
             httpGet:
               scheme: HTTP
               path: /probe/healthy
               port: api-server
-          readinessProbe:
-            failureThreshold: 6
-            initialDelaySeconds: 20
+            initialDelaySeconds: 5
             periodSeconds: 10
             successThreshold: 1
-            timeoutSeconds: 5
+            failureThreshold: 10
+          readinessProbe:
             httpGet:
               scheme: HTTP
               path: /probe/ready
               port: api-server
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
           resources:
             limits:
               cpu: 1
@@ -100,20 +124,17 @@ spec:
             requests:
               cpu: 200m
               memory: 512Mi
-          volumeMounts:
-            - name: data
-              mountPath: /bitnami/harbor-adapter-trivy/.cache
-              readOnly: false
-      volumes:
   volumeClaimTemplates:
-    - metadata:
-        name: data
-        labels:
-          app.kubernetes.io/name: harbor
-          app.kubernetes.io/instance: registry
-      spec:
-        accessModes:
-          - "ReadWriteOnce"
-        resources:
-          requests:
-            storage: "5Gi"
+  - metadata:
+      name: data
+      labels:
+        heritage: Helm
+        release: registry
+        chart: harbor
+        app: "harbor"
+      annotations:
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: "5Gi"

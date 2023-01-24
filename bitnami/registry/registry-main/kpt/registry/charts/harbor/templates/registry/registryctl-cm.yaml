@@ -1,0 +1,12 @@
+---
+# Source: registry/charts/harbor/templates/registry/registryctl-cm.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "registry-harbor-registryctl"
+  labels:
+    heritage: Helm
+    release: registry
+    chart: harbor
+    app: "harbor"
+data:

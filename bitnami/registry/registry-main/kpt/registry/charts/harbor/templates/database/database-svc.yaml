@@ -1,9 +1,9 @@
 ---
-# Source: registry/charts/harbor/templates/chartmuseum/chartmuseum-svc.yaml
+# Source: registry/charts/harbor/templates/database/database-svc.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: "registry-harbor-chartmuseum"
+  name: "registry-harbor-database"
   labels:
     heritage: Helm
     release: registry
@@ -11,9 +11,8 @@ metadata:
     app: "harbor"
 spec:
   ports:
-    - port: 80
-      targetPort: 9999
+    - port: 5432
   selector:
     release: registry
     app: "harbor"
-    component: chartmuseum
+    component: database

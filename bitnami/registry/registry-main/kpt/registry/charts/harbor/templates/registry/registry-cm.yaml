@@ -3,18 +3,17 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: registry-harbor-registry
-  namespace: "registry"
+  name: "registry-harbor-registry"
   labels:
-    app.kubernetes.io/name: harbor
-    helm.sh/chart: harbor-16.3.0
-    app.kubernetes.io/instance: registry
-    app.kubernetes.io/managed-by: Helm
+    heritage: Helm
+    release: registry
+    chart: harbor
+    app: "harbor"
 data:
   config.yml: |+
     version: 0.1
     log:
-      level: debug
+      level: info
       fields:
         service: registry
     storage:
@@ -24,17 +23,27 @@ data:
         layerinfo: redis
       maintenance:
         uploadpurging:
-          enabled: false
+          enabled: true
+          age: 168h
+          interval: 24h
+          dryrun: false
       delete:
         enabled: true
       redirect:
         disable: false
     redis:
-      addr: "registry-redis-master:6379"
+      addr: registry-harbor-redis:6379
       db: 2
+      readtimeout: 10s
+      writetimeout: 10s
+      dialtimeout: 10s
+      pool:
+        maxidle: 100
+        maxactive: 500
+        idletimeout: 60s
     http:
-      relativeurls: false
       addr: :5000
+      relativeurls: false
       # set via environment variable
       # secret: placeholder
       debug:
@@ -45,9 +54,12 @@ data:
         path: /etc/registry/passwd
     validation:
       disabled: true
+    compatibility:
+      schema1:
+        enabled: true
   ctl-config.yml: |+
     ---
     protocol: "http"
     port: 8080
-    log_level: debug
+    log_level: info
     registry_config: "/etc/registry/config.yml"
