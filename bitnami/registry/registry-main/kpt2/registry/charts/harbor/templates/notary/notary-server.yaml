@@ -1,0 +1,78 @@
+---
+# Source: registry/charts/harbor/templates/notary/notary-server.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry-harbor-notary-server
+  labels:
+    heritage: Helm
+    release: registry
+    chart: harbor
+    app: "harbor"
+    component: notary-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      release: registry
+      app: "harbor"
+      component: notary-server
+  template:
+    metadata:
+      labels:
+        heritage: Helm
+        release: registry
+        chart: harbor
+        app: "harbor"
+        component: notary-server
+      annotations:
+        checksum/secret: cb44fcf20b60b1ff0fc3f61c3e982e5ecb71642a3b534c837e37e801fe9e39ea
+        checksum/secret-core: 17ee553865f90cdc5f95abab77833668e129007d9d3f4d6d47938d54f5646b1b
+    spec:
+      securityContext:
+        runAsUser: 10000
+        fsGroup: 10000
+      automountServiceAccountToken: false
+      containers:
+      - name: notary-server
+        image: goharbor/notary-server-photon:v2.5.5
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /_notary_server/health
+            scheme: "HTTP"
+            port: 4443
+          initialDelaySeconds: 300
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /_notary_server/health
+            scheme: "HTTP"
+            port: 4443
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        env:
+        - name: MIGRATIONS_PATH
+          value: migrations/server/postgresql
+        - name: DB_URL
+          value: postgres://postgres:changeit@registry-harbor-database:5432/notaryserver?sslmode=disable
+        volumeMounts:
+        - name: config
+          mountPath: /etc/notary/server-config.postgres.json
+          subPath: server.json
+        - name: token-service-certificate
+          mountPath: /root.crt
+          subPath: tls.crt
+        - name: signer-certificate
+          mountPath: /etc/ssl/notary/ca.crt
+          subPath: ca.crt
+      volumes:
+      - name: config
+        secret:
+          secretName: "registry-harbor-notary-server"
+      - name: token-service-certificate
+        secret:
+          secretName: registry-harbor-core
+      - name: signer-certificate
+        secret:
+          secretName: registry-harbor-notary-server

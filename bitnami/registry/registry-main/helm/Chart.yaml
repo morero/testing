@@ -26,9 +26,4 @@ appVersion: "1.16.0"
 # Registry dependencies
 dependencies:
 - name: harbor
-  version: 1.9.5
-- name: common
-  repository: https://charts.bitnami.com/bitnami
-  tags:
-    - bitnami-common
-  version: 1.x.x
+  version: 1.4.0-dev

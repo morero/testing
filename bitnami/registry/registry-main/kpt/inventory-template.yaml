@@ -1,5 +1,5 @@
 # NOTE: auto-generated. Some fields should NOT be modified.
-# Date: 2023-01-19 18:05:28 CET
+# Date: 2023-01-24 11:45:19 CET
 #
 # Contains the "inventory object" template ConfigMap.
 # When this object is applied, it is handled specially,
@@ -25,10 +25,10 @@ metadata:
   # NOTE: The name of the inventory object does NOT have
   # any impact on group-related functionality such as
   # deletion or pruning.
-  name: inventory-59096592
+  name: inventory-19319866
   labels:
     # DANGER: Do not change the value of this label.
     # Changing this value will cause a loss of continuity
     # with previously applied grouped objects. Set deletion
     # and pruning functionality will be impaired.
-    cli-utils.sigs.k8s.io/inventory-id: e7e5930c-6427-497d-9b6a-18f855a96ede
+    cli-utils.sigs.k8s.io/inventory-id: c364dae8-3a88-4c59-837d-40fcf1779faa

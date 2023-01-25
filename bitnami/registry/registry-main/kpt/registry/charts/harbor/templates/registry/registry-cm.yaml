@@ -32,7 +32,7 @@ data:
       redirect:
         disable: false
     redis:
-      addr: registry-harbor-redis:6379
+      addr: redis-master.redis:6379
       db: 2
       readtimeout: 10s
       writetimeout: 10s

@@ -26,7 +26,7 @@ spec:
         app: "harbor"
         component: notary-signer
       annotations:
-        checksum/secret: a1a79da56fa6f07ffb32dc4fcf1bf7cc760b233293cf03ee9260a59a26048637
+        checksum/secret: 0c609c4ca166ed5c5ff7e1239dd4e4c24d37122a7055c3e159bb39854531cd02
     spec:
       securityContext:
         runAsUser: 10000
@@ -34,7 +34,7 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: notary-signer
-        image: goharbor/notary-signer-photon:v2.5.5
+        image: goharbor/notary-signer-photon:dev
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -54,7 +54,10 @@ spec:
         - name: MIGRATIONS_PATH
           value: migrations/signer/postgresql
         - name: DB_URL
-          value: postgres://postgres:changeit@registry-harbor-database:5432/notarysigner?sslmode=disable
+          valueFrom:
+            secretKeyRef:
+              name: registry-harbor-notary-server
+              key: NOTARY_SIGNER_DB_URL
         - name: NOTARY_SIGNER_DEFAULTALIAS
           value: defaultalias
         volumeMounts:

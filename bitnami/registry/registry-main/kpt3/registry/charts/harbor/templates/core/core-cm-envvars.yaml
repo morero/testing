@@ -1,4 +1,3 @@
----
 # Source: registry/charts/harbor/templates/core/core-cm-envvars.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -19,7 +18,7 @@ data:
   POSTGRESQL_USERNAME: "postgres"
   POSTGRESQL_DATABASE: "registry"
   POSTGRESQL_SSLMODE: "disable"
-  EXT_ENDPOINT: "https://core.harbor.domain" # {"$kpt-set":"ext-endpoint"}
+  EXT_ENDPOINT: "https://core.7xqfswmw24tga222.ertia.cloud" # {"$kpt-set":"ext-endpoint"}
   CORE_URL: "http://registry-harbor-core:80"
   JOBSERVICE_URL: "http://registry-harbor-jobservice:80"
   REGISTRY_URL: "http://registry-harbor-registry:5000"

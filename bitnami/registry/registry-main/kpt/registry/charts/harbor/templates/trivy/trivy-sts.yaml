@@ -27,7 +27,7 @@ spec:
         app: "harbor"
         component: trivy
       annotations:
-        checksum/secret: 789fe3b923a481e179463acdcf8eb6a12a329656ef53182c03ce28b8bc81e8ff
+        checksum/secret: 9e08f9dd8163f205b772203cc3f9a8bdf0c9761012356236f74239afdeeed13c
     spec:
       securityContext:
         runAsUser: 10000
@@ -35,7 +35,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: trivy
-          image: goharbor/trivy-adapter-photon:v2.5.5
+          image: goharbor/trivy-adapter-photon:dev
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false

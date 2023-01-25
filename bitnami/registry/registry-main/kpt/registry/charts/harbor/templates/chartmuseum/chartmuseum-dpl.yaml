@@ -29,9 +29,9 @@ spec:
         app: "harbor"
         component: chartmuseum
       annotations:
-        checksum/configmap: 23c26e12ded30e12d7b0a4a68120e8a383d1ad7bca55a3385a066a1daee65535
-        checksum/secret: 1f31738d069828d7a38d3fc5377467e919ae6cedabd9fbfd7ea223e576ec2273
-        checksum/secret-core: 9d2bd9fed335936551d989e09f46205d6f7cb9deef5811ec4cc934c225d67962
+        checksum/configmap: 45d215ab3a384a7b65643b728beb88515899141dab7c7a41dc234d11c292670a
+        checksum/secret: 007aaaaf61be527cd765b3084429c96294fc490956dd6efdb6e8c9eef37ce340
+        checksum/secret-core: 0316aecbd4ac9aa609297b2e6513ac5469eaefb8cff400a833eecf4578febbbe
     spec:
       securityContext:
         runAsUser: 10000
@@ -39,7 +39,7 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: chartmuseum
-        image: goharbor/chartmuseum-photon:v2.5.5
+        image: goharbor/chartmuseum-photon:dev
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:

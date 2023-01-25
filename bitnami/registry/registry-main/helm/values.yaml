@@ -5,16 +5,12 @@ harbor:
   replicaCount: 1
 
 
-  # Modifications of bitnami values
-  redis:
-    enabled: false
-    auth:
-      existingSecret: redis-auth
 
-    
-  externalRedis:
-    host: redis-master.redis
-    port: 6379
+  redis:
+    type: external
+    external:
+#      existingSecret: redis-auth # NO AUTH used for now, harbor helm won't support it
+      addr: redis-master.redis:6379
 
   # Default user: admin
   existingSecretAdminPassword: registry-admin

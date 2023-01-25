@@ -29,19 +29,20 @@ spec:
         app: "harbor"
         component: registry
       annotations:
-        checksum/configmap: 4d3eae339d490effc25aab89165bf9b849a5729bc606b2a95dffe4aeb86bf584
-        checksum/secret: 5ea39b40cc646e36ad651055ea58a4eac5c0cbc870194bf284c79c79f4ef5569
-        checksum/secret-jobservice: 8c8a363a660acaca0c87cbefc5026923dc0cf3788784164c652ec4ed2d753875
-        checksum/secret-core: fec87a44f65bd0e51391e069d870016e26eab24f6c0107a155837ba7c6bdc463
+        checksum/configmap: 4787a0807cc3e949660a9171731a0bc72cacde5409addeb677ddbe982d6c2f67
+        checksum/secret: 2b53f217d0dae847c62d046e4811dee284935c7fd755e583162a45c401e5dbe0
+        checksum/secret-jobservice: 3c379f12b7c4018861430a03cbb7030df8b2260c4448f35025e4a33dc08a8536
+        checksum/secret-core: 3f4bd57b1ca67f7e5263b2b181cb53c282464aca38f156b43b95a3c20b5fde74
     spec:
       securityContext:
         runAsUser: 10000
         fsGroup: 10000
+        fsGroupChangePolicy: OnRootMismatch
       automountServiceAccountToken: false
       terminationGracePeriodSeconds: 120
       containers:
       - name: registry
-        image: goharbor/registry-photon:v2.5.5
+        image: goharbor/registry-photon:dev
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -76,7 +77,7 @@ spec:
           mountPath: /etc/registry/config.yml
           subPath: config.yml
       - name: registryctl
-        image: goharbor/harbor-registryctl:v2.5.5
+        image: goharbor/harbor-registryctl:dev
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -126,6 +127,7 @@ spec:
       - name: registry-htpasswd
         secret:
           secretName: registry-harbor-registry-htpasswd
+          
           items:
             - key: REGISTRY_HTPASSWD
               path: passwd

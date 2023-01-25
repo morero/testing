@@ -1,5 +1,6 @@
 redis:
   auth:
+    enabled: false # No auth for now, harbor wont support it...
     existingSecret: redis-auth
     existingSecretPasswordKey: "password"
 

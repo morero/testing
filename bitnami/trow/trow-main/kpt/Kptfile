@@ -1,0 +1,50 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: trow-main
+packageMetadata:
+  shortDescription: sample description
+openAPI:
+  definitions:
+    io.k8s.cli.setters.domains:
+      x-k8s-cli:
+        setter:
+          name: domains
+          value: "registry.7xqfswmw24tga222.ertia.cloud"
+          isSet: true
+    io.k8s.cli.setters.cert-issuer:
+      x-k8s-cli:
+        setter:
+          name: cert-issuer
+          value: "letsencrypt-staging"
+    io.k8s.cli.setters.registry-domain:
+      x-k8s-cli:
+        setter:
+          name: registry-domain
+          value: "registry.7xqfswmw24tga222.ertia.cloud"
+          isSet: true
+    io.k8s.cli.setters.username:
+      x-k8s-cli:
+        setter:
+          name: username
+          value: "registry"
+    io.k8s.cli.setters.password:
+      x-k8s-cli:
+        setter:
+          name: password
+          value: "registry"
+    io.k8s.cli.setters.auth:
+      x-k8s-cli:
+        setter:
+          name: auth
+          value: "cmVnaXN0cnk6cmVnaXN0cnkK"
+    io.k8s.cli.setters.dockerconfigjson:
+      x-k8s-cli:
+        setter:
+          name: dockerconfigjson
+          value: "ewogICAgICAgICJhdXRocyI6IHsKICAgICAgICAgICAgICAgICJyZWdpc3RyeS5sb2NhbC5lcnRpYS5jbG91ZCI6IHsKICAgICAgICAgICAgICAgICAgICAgICAgImF1dGgiOiAiY21WbmFYTjBjbms2Y21WbmFYTjBjbms9IgogICAgICAgICAgICAgICAgfQogICAgICAgIH0KfQoK"
+    io.k8s.cli.setters.generate-password-fields:
+      x-k8s-cli:
+        setter:
+          name: generate-password-fields
+          value: "password"

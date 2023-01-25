@@ -32,7 +32,7 @@ spec:
       annotations:
         checksum/configmap: 62690532a2fce026e4d5263d0f88a067ad8c33afb8d930fd563ad137203ffbee
         checksum/health: a83290c28cee9c2d826f8d120b54d494d33ff6e21f8e5d5bac07f11bcefa60a6
-        checksum/scripts: 52bd306a90427762fb066820cc4ba07381e351903f93e3afe183044a6977a9f3
+        checksum/scripts: 09a53bea8f1e612918f2fdf67aba491c686dbdf0c666ede28219af9e4d5238ab
         checksum/secret: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
     spec:
       
@@ -74,12 +74,7 @@ spec:
             - name: REDIS_REPLICATION_MODE
               value: master
             - name: ALLOW_EMPTY_PASSWORD
-              value: "no"
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: redis-auth
-                  key: password
+              value: "yes"
             - name: REDIS_TLS_ENABLED
               value: "no"
             - name: REDIS_PORT

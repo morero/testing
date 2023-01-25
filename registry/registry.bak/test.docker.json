@@ -1,0 +1,8 @@
+{
+        "auths": {
+                "registry.local.ertia.cloud": {
+                        "auth": "cmVnaXN0cnk6cmVnaXN0cnk="
+                }
+        }
+}
+

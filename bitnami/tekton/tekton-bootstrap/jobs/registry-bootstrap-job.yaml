@@ -15,7 +15,8 @@ spec:
           name: init-scripts-registry
       containers:
       - name: init-scripts-registry
-        image: alpine
+        image: ertiacloud/setup:0.0.1
+
         volumeMounts:
           - mountPath: /registry-scripts
             name: registry-scripts
@@ -25,7 +26,10 @@ spec:
           - name: "REGISTRY_USER"
             value: "registry"
           - name: "REGISTRY_PASSWORD" # valueFrom!!! ertia-harbor-admin:secret .password
-            value: "registry"
+            valueFrom:
+              secretKeyRef:
+                name: registry-admin
+                key: password
           - name: DELETE_PROJECT_NAME
             value: "library"
           - name: CREATE_PROJECT_NAME
@@ -33,9 +37,9 @@ spec:
           - name: ROBOT_NAME
             value: "tekton-robot"
           - name: ROBOT_PASSWORD
-            value: ""
+            value: "tekton-robot-password"
         command:
-        - /bin/sh
+        - /bin/bash
         - -c
         - |
           echo "scripts in /registry-scripts"
@@ -45,12 +49,17 @@ spec:
           echo "apply 'chmod +x' to /tmp/*.sh"
           chmod +x /tmp/*.sh
           echo "execute scripts now"
+          ls -ltra /tmp
 
-          REGISTRY_TOKEN=$(printf "%s:%s" "${REGISTRY_USER}" "${REGISTRY_PASSWORD}" | base64)
+          cat /tmp/delete_project.sh
+
+          export REGISTRY_TOKEN=$(printf "%s:%s" "${REGISTRY_USER}" "${REGISTRY_PASSWORD}" | base64)
 
 
-          
+      echo "PASS: $(REGISTRY_PASSWORD)"    
+          echo "PROJECT_NAME=$(DELETE_PROJECT_NAME) /tmp/delete_project.sh"
           PROJECT_NAME=$(DELETE_PROJECT_NAME) /tmp/delete_project.sh
+          echo "PROJECT_NAME=$(CREATE_PROJECT_NAME) /tmp/create_project.sh"
           PROJECT_NAME=$(CREATE_PROJECT_NAME) /tmp/create_project.sh
           /tmp/create_robot_user.sh
       restartPolicy: Never

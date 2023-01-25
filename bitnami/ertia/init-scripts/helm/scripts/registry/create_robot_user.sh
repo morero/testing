@@ -225,7 +225,7 @@ _create_robot_user() {
     _refresh_robot_secret "${RETURN_ID}" "${USER_TOKEN}"
 }
 
-The following will be run from the job triggering this..
+#The following will be run from the job triggering this..
 _main() {
     _create_robot_user "${ROBOT_NAME}" "${ROBOT_PASSWORD}"
 }

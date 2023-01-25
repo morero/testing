@@ -22,8 +22,6 @@ spec:
       default: docker.io/devspacesh/devspace
   workspaces:
   - name: source
-  #- name: kaniko-secret
-  #  mountPath: /kaniko/.secret
   - name: dockerconfig
     description: >-
       An optional workspace that allows providing a .docker/config.json file

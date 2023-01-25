@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: trow-ingress
+  namespace: registry
+  annotations:
+    ingress.kubernetes.io/proxy-body-size: "0"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.class: "traefik"
+    certmanager.k8s.io/cluster-issuer: "letsencrypt-production" # {"$kpt-set":"cert-issuer"}
+    cert-manager.io/cluster-issuer: "letsencrypt-production" # {"$kpt-set":"cert-issuer"}
+spec:
+  rules:
+  - host: registry.7xqfswmw24tga222.ertia.cloud # {"$kpt-set":"registry-domain"}
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: trow-svc
+            port:
+              number: 8000
+  tls: 
+    - hosts:
+        - "registry.7xqfswmw24tga222.ertia.cloud" # {"$kpt-set":"registry-domain"}
+      secretName: trow-registry-tls

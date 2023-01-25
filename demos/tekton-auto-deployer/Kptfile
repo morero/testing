@@ -2,5 +2,6 @@ apiVersion: kpt.dev/v1alpha1
 kind: Kptfile
 metadata:
   name: tekton-auto-deployer
+  namespace: tekton-pipelines
 packageMetadata:
   shortDescription: sample description

@@ -1,0 +1,18 @@
+---
+# Source: registry/charts/harbor/templates/redis/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry-harbor-redis
+  labels:
+    heritage: Helm
+    release: registry
+    chart: harbor
+    app: "harbor"
+spec:
+  ports:
+    - port: 6379
+  selector:
+    release: registry
+    app: "harbor"
+    component: redis

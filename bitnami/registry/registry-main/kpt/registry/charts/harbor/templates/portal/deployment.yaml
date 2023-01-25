@@ -32,7 +32,7 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: portal
-        image: goharbor/harbor-portal:v2.5.5
+        image: goharbor/harbor-portal:dev
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:

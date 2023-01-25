@@ -25,9 +25,9 @@ spec:
         app: "harbor"
         component: core
       annotations:
-        checksum/configmap: 667eeae9dae3cb53ff030cbc0e524ddfd832c5606d8c1a0721b2411e77c80055
-        checksum/secret: 0b25bd6a4faef3c69602d09f1b4d2ce6dbddc7a649fa16b5ab71943467b820dd
-        checksum/secret-jobservice: cef9ec667d9bf950c61afc8b9ce6a3a2fe360ef5df898e68413787dd81bcd248
+        checksum/configmap: 4fefb514bb75c99d11b2c25db9ea3b72ef963bf278b9abc953ab0acc350bd88d
+        checksum/secret: 068631b7e371528a68d01b1e7fe1cc7d4a828bc2b43853ac24b5b822aebcd0e6
+        checksum/secret-jobservice: 2bddd66b05306931a2b28f061d7a94392649fca4bb945ef5dd668d0feb493489
     spec:
       securityContext:
         runAsUser: 10000
@@ -36,7 +36,7 @@ spec:
       terminationGracePeriodSeconds: 120
       containers:
       - name: core
-        image: goharbor/harbor-core:v2.5.5
+        image: goharbor/harbor-core:dev
         imagePullPolicy: IfNotPresent
         startupProbe:
           httpGet:

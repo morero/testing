@@ -1,0 +1,19 @@
+---
+# Source: registry/charts/harbor/templates/chartmuseum/chartmuseum-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: "registry-harbor-chartmuseum"
+  labels:
+    heritage: Helm
+    release: registry
+    chart: harbor
+    app: "harbor"
+spec:
+  ports:
+    - port: 80
+      targetPort: 9999
+  selector:
+    release: registry
+    app: "harbor"
+    component: chartmuseum

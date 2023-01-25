@@ -26,8 +26,8 @@ spec:
         app: "harbor"
         component: notary-server
       annotations:
-        checksum/secret: 63db0f9374ee98b2913329633794b105e7cf532ccf98a44f1234122fc9ebe3ee
-        checksum/secret-core: 090092dd40d1da450d72fc9b2635d513ea6d9833c4dd0374c8583bb8f13a2885
+        checksum/secret: dbdb4c0310ce9120702b92d9d243658319724a4a305cce21ad786b0dcdefa90c
+        checksum/secret-core: fdd6a90662485ffc10899a7aec5ea044f82c3ea937c7415f1e2394cccb7d8c01
     spec:
       securityContext:
         runAsUser: 10000
@@ -35,7 +35,7 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: notary-server
-        image: goharbor/notary-server-photon:v2.5.5
+        image: goharbor/notary-server-photon:dev
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -55,7 +55,10 @@ spec:
         - name: MIGRATIONS_PATH
           value: migrations/server/postgresql
         - name: DB_URL
-          value: postgres://postgres:changeit@registry-harbor-database:5432/notaryserver?sslmode=disable
+          valueFrom:
+            secretKeyRef:
+              name: registry-harbor-notary-server
+              key: NOTARY_SERVER_DB_URL
         volumeMounts:
         - name: config
           mountPath: /etc/notary/server-config.postgres.json

@@ -29,10 +29,10 @@ spec:
         app: "harbor"
         component: jobservice
       annotations:
-        checksum/configmap: a26586e98c5d58dcd042d058ee87789aecb016510e0d391e41c1076ce6c7624e
+        checksum/configmap: d431ac69ed1a53647ecf8a90f2b41f54ae6afe5f12a7ad8ecbd31f1752eb4319
         checksum/configmap-env: c8cff69073cc0ee0eb10cf7c84621abd89898c6b863f60030c616934027b0488
-        checksum/secret: 569b9f0969495c6bc43fd156b170568154890f5529aa76213380455c623d6b52
-        checksum/secret-core: 1623f80146d81d0dd9ff9e2460950dabaca972e483e55062bf9e7e029cc398eb
+        checksum/secret: 5a07fec4056980e1d6d31abbf5a52b9faf19952a80078a57041437386cbcb1a5
+        checksum/secret-core: 1ba371ada0228d11cc05c007c2fcc61887a1f7b3e7fdcc72cce7a3d88b6966be
     spec:
       securityContext:
         runAsUser: 10000
@@ -41,7 +41,7 @@ spec:
       terminationGracePeriodSeconds: 120
       containers:
       - name: jobservice
-        image: goharbor/harbor-jobservice:v2.5.5
+        image: goharbor/harbor-jobservice:dev
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -77,6 +77,9 @@ spec:
         - name: job-logs
           mountPath: /var/log/jobs
           subPath: 
+        - name: job-scandata-exports
+          mountPath: /var/scandata_exports
+          subPath: 
       volumes:
       - name: jobservice-config
         configMap:
@@ -84,3 +87,6 @@ spec:
       - name: job-logs
         persistentVolumeClaim:
           claimName: registry-harbor-jobservice
+      - name: job-scandata-exports
+        persistentVolumeClaim:
+          claimName: registry-harbor-jobservice-scandata

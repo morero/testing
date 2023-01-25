@@ -1,0 +1,86 @@
+---
+# Source: registry/charts/harbor/templates/jobservice/jobservice-dpl.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "registry-harbor-jobservice"
+  labels:
+    heritage: Helm
+    release: registry
+    chart: harbor
+    app: "harbor"
+    component: jobservice
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      release: registry
+      app: "harbor"
+      component: jobservice
+  template:
+    metadata:
+      labels:
+        heritage: Helm
+        release: registry
+        chart: harbor
+        app: "harbor"
+        component: jobservice
+      annotations:
+        checksum/configmap: a26586e98c5d58dcd042d058ee87789aecb016510e0d391e41c1076ce6c7624e
+        checksum/configmap-env: c8cff69073cc0ee0eb10cf7c84621abd89898c6b863f60030c616934027b0488
+        checksum/secret: 89d746005a0e701d06c627963b59a323ec09f928757a8bbed3d11a85c457befc
+        checksum/secret-core: 107d517579d8cfea7f363de7ca53a715cee8ea0baaf7a9c6da31c2a4fb6bedbf
+    spec:
+      securityContext:
+        runAsUser: 10000
+        fsGroup: 10000
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 120
+      containers:
+      - name: jobservice
+        image: goharbor/harbor-jobservice:v2.5.5
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /api/v1/stats
+            scheme: HTTP
+            port: 8080
+          initialDelaySeconds: 300
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/v1/stats
+            scheme: HTTP
+            port: 8080
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        env:
+          - name: CORE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: registry-harbor-core
+                key: secret
+        envFrom:
+        - configMapRef:
+            name: "registry-harbor-jobservice-env"
+        - secretRef:
+            name: "registry-harbor-jobservice"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: jobservice-config
+          mountPath: /etc/jobservice/config.yml
+          subPath: config.yml
+        - name: job-logs
+          mountPath: /var/log/jobs
+          subPath: 
+      volumes:
+      - name: jobservice-config
+        configMap:
+          name: "registry-harbor-jobservice"
+      - name: job-logs
+        persistentVolumeClaim:
+          claimName: registry-harbor-jobservice
