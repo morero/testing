@@ -9,13 +9,12 @@ metadata:
     app.kubernetes.io/name: gitea
     helm.sh/chart: gitea-0.1.6
     app.kubernetes.io/instance: git-kpt
-    app.kubernetes.io/managed-by: Helm
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-production
+    cert-manager.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
-    - host: gitea.local
+    - host: "git.local.ertia.cloud" # {"$kpt-set":"git-domain"}
       http:
         paths:
           - path: /
@@ -27,5 +26,5 @@ spec:
                   name: http
   tls:
     - hosts:
-        - "gitea.local"
+        - "git.local.ertia.cloud" # {"$kpt-set":"git-domain"}
       secretName: gitea.local-tls
