@@ -16,7 +16,7 @@ openAPI:
       x-k8s-cli:
         setter:
           name: cert-issuer
-          value: "letsencrypt-staging"
+          value: "letsencrypt-selfsigned"
     io.k8s.cli.setters.registry-domain:
       x-k8s-cli:
         setter:
