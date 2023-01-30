@@ -24,6 +24,21 @@ openAPI:
           name: database
           value: "git"
           isSet: true
+    io.k8s.cli.setters.postgres-admin-secret-name:
+      x-k8s-cli:
+        setter:
+          name: postgres-admin-secret-name
+          value: "stolon-auth"
+    io.k8s.cli.setters.postgres-admin-secret-password-key:
+      x-k8s-cli:
+        setter:
+          name: postgres-admin-secret-password-key
+          value: "password"
+    io.k8s.cli.setters.postgres-admin-secret-username-key:
+      x-k8s-cli:
+        setter:
+          name: postgres-admin-secret-username-key
+          value: "username"
     io.k8s.cli.setters.generate-password-fields:
       x-k8s-cli:
         setter:
