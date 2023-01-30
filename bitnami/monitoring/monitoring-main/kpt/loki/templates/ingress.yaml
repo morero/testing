@@ -1,4 +1,3 @@
----
 # Source: monitoring/charts/loki/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -11,32 +10,32 @@ metadata:
     release: monitoring
     heritage: Helm
   annotations:
-    cert-manager.io/cluster-issuer: # {"$kpt-set":"cert-issuer"}
+    cert-manager.io/cluster-issuer: letsencrypt-selfsigned # {"$kpt-set":"cert-issuer"}
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.middlewares: monitoring-loki-basic-auth@kubernetescrd
 spec:
   tls:
-    - hosts:
-        - "loki.local.ertia.cloud" # {"$kpt-set":"loki-domain"}
-      secretName: loki-tls
+  - hosts:
+    - "loki.local.ertia.cloud" # {"$kpt-set":"loki-domain"}
+    secretName: loki-tls
   rules:
-    - host: "loki.local.ertia.cloud" # {"$kpt-set":"loki-domain"}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: monitoring-loki
-                port:
-                  number: 3100
-    - host: "loki.local.ertia.cloud" # {"$kpt-set":"loki-domain"}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: monitoring-loki
-                port:
-                  number: 3100
+  - host: "loki.local.ertia.cloud" # {"$kpt-set":"loki-domain"}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: monitoring-loki
+            port:
+              number: 3100
+  - host: "loki.local.ertia.cloud" # {"$kpt-set":"loki-domain"}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: monitoring-loki
+            port:
+              number: 3100

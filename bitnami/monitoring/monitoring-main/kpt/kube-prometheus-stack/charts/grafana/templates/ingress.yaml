@@ -1,4 +1,3 @@
----
 # Source: monitoring/charts/kube-prometheus-stack/charts/grafana/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -17,17 +16,17 @@ metadata:
     kubernetes.io/ingress.class: "traefik"
 spec:
   tls:
-    - hosts:
-      - grafana.local.ertia.cloud # {"$kpt-set":"grafana-domain"}
-      secretName: grafana-tls
+  - hosts:
+    - grafana.local.ertia.cloud # {"$kpt-set":"grafana-domain"}
+    secretName: grafana-tls
   rules:
-    - host: grafana.local.ertia.cloud # {"$kpt-set":"grafana-domain"}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: monitoring-grafana
-                port:
-                  number: 80
+  - host: grafana.local.ertia.cloud # {"$kpt-set":"grafana-domain"}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: monitoring-grafana
+            port:
+              number: 80

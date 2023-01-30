@@ -11,6 +11,7 @@ openAPI:
         setter:
           name: cert-issuer
           value: "letsencrypt-selfsigned"
+          isSet: true
     io.k8s.cli.setters.grafana-domain:
       x-k8s-cli:
         setter:
