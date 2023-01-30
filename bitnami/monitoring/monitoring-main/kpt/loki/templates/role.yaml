@@ -1,0 +1,17 @@
+---
+# Source: monitoring/charts/loki/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: monitoring-loki
+  namespace: monitoring
+  labels:
+    app: loki
+    chart: loki-2.10.1
+    heritage: Helm
+    release: monitoring
+rules:
+- apiGroups:      ['extensions']
+  resources:      ['podsecuritypolicies']
+  verbs:          ['use']
+  resourceNames:  [monitoring-loki]

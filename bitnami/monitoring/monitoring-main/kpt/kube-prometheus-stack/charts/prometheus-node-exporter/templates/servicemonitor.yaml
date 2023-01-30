@@ -1,0 +1,22 @@
+---
+# Source: monitoring/charts/kube-prometheus-stack/charts/prometheus-node-exporter/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: monitoring-prometheus-node-exporter
+  namespace: monitoring
+  labels:     
+    app: prometheus-node-exporter
+    heritage: Helm
+    release: monitoring
+    chart: prometheus-node-exporter-2.4.1
+    jobLabel: node-exporter
+spec:
+  jobLabel: jobLabel
+  selector:
+    matchLabels:
+      app: prometheus-node-exporter
+      release: monitoring
+  endpoints:
+    - port: http-metrics
+      scheme: http

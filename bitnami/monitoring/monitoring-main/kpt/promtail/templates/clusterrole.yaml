@@ -1,0 +1,25 @@
+---
+# Source: monitoring/charts/promtail/templates/clusterrole.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: monitoring-promtail
+  labels:
+    helm.sh/chart: promtail-3.11.0
+    app.kubernetes.io/name: promtail
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/version: "2.4.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+      - nodes/proxy
+      - services
+      - endpoints
+      - pods
+    verbs:
+      - get
+      - watch
+      - list

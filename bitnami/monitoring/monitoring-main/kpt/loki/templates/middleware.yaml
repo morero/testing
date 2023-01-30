@@ -1,0 +1,11 @@
+---
+# Source: monitoring/charts/loki/templates/middleware.yaml
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: loki-basic-auth
+  namespace: monitoring
+spec:
+  basicAuth:
+    secret: loki-auth-secret
+    removeHeader: true
