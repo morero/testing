@@ -1,12 +1,9 @@
 cilium:
   ingressController:
     enabled: true
-  containerRuntime: 
-    integration: containerd
-    socketPath: /var/run/k3s/containerd/containerd.sock
   kubeProxyReplacement: strict
-  k8sServiceHost: kind-external-load-balancer # api server lb
-  k8sServicePort: 6443                        # api server port
+  #k8sServiceHost: kind-external-load-balancer # api server lb
+  #k8sServicePort: 6443                        # api server port
   operator:
     replicas: 1
   externalIPs: 
