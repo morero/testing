@@ -2,8 +2,8 @@ cilium:
   ingressController:
     enabled: true
   kubeProxyReplacement: strict
-  #k8sServiceHost: kind-external-load-balancer # api server lb
-  #k8sServicePort: 6443                        # api server port
+  k8sServiceHost: ertia-control-plane # api server lb
+  k8sServicePort: 6443                        # api server port
   operator:
     replicas: 1
   externalIPs: 
@@ -13,7 +13,7 @@ cilium:
   hostPort:
     enabled: true
   hostServices:
-    enabled: false
+    enabled: true
   hubble:
     enabled: true
     relay:
