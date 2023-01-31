@@ -13,7 +13,7 @@ cilium:
   hostPort:
     enabled: true
   hostServices:
-    enabled: true
+    enabled: false
   hubble:
     enabled: true
     relay:
