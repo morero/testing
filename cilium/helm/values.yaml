@@ -7,4 +7,11 @@ cilium:
   kubeProxyReplacement: strict
   operator:
     replicas: 1
-  
+  externalIPs: 
+    enabled: true
+  nodePort:
+    enabled: true
+  hostPort:
+    enabled: true
+  hostServices:
+    enabled: true
