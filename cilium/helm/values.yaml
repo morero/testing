@@ -5,4 +5,6 @@ cilium:
     integration: containerd
     socketPath: /var/run/k3s/containerd/containerd.sock
   kubeProxyReplacement: strict
+  operator:
+    replicas: 1
   
