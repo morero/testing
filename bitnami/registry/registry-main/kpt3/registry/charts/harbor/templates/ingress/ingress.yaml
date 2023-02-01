@@ -9,7 +9,8 @@ metadata:
     chart: harbor
     app: "harbor"
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-staging
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    cert-manager.k8s.io/cluster-issuer: "letsencrypt-staging"
     ingress.kubernetes.io/proxy-body-size: "0"
     ingress.kubernetes.io/ssl-redirect: "true"
     kubernetes.io/ingress.class: traefik

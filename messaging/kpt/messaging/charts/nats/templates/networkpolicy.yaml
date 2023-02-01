@@ -1,0 +1,60 @@
+---
+# Source: messaging/charts/nats/templates/networkpolicy.yaml
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: messaging-nats
+  namespace: messaging
+  labels:
+    helm.sh/chart: nats-0.17.0
+    app.kubernetes.io/name: nats
+    app.kubernetes.io/instance: messaging
+    app.kubernetes.io/version: "2.8.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: nats
+      app.kubernetes.io/instance: messaging
+  policyTypes:
+  - Ingress
+  - Egress
+  egress:
+  # Allow dns resolution
+  - ports:
+    - port: 53
+      protocol: UDP
+  # Allow outbound connections to other cluster pods
+  - ports:
+    - port: 4222
+      protocol: TCP
+    - port: 6222
+      protocol: TCP
+    - port: 8222
+      protocol: TCP
+    - port: 7777
+      protocol: TCP
+    - port: 7422
+      protocol: TCP
+    - port: 7522
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: nats
+          app.kubernetes.io/instance: messaging
+  ingress:
+  # Allow inbound connections
+  - ports:
+    - port: 4222
+      protocol: TCP
+    - port: 6222
+      protocol: TCP
+    - port: 8222
+      protocol: TCP
+    - port: 7777
+      protocol: TCP
+    - port: 7422
+      protocol: TCP
+    - port: 7522
+      protocol: TCP

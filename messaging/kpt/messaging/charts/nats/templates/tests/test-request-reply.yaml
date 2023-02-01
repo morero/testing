@@ -1,0 +1,36 @@
+---
+# Source: messaging/charts/nats/templates/tests/test-request-reply.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "messaging-nats-test-request-reply"
+  labels:
+    helm.sh/chart: nats-0.17.0
+    app.kubernetes.io/name: nats
+    app.kubernetes.io/instance: messaging
+    app.kubernetes.io/version: "2.8.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+  - name: nats-box
+    image: synadia/nats-box
+    env:
+    - name: NATS_HOST
+      value: messaging-nats
+    command:
+    - /bin/sh
+    - -ec
+    - |
+      nats reply -s nats://$NATS_HOST:4222 'name.>' --command "echo 1" &
+    - |
+      "&&"
+    - |
+      name=$(nats request -s nats://$NATS_HOST:4222 name.test '' 2>/dev/null)
+    - |
+      "&&"
+    - |
+      [ $name = test ]
+
+  restartPolicy: Never

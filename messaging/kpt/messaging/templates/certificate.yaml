@@ -1,0 +1,30 @@
+---
+# Source: messaging/templates/certificate.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nats-client-tls
+  namespace: messaging
+  labels:
+    helm.sh/chart: messaging-0.0.2
+    app.kubernetes.io/name: messaging
+    app.kubernetes.io/instance: messaging
+    app.kubernetes.io/version: "0.0.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  secretName: nats-client-tls
+  duration: 2160h # 90 days
+  renewBefore: 360h # 15 days
+  subject:
+    organizations:
+    - ertia
+  commonName: nats.local.ertia.cloud # {"$kpt-set":"nats-domain"}
+  isCA: false
+  usages:
+  - server auth
+  - client auth
+  dnsNames:
+  - "nats.local.ertia.cloud" # {"$kpt-set":"nats-domain"}
+  issuerRef:
+    name: letsencrypt-selfsigned # {"$kpt-set":"cert-issuer"}
+    kind: ClusterIssuer

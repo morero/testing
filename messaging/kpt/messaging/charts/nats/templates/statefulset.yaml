@@ -1,0 +1,232 @@
+---
+# Source: messaging/charts/nats/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: messaging-nats
+  namespace: messaging
+  labels:
+    helm.sh/chart: nats-0.17.0
+    app.kubernetes.io/name: nats
+    app.kubernetes.io/instance: messaging
+    app.kubernetes.io/version: "2.8.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nats
+      app.kubernetes.io/instance: messaging
+  replicas: 1 # {"$kpt-set":"replicas"}
+  serviceName: messaging-nats
+
+  podManagementPolicy: Parallel
+
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "7777"
+        prometheus.io/scrape: "true"
+        checksum/config: d3267ebeb68d96981b09b827925f3cefa014c790fac635ed29056d9a856f5c84
+      labels:
+        app.kubernetes.io/name: nats
+        app.kubernetes.io/instance: messaging
+    spec:
+      # Common volumes for the containers.
+      volumes:
+      - name: config-volume
+        configMap:
+          name: messaging-nats-config
+
+      # Local volume shared with the reloader.
+      - name: pid
+        emptyDir: {}
+
+      #################
+      #               #
+      #  TLS Volumes  #
+      #               #
+      #################
+      
+      - name: nats-client-tls-clients-volume
+        secret:
+          secretName: nats-client-tls
+
+      serviceAccountName: messaging-nats
+
+      # Required to be able to HUP signal and apply config
+      # reload to the server without restarting the pod.
+      shareProcessNamespace: true
+
+      #################
+      #               #
+      #  NATS Server  #
+      #               #
+      #################
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: nats
+        image: nats:2.8.2-alpine
+        imagePullPolicy: IfNotPresent
+        resources:
+          {}
+        ports:
+        - containerPort: 4222
+          name: client
+        - containerPort: 6222
+          name: cluster
+        - containerPort: 8222
+          name: monitor
+        - containerPort: 7777
+          name: metrics
+
+        command:
+        - "nats-server"
+        - "--config"
+        - "/etc/nats-config/nats.conf"
+
+        # Required to be able to define an environment variable
+        # that refers to other environment variables.  This env var
+        # is later used as part of the configuration file.
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: SERVER_NAME
+          value: $(POD_NAME)
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: CLUSTER_ADVERTISE
+          value: $(POD_NAME).messaging-nats.$(POD_NAMESPACE).svc.cluster.local
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/nats-config
+        - name: pid
+          mountPath: /var/run/nats
+        - name: messaging-nats-js-pvc
+          mountPath: /data
+        
+        #######################
+        #                     #
+        #  TLS Volumes Mounts #
+        #                     #
+        #######################
+        
+        - name: nats-client-tls-clients-volume
+          mountPath: /etc/nats-certs/clients/nats-client-tls
+
+        #######################
+        #                     #
+        # Healthcheck Probes  #
+        #                     #
+        #######################
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8222
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 30
+          successThreshold: 1
+          failureThreshold: 3
+        startupProbe:
+          httpGet:
+            # for NATS server versions >=2.7.1, healthz will be enabled to allow for a grace period
+            # in case of JetStream enabled deployments to form quorum and streams to catch up.
+            path: /healthz
+            port: 8222
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 30
+
+        # Gracefully stop NATS Server on pod deletion or image upgrade.
+        #
+        lifecycle:
+          preStop:
+            exec:
+              # send the lame duck shutdown signal to trigger a graceful shutdown
+              # nats-server will ignore the TERM signal it receives after this
+              #
+              command:
+              - "nats-server"
+              - "-sl=ldm=/var/run/nats/nats.pid"
+
+      #################################
+      #                               #
+      #  NATS Configuration Reloader  #
+      #                               #
+      #################################
+      - name: reloader
+        image: natsio/nats-server-config-reloader:0.7.0
+        imagePullPolicy: IfNotPresent
+        resources:
+          null
+        command:
+        - "nats-server-config-reloader"
+        - "-pid"
+        - "/var/run/nats/nats.pid"
+        - "-config"
+        - "/etc/nats-config/nats.conf"
+        
+        
+        - -config
+        - /etc/nats-certs/clients/nats-client-tls/tls.crt
+        - -config
+        - /etc/nats-certs/clients/nats-client-tls/tls.key
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/nats-config
+        - name: pid
+          mountPath: /var/run/nats
+        
+        #######################
+        #                     #
+        #  TLS Volumes Mounts #
+        #                     #
+        #######################
+        
+        - name: nats-client-tls-clients-volume
+          mountPath: /etc/nats-certs/clients/nats-client-tls
+
+      ##############################
+      #                            #
+      #  NATS Prometheus Exporter  #
+      #                            #
+      ##############################
+      - name: metrics
+        image: natsio/prometheus-nats-exporter:0.9.3
+        imagePullPolicy: IfNotPresent
+        resources:
+          {}
+        args:
+        - -connz
+        - -routez
+        - -subz
+        - -varz
+        - -prefix=nats
+        - -use_internal_server_id
+        - -jsz=all
+        - http://localhost:8222/
+        ports:
+        - containerPort: 7777
+          name: metrics
+
+  volumeClaimTemplates:
+  #####################################
+  #                                   #
+  #  Jetstream New Persistent Volume  #
+  #                                   #
+  #####################################
+    - metadata:
+        name: messaging-nats-js-pvc
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi

@@ -16,9 +16,9 @@ traefik:
     - "--serverstransport.insecureskipverify=true"
     - "--log.level=DEBUG"
 
-  logs:
-    general:
-      level: DEBUG
-    access:
-      enabled: true
+#  logs:
+#    general:
+#      level: DEBUG
+#    access:
+#      enabled: true
 

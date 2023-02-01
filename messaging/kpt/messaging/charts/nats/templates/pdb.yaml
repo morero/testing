@@ -1,0 +1,19 @@
+---
+# Source: messaging/charts/nats/templates/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: messaging-nats
+  namespace: messaging
+  labels:
+    helm.sh/chart: nats-0.17.0
+    app.kubernetes.io/name: nats
+    app.kubernetes.io/instance: messaging
+    app.kubernetes.io/version: "2.8.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nats
+      app.kubernetes.io/instance: messaging

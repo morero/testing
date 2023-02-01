@@ -1,0 +1,24 @@
+---
+# Source: messaging/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: messaging-nats-lb
+  namespace: messaging
+  labels:
+    helm.sh/chart: messaging-0.0.2
+    app.kubernetes.io/name: messaging
+    app.kubernetes.io/instance: messaging
+    app.kubernetes.io/version: "0.0.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: nats
+    app.kubernetes.io/instance: messaging
+  externalTrafficPolicy: Cluster
+  ports:
+    - name: nats
+      port: 4222
+      protocol: TCP
+      targetPort: 4222

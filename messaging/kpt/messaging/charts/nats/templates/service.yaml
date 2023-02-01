@@ -1,0 +1,32 @@
+---
+# Source: messaging/charts/nats/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: messaging-nats
+  namespace: messaging
+  labels:
+    helm.sh/chart: nats-0.17.0
+    app.kubernetes.io/name: nats
+    app.kubernetes.io/instance: messaging
+    app.kubernetes.io/version: "2.8.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selector:
+    app.kubernetes.io/name: nats
+    app.kubernetes.io/instance: messaging
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+  - name: client
+    port: 4222
+  - name: cluster
+    port: 6222
+  - name: monitor
+    port: 8222
+  - name: metrics
+    port: 7777
+  - name: leafnodes
+    port: 7422
+  - name: gateways
+    port: 7522
