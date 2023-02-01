@@ -6,11 +6,11 @@ metadata:
   annotations:
     ingress.kubernetes.io/proxy-body-size: "0"
     ingress.kubernetes.io/ssl-redirect: "true"
-#    kubernetes.io/ingress.class: "traefik"
+    kubernetes.io/ingress.class: "traefik"
     certmanager.k8s.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
     cert-manager.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
 spec:
-  ingressClassName: cilium
+  ingressClassName: traefik
   rules:
   - host: registry.7xqfswmw24tga222.ertia.cloud # {"$kpt-set":"registry-domain"}
     http:
