@@ -10,9 +10,9 @@ spec:
   - name: http-tcp
     protocol: TCP
     port: 8000
-    targetPort: trow-http-port
+    targetPort: 8000
   - name: https-tcp
     protocol: TCP
     port: 8443
-    targetPort: trow-https-port
+    targetPort: 8443
 
