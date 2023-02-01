@@ -1,6 +1,6 @@
 metallb:
   configInline:
-    peers:
+#    peers:
 #    - peer-address: 192.168.80.10
 #      peer-asn: 65000
 #      my-asn: 65000
