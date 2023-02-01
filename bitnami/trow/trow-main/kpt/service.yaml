@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     app: trow
-#  type: NodePort
+  type: LoadBalancer
   ports:
   - name: http-tcp
     protocol: TCP
