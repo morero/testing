@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/instance: git-kpt
     app.kubernetes.io/managed-by: Helm
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   sessionAffinity: None
   externalTrafficPolicy: "Cluster"
   ports:
