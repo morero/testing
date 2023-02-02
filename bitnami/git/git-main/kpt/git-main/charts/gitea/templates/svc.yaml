@@ -13,7 +13,6 @@ metadata:
 spec:
   type: ClusterIP
   sessionAffinity: None
-  externalTrafficPolicy: "Cluster"
   ports:
     - name: http
       port: 8000
