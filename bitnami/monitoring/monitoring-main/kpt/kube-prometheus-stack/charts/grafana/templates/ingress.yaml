@@ -10,6 +10,7 @@ metadata:
     app.kubernetes.io/instance: monitoring
     app.kubernetes.io/version: "8.3.3"
     app.kubernetes.io/managed-by: Helm
+    cert-promoter: pending
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
     ingress.kubernetes.io/ssl-redirect: "false"

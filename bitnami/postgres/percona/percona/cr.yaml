@@ -12,7 +12,6 @@ spec:
 #    host: "<primary-ip>"
 #    port: "<primary-port>"
 
-#  openshift: true
 
 #  users:
 #    - name: rhino
@@ -106,7 +105,7 @@ spec:
 
   proxy:
     pgBouncer:
-#      replicas: 3
+     replicas: 0
       image: perconalab/percona-postgresql-operator:main-ppg14-pgbouncer
 #      resources:
 #        limits:

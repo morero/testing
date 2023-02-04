@@ -9,6 +9,7 @@ metadata:
     chart: loki-2.10.1
     release: monitoring
     heritage: Helm
+    cert-promoter: pending
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
     cert-manager.k8s.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
