@@ -1,0 +1,28 @@
+---
+# Source: helm/charts/kube-prometheus/templates/blackbox-exporter/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: monitoring-kube-prometheus-blackbox-exporter
+  namespace: "monitoring"
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    helm.sh/chart: kube-prometheus-8.3.3
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: blackbox-exporter
+  annotations:
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  publishNotReadyAddresses: true
+  ports:
+    - name: http
+      port: 19115
+      targetPort: http
+      protocol: TCP
+      nodePort: null
+  selector:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/component: blackbox-exporter

@@ -10,9 +10,9 @@ metadata:
     
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: monitoring
-    app.kubernetes.io/version: "30.0.1"
+    app.kubernetes.io/version: "44.3.1"
     app.kubernetes.io/part-of: kube-prometheus-stack
-    chart: kube-prometheus-stack-30.0.1
+    chart: kube-prometheus-stack-44.3.1
     release: "monitoring"
     heritage: "Helm"
 spec:
@@ -28,25 +28,25 @@ spec:
         
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: monitoring
-        app.kubernetes.io/version: "30.0.1"
+        app.kubernetes.io/version: "44.3.1"
         app.kubernetes.io/part-of: kube-prometheus-stack
-        chart: kube-prometheus-stack-30.0.1
+        chart: kube-prometheus-stack-44.3.1
         release: "monitoring"
         heritage: "Helm"
     spec:
       containers:
         - name: kube-prometheus-stack
-          image: "quay.io/prometheus-operator/prometheus-operator:v0.53.1"
+          image: "quay.io/prometheus-operator/prometheus-operator:v0.62.0"
           imagePullPolicy: "IfNotPresent"
           args:
             - --kubelet-service=kube-system/monitoring-kube-prometheus-kubelet
             - --localhost=127.0.0.1
-            - --prometheus-config-reloader=quay.io/prometheus-operator/prometheus-config-reloader:v0.53.1
-            - --config-reloader-cpu-request=100m
-            - --config-reloader-cpu-limit=100m
+            - --prometheus-config-reloader=quay.io/prometheus-operator/prometheus-config-reloader:v0.62.0
+            - --config-reloader-cpu-request=200m
+            - --config-reloader-cpu-limit=200m
             - --config-reloader-memory-request=50Mi
             - --config-reloader-memory-limit=50Mi
-            - --thanos-default-base-image=quay.io/thanos/thanos:v0.24.0
+            - --thanos-default-base-image=quay.io/thanos/thanos:v0.30.1
             - --web.enable-tls=true
             - --web.cert-file=/cert/cert
             - --web.key-file=/cert/key

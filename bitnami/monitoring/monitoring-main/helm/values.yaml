@@ -17,8 +17,10 @@ kube-prometheus-stack:
       enabled: true
       annotations:
         kubernetes.io/ingress.class: traefik
-        cert-manager.io/cluster-issuer: letsencrypt-production
+        cert-manager.io/cluster-issuer: letsencrypt-selfsigned
         ingress.kubernetes.io/ssl-redirect: "false"
+      labels:
+        cert-promoter: pending
       hosts:
         - grafana.@DOMAIN@
         #- grafana.@PROVIDED_DOMAIN@
@@ -72,37 +74,37 @@ kube-prometheus-stack:
             resources:
               requests:
                 storage: 20Gi
+sloki:
+  loki:
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: traefik
+        cert-manager.io/cluster-issuer: "@CERT_ISSUER@"
+        traefik.ingress.kubernetes.io/router.middlewares: monitoring-loki-basic-auth@kubernetescrd
+      hosts:
+        - host: loki.@DOMAIN@
+          paths:
+            - /
+        - host: loki.@PROVIDED_DOMAIN@
+          paths:
+            - /
+      tls:
+        - secretName: loki-tls
+          hosts:
+            - loki.@DOMAIN@
+            - loki.@PROVIDED_DOMAIN@
+      basicAuth:
+        removeHeader: true
+        secret: loki-auth-secret
 
-loki:
-  ingress:
-    enabled: true
-    annotations:
-      kubernetes.io/ingress.class: traefik
-      cert-manager.io/cluster-issuer: "@CERT_ISSUER@"
-      traefik.ingress.kubernetes.io/router.middlewares: monitoring-loki-basic-auth@kubernetescrd
-    hosts:
-      - host: loki.@DOMAIN@
-        paths:
-          - /
-      - host: loki.@PROVIDED_DOMAIN@
-        paths:
-          - /
-    tls:
-      - secretName: loki-tls
-        hosts:
-          - loki.@DOMAIN@
-          - loki.@PROVIDED_DOMAIN@
-    basicAuth:
-      removeHeader: true
-      secret: loki-auth-secret
+    persistence:
+      enabled: true
+      size: 10Gi
 
-  persistence:
-    enabled: true
-    size: 10Gi
-
-  config:
-    compactor:
-      retention_enabled: true
+    config:
+      compactor:
+        retention_enabled: true
 
 promtail:
   config:

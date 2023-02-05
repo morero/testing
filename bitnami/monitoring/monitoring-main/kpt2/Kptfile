@@ -1,0 +1,29 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: monitoring-main
+packageMetadata:
+  shortDescription: sample description
+openAPI:
+  definitions:
+    io.k8s.cli.setters.cert-issuer:
+      x-k8s-cli:
+        setter:
+          name: cert-issuer
+          value: "letsencrypt-selfsigned"
+          isSet: true
+    io.k8s.cli.setters.grafana-domain:
+      x-k8s-cli:
+        setter:
+          name: grafana-domain
+          value: "grafana.local.ertia.cloud"
+    io.k8s.cli.setters.loki-domain:
+      x-k8s-cli:
+        setter:
+          name: loki-domain
+          value: "loki.local.ertia.cloud"
+    io.k8s.cli.setters.grafana-endpoint:
+      x-k8s-cli:
+        setter:
+          name: grafana-endpoint
+          value: "https://grafana.local.ertia.cloud"

@@ -1,0 +1,25 @@
+---
+# Source: monitoring/charts/loki/templates/monitoring/logs-instance.yaml
+apiVersion: monitoring.grafana.com/v1alpha1
+kind: LogsInstance
+metadata:
+  name: monitoring-loki
+  labels:
+    helm.sh/chart: loki-4.4.2
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/version: "main-5e53303"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  clients:
+    - url: http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push
+      externalLabels:
+        cluster: monitoring-loki
+      tenantId: self-monitoring
+
+  podLogsNamespaceSelector: {}
+
+  podLogsSelector:
+    matchLabels:
+      app.kubernetes.io/name: loki
+      app.kubernetes.io/instance: monitoring

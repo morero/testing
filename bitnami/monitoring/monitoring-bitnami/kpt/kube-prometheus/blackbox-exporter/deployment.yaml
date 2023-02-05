@@ -1,0 +1,95 @@
+---
+# Source: helm/charts/kube-prometheus/templates/blackbox-exporter/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitoring-kube-prometheus-blackbox-exporter
+  namespace: "monitoring"
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    helm.sh/chart: kube-prometheus-8.3.3
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: blackbox-exporter
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kube-prometheus
+      app.kubernetes.io/instance: monitoring
+      app.kubernetes.io/component: blackbox-exporter
+  template:
+    metadata:
+      annotations:
+        checksum/config: 2e377103b14e4b36ed7323a1e11ea3848e3e20c9b2d20190e44340bfca048ed1
+      labels:
+        app.kubernetes.io/name: kube-prometheus
+        helm.sh/chart: kube-prometheus-8.3.3
+        app.kubernetes.io/instance: monitoring
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: blackbox-exporter
+    spec:
+      serviceAccountName: monitoring-kube-prometheus-blackbox-exporter
+      
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: kube-prometheus
+                    app.kubernetes.io/instance: monitoring
+                    app.kubernetes.io/component: blackbox-exporter
+                namespaces:
+                  - "monitoring"
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      securityContext:
+        fsGroup: 1001
+      initContainers:
+      containers:
+        - name: blackbox-exporter
+          image: docker.io/bitnami/blackbox-exporter:0.23.0-debian-11-r10
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+          args:
+            - --config.file=/bitnami/blackbox-exporter/conf/config.yml
+            - --web.listen-address=:19115
+          envFrom:
+          ports:
+            - containerPort: 19115
+              name: http
+          resources:
+            limits: {}
+            requests: {}
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+            httpGet:
+              port: http
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+            httpGet:
+              port: http
+          volumeMounts:
+            - name: blackbox-exporter-config
+              mountPath: /bitnami/blackbox-exporter/conf
+      volumes:
+        - name: blackbox-exporter-config
+          configMap:
+            name: monitoring-kube-prometheus-blackbox-exporter

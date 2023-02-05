@@ -10,9 +10,9 @@ metadata:
     
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: monitoring
-    app.kubernetes.io/version: "30.0.1"
+    app.kubernetes.io/version: "44.3.1"
     app.kubernetes.io/part-of: kube-prometheus-stack
-    chart: kube-prometheus-stack-30.0.1
+    chart: kube-prometheus-stack-44.3.1
     release: "monitoring"
     heritage: "Helm"
 spec:
@@ -57,9 +57,9 @@ spec:
       record: instance:node_memory_utilisation:ratio
     - expr: rate(node_vmstat_pgmajfault{job="node-exporter"}[5m])
       record: instance:node_vmstat_pgmajfault:rate5m
-    - expr: rate(node_disk_io_time_seconds_total{job="node-exporter", device=~"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+"}[5m])
+    - expr: rate(node_disk_io_time_seconds_total{job="node-exporter", device=~"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)"}[5m])
       record: instance_device:node_disk_io_time_seconds:rate5m
-    - expr: rate(node_disk_io_time_weighted_seconds_total{job="node-exporter", device=~"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+"}[5m])
+    - expr: rate(node_disk_io_time_weighted_seconds_total{job="node-exporter", device=~"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)"}[5m])
       record: instance_device:node_disk_io_time_weighted_seconds:rate5m
     - expr: |-
         sum without (device) (

@@ -10,9 +10,9 @@ metadata:
     
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: monitoring
-    app.kubernetes.io/version: "30.0.1"
+    app.kubernetes.io/version: "44.3.1"
     app.kubernetes.io/part-of: kube-prometheus-stack
-    chart: kube-prometheus-stack-30.0.1
+    chart: kube-prometheus-stack-44.3.1
     release: "monitoring"
     heritage: "Helm"
 spec:
@@ -23,8 +23,8 @@ spec:
         port: http-web
         pathPrefix: "/"
         apiVersion: v2
-  image: "quay.io/prometheus/prometheus:v2.32.1"
-  version: v2.32.1
+  image: "quay.io/prometheus/prometheus:v2.41.0"
+  version: v2.41.0
   externalUrl: http://monitoring-kube-prometheus-prometheus.monitoring:9090
   paused: false
   replicas: 1
@@ -34,6 +34,7 @@ spec:
   listenLocal: false
   enableAdminAPI: false
   retention: "10d"
+  walCompression: true
   routePrefix: "/"
   serviceAccountName: monitoring-kube-prometheus-prometheus
   serviceMonitorSelector:
@@ -69,5 +70,6 @@ spec:
         resources:
           requests:
             storage: 20Gi
-        storageClassName: standard
+        storageClassName: local-path
   portName: http-web
+  hostNetwork: false

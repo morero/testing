@@ -1,0 +1,21 @@
+---
+# Source: helm/charts/kube-prometheus/templates/prometheus-operator/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: monitoring-kube-prometheus-operator
+  namespace: "monitoring"
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    helm.sh/chart: kube-prometheus-8.3.3
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: monitoring-kube-prometheus-operator
+subjects:
+  - kind: ServiceAccount
+    name: monitoring-kube-prometheus-operator
+    namespace: "monitoring"

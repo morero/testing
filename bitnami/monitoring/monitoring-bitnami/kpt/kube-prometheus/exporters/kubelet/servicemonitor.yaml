@@ -1,0 +1,40 @@
+---
+# Source: helm/charts/kube-prometheus/templates/exporters/kubelet/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: monitoring-kube-prometheus-kubelet
+  namespace: "monitoring"
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    helm.sh/chart: kube-prometheus-8.3.3
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: kubelet
+  annotations:
+spec:
+  jobLabel: k8s-app
+  selector:
+    matchLabels:
+      k8s-app: kubelet
+  namespaceSelector:
+    matchNames:
+      - kube-system
+  endpoints:
+    - port: https-metrics
+      scheme: https
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        serverName: kubernetes
+        insecureSkipVerify: true
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      honorLabels: true
+    - port: https-metrics
+      scheme: https
+      path: /metrics/cadvisor
+      honorLabels: true
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        serverName: kubernetes
+        insecureSkipVerify: true
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token

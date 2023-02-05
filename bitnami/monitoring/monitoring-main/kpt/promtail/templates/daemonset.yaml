@@ -6,10 +6,10 @@ metadata:
   name: monitoring-promtail
   namespace: monitoring
   labels:
-    helm.sh/chart: promtail-3.11.0
+    helm.sh/chart: promtail-6.8.2
     app.kubernetes.io/name: promtail
     app.kubernetes.io/instance: monitoring
-    app.kubernetes.io/version: "2.4.2"
+    app.kubernetes.io/version: "2.7.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   selector:
@@ -24,23 +24,24 @@ spec:
         app.kubernetes.io/name: promtail
         app.kubernetes.io/instance: monitoring
       annotations:
-        checksum/config: 553be0370e292e3a09c7c7ac9d3a6f82e12da29ee63680f8a42d95dba4cefcd9
+        checksum/config: 949a45f7603e2cc7efc0ac8b6036dd2246f9d8da74c68f9447bbaa684edc3a3e
     spec:
       serviceAccountName: monitoring-promtail
+      enableServiceLinks: true
       securityContext:
         runAsGroup: 0
         runAsUser: 0
       containers:
         - name: promtail
-          image: "docker.io/grafana/promtail:2.4.2"
+          image: "docker.io/grafana/promtail:2.7.2"
           imagePullPolicy: IfNotPresent
           args:
             - "-config.file=/etc/promtail/promtail.yaml"
           volumeMounts:
             - name: config
               mountPath: /etc/promtail
-            - name: run
-              mountPath: /run/promtail
+            - mountPath: /run/promtail
+              name: run
             - mountPath: /var/lib/docker/containers
               name: containers
               readOnly: true
@@ -65,7 +66,7 @@ spec:
           readinessProbe:
             failureThreshold: 5
             httpGet:
-              path: /ready
+              path: '/ready'
               port: http-metrics
             initialDelaySeconds: 10
             periodSeconds: 10
@@ -82,9 +83,9 @@ spec:
         - name: config
           secret:
             secretName: monitoring-promtail
-        - name: run
-          hostPath:
+        - hostPath:
             path: /run/promtail
+          name: run
         - hostPath:
             path: /var/lib/docker/containers
           name: containers

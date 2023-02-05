@@ -1,0 +1,26 @@
+---
+# Source: helm/charts/grafana-loki/templates/promtail/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: grafana-loki
+    helm.sh/chart: grafana-loki-2.5.6
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: grafana-loki
+    app.kubernetes.io/component: promtail
+  name: monitoring-grafana-loki-monitoring-promtail
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+      - nodes/proxy
+      - services
+      - endpoints
+      - pods
+    verbs:
+      - get
+      - watch
+      - list

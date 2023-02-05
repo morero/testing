@@ -1,0 +1,123 @@
+---
+# Source: helm/charts/grafana-loki/templates/promtail/daemonset.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: monitoring-grafana-loki-promtail
+  namespace: "monitoring"
+  labels:
+    app.kubernetes.io/name: grafana-loki
+    helm.sh/chart: grafana-loki-2.5.6
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: grafana-loki
+    app.kubernetes.io/component: promtail
+spec:
+  updateStrategy:
+    rollingUpdate: {}
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: grafana-loki
+      app.kubernetes.io/instance: monitoring
+      app.kubernetes.io/part-of: grafana-loki
+      app.kubernetes.io/component: promtail
+  template:
+    metadata:
+      annotations:
+        checksum/config: 5a42737d167a824f2d91a6c89ed1c20fe8a9c5adf0e7ef122ba844d20a64b428
+      labels:
+        app.kubernetes.io/name: grafana-loki
+        helm.sh/chart: grafana-loki-2.5.6
+        app.kubernetes.io/instance: monitoring
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/part-of: grafana-loki
+        app.kubernetes.io/component: promtail
+        loki-gossip-member: "true"
+    spec:
+      serviceAccountName: monitoring-grafana-loki-promtail
+      
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: grafana-loki
+                    app.kubernetes.io/instance: monitoring
+                    app.kubernetes.io/component: promtail
+                namespaces:
+                  - "monitoring"
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      securityContext:
+        fsGroup: 0
+      initContainers:
+      containers:
+        - name: promtail
+          image: docker.io/bitnami/promtail:2.7.2-debian-11-r1
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 0
+          args:
+            - -config.file=/bitnami/promtail/conf/promtail.yaml
+          env:
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          envFrom:
+          ports:
+            - containerPort: 8080
+              name: http
+          resources:
+            limits: {}
+            requests: {}
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+            httpGet:
+              path: /ready
+              port: http
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+            httpGet:
+              path: /ready
+              port: http
+          volumeMounts:
+            - name: loki-config
+              mountPath: /bitnami/promtail/conf/promtail.yaml
+              subPath: promtail.yaml
+            - name: containers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+            - name: pods
+              mountPath: /var/log/pods
+              readOnly: true
+            - name: run
+              mountPath: /run/promtail
+      volumes:
+        - name: loki-config
+          secret:
+            secretName: monitoring-grafana-loki-promtail
+        - name: containers
+          hostPath:
+            path: /var/lib/docker/containers
+        - name: pods
+          hostPath:
+            path: /var/log/pods
+        - name: run
+          hostPath:
+            path: /run/promtail

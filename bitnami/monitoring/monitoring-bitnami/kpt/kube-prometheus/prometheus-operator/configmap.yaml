@@ -1,0 +1,15 @@
+---
+# Source: helm/charts/kube-prometheus/templates/prometheus-operator/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: monitoring-kube-prometheus-operator
+  namespace: "monitoring"
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    helm.sh/chart: kube-prometheus-8.3.3
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: operator
+data:
+  prometheus-config-reloader: docker.io/bitnami/prometheus-operator:0.62.0-debian-11-r0

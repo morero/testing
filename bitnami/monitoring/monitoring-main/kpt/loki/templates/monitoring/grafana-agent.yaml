@@ -1,0 +1,75 @@
+---
+# Source: monitoring/charts/loki/templates/monitoring/grafana-agent.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: monitoring-loki-grafana-agent
+  namespace: monitoring
+---
+# Source: monitoring/charts/loki/templates/monitoring/grafana-agent.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: monitoring-loki-grafana-agent
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  - nodes/proxy
+  - nodes/metrics
+  - services
+  - endpoints
+  - pods
+  - events
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- nonResourceURLs:
+  - /metrics
+  - /metrics/cadvisor
+  verbs:
+  - get
+---
+# Source: monitoring/charts/loki/templates/monitoring/grafana-agent.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: monitoring-loki-grafana-agent
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: monitoring-loki-grafana-agent
+subjects:
+- kind: ServiceAccount
+  name: monitoring-loki-grafana-agent
+  namespace: monitoring
+---
+# Source: monitoring/charts/loki/templates/monitoring/grafana-agent.yaml
+apiVersion: monitoring.grafana.com/v1alpha1
+kind: GrafanaAgent
+metadata:
+  name: monitoring-loki
+  labels:
+    helm.sh/chart: loki-4.4.2
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/version: "main-5e53303"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  serviceAccountName: monitoring-loki-grafana-agent
+  enableConfigReadAPI: false
+  logs:
+    instanceSelector:
+      matchLabels:
+        app.kubernetes.io/name: loki
+        app.kubernetes.io/instance: monitoring
