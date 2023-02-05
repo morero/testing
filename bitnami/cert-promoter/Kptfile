@@ -1,0 +1,23 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: cert-promoter
+packageMetadata:
+  shortDescription: sample description
+openAPI:
+  definitions:
+    io.k8s.cli.setters.cluster-ips:
+      x-k8s-cli:
+        setter:
+          name: cluster-ips 
+          value: "127.0.0.1,0.0.0.0"
+    io.k8s.cli.setters.cert-issuer-promotion:
+      x-k8s-cli:
+        setter:
+          name: cert-issuer-promotion
+          value: "letsencrypt-staging"
+    io.k8s.cli.setters.ignore-domain:
+      x-k8s-cli:
+        setter:
+          name: ignore-domain
+          value: "loca.ertia.cloud"

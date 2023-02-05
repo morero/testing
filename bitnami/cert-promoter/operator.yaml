@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cert-promoter
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: cert-promoter
+rules:
+  - apiGroups:
+      - "networking.k8s.io"
+    resources:
+      - ingresses
+    verbs:
+      - create
+      - get
+      - list
+      - patch
+      - update
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrolebinding
+    app.kubernetes.io/instance: cert-promoter-rolebinding
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: cert-promoter
+    app.kubernetes.io/part-of: cert-promoter
+  name: cert-promoter
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cert-promoter
+subjects:
+  - kind: ServiceAccount
+    name: cert-promoter
+    namespace: cert-promoter
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/name: serviceaccount
+    app.kubernetes.io/instance: cert-promoter
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: cert-promoter
+    app.kubernetes.io/part-of: cert-promoter
+  name: cert-promoter
+  namespace: cert-promoter
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cert-promoter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: cert-promoter-operator
+  template:
+    metadata:
+      labels:
+        name: cert-promoter-operator
+    spec:
+      serviceAccountName: cert-promoter
+      containers:
+        - name: cert-promoter-operator
+          # Replace this with the built image name
+          image: morero/cert-promoter:v0.0.1
+          command:
+            - /manager
+          imagePullPolicy: Always # set to IfNotPresent later
+          env:
+            - name: TARGET_ISSUER
+              value: "letsencrypt-staging" # {"$kpt-set":"cert-issuer-promotion"}
+            - name: IPS
+              value: "" # {"$kpt-set":"cluster-ips"}
+            - name: IGNORE_DOMAIN
+              value: "local.ertia.cloud" # {"$kpt-set":"ignore-domain"}

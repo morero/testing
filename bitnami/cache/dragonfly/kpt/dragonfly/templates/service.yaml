@@ -1,0 +1,22 @@
+---
+# Source: dragonfly/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cache-dragonfly
+  labels:
+    helm.sh/chart: dragonfly-v0.15.0
+    app.kubernetes.io/name: dragonfly
+    app.kubernetes.io/instance: cache
+    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6379
+      targetPort: dragonfly
+      protocol: TCP
+      name: dragonfly
+  selector:
+    app.kubernetes.io/name: dragonfly
+    app.kubernetes.io/instance: cache

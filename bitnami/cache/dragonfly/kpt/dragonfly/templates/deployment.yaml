@@ -1,0 +1,59 @@
+---
+# Source: dragonfly/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cache-dragonfly
+  labels:
+    helm.sh/chart: dragonfly-v0.15.0
+    app.kubernetes.io/name: dragonfly
+    app.kubernetes.io/instance: cache
+    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dragonfly
+      app.kubernetes.io/instance: cache
+  template:
+    metadata:
+      annotations:
+      labels:
+        app.kubernetes.io/name: dragonfly
+        app.kubernetes.io/instance: cache
+    spec:
+      serviceAccountName: cache-dragonfly
+      containers:
+        - name: dragonfly
+          image: "docker.dragonflydb.io/dragonflydb/dragonfly:v0.15.0"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: dragonfly
+              containerPort: 6379
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - /usr/local/bin/healthcheck.sh
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - /usr/local/bin/healthcheck.sh
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          args:
+            - "--alsologtostderr"
+          resources:
+            limits: {}
+            requests: {}
