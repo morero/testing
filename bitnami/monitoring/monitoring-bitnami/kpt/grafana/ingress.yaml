@@ -13,7 +13,7 @@ metadata:
     cert-promoter: pending
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
-    ingress.kubernetes.io/ssl-redirect: "false"
+    ingress.kubernetes.io/ssl-redirect: "true"
     kubernetes.io/ingress.class: "traefik"
 spec:
   tls:
@@ -30,4 +30,4 @@ spec:
           service:
             name: monitoring-grafana
             port:
-              number: 80
+              number: 3000
