@@ -20,4 +20,44 @@ openAPI:
       x-k8s-cli:
         setter:
           name: ignore-domain
-          value: "loca.ertia.cloud"
+          value: "local.ertia.cloud"
+    io.k8s.cli.setters.replicas-min:
+      x-k8s-cli:
+        setter:
+          name: replicas-min
+          value: "1"
+    io.k8s.cli.setters.replicas-max:
+      x-k8s-cli:
+        setter:
+          name: replicas-max
+          value: "1"
+    io.k8s.cli.setters.storage-min:
+      x-k8s-cli:
+        setter:
+          name: storage-min
+          value: "100Mi"
+    io.k8s.cli.setters.storage-max:
+      x-k8s-cli:
+        setter:
+          name: storage-max
+          value: "100Mi"
+    io.k8s.cli.setters.cpu-min:
+      x-k8s-cli:
+        setter:
+          name: cpu-min
+          value: "100m"
+    io.k8s.cli.setters.cpu-max:
+      x-k8s-cli:
+        setter:
+          name: cpu-max
+          value: ""
+    io.k8s.cli.setters.memory-min:
+      x-k8s-cli:
+        setter:
+          name: memory-min
+          value: "100Mi"
+    io.k8s.cli.setters.memory-max:
+      x-k8s-cli:
+        setter:
+          name: memory-max
+          value: "100Mi"
