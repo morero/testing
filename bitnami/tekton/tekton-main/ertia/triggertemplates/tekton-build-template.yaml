@@ -35,7 +35,19 @@ spec:
           - name: GIT_REVISION
             value: $(tt.params.GIT_REVISION)
           - name: RELEASE_NAMESPACE
-            value:  $(tt.params.NAMESPACE)
+            value: $(tt.params.NAMESPACE)
+          - name: NAMESPACE
+            value: $(tt.params.NAMESPACE)
+          - name: IMAGE
+            value: $(tt.params.IMAGE)
+          - name: TAG
+            value: $(tt.params.TAG)
+          - name: REF
+            value: $(tt.params.REF)
+          - name: REF_TYPE
+            value: $(tt.params.REF_TYPE)
+          - name: REGISTRY
+            value: $(tt.params.REGISTRY)
         workspaces:
           - name: source
             volumeClaimTemplate:

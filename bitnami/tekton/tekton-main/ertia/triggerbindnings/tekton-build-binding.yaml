@@ -13,3 +13,16 @@ spec:
       value: "$(body.head_commit.id)"
     - name: NAMESPACE
       value: "$(body.repository.owner.username)"
+    - name: IMAGE
+      value: "$(body.repository.name)"
+    - name: TAG
+      value: "$(body.ref)"
+    - name: REF
+      value: "$(body.ref)"
+    - name: REF_TYPE
+      value: "$(body.ref_type)"
+    - name: REGISTRY
+      value: "$(body.repository.name)"
+    - name: NAMESPACE
+      value: "$(body.repository.name)"
+

@@ -35,6 +35,23 @@ spec:
       type: string
       description: Namespace to deploy to
       default: "apps"
+    - name: IMAGE
+      description: |
+        The image to build and push
+      type: string
+    - name: TAG
+      description: |
+        Image tag
+      type: string
+    - name: REGISTRY
+      description: |
+        The registry to push to
+      type: string
+    - name: NAMESPACE
+      description: |
+        Project in Git and registry
+      type: string
+
   tasks:
     - name: clone
       taskRef:
@@ -68,7 +85,16 @@ spec:
       params:
         - name: BASE_IMAGE
           value: "$(params.BASE_IMAGE)"
-
+        - name: IMAGE
+          value: "$(params.IMAGE)"
+        - name: REVISION
+          value: "$(params.GIT_REVISION)"
+        - name: TAG
+          value: "$(params.TAG)"
+        - name: REGISTRY
+          value: "$(params.REGISTRY)"
+        - name: NAMESPACE
+          value: "$(params.NAMESPACE)"
     - name: deploy
       runAfter: 
         - build
@@ -83,7 +109,16 @@ spec:
       params:
         - name: BASE_IMAGE
           value: "$(params.BASE_IMAGE)"
-
+        - name: IMAGE
+          value: "$(params.IMAGE)"
+        - name: REVISION
+          value: "$(params.GIT_REVISION)"
+        - name: TAG
+          value: "$(params.TAG)"
+        - name: REGISTRY
+          value: "$(params.REGISTRY)"
+        - name: NAMESPACE
+          value: "$(params.NAMESPACE)"
   workspaces:
     - name: source
     - name: dockerconfig
