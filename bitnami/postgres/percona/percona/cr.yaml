@@ -12,16 +12,17 @@ spec:
 #    host: "<primary-ip>"
 #    port: "<primary-port>"
 
+#  openshift: true
 
-#  users:
-#    - name: rhino
-#      databases:
-#        - zoo
-#      options: "SUPERUSER"
+  users:
+    - name: rhino
+      databases:
+        - zoo
+      options: "SUPERUSER"
 
-#  databaseInitSQL:
-#    key: init.sql
-#    name: cluster1-init-sql
+  databaseInitSQL:
+    key: init.sql
+    name: cluster1-init-sql
 
 #  shutdown: true
 #  paused: true
@@ -105,7 +106,7 @@ spec:
 
   proxy:
     pgBouncer:
-     replicas: 0
+#      replicas: 3
       image: perconalab/percona-postgresql-operator:main-ppg14-pgbouncer
 #      resources:
 #        limits:

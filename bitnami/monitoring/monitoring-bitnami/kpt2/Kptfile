@@ -27,3 +27,13 @@ openAPI:
         setter:
           name: grafana-endpoint
           value: "https://grafana.local.ertia.cloud"
+    io.k8s.cli.setters.admin-user:
+      x-k8s-cli:
+        setter:
+          name: admin-password
+          value: "admin"
+    io.k8s.cli.setters.admin-password:
+      x-k8s-cli:
+        setter:
+          name: admin-password
+          value: "admin"

@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: grafana
 data:
-  GF_SECURITY_ADMIN_USER: "admin"
+  GF_SECURITY_ADMIN_USER: "admin" # {"$kpt-set":"admin-user"}
   GF_INSTALL_PLUGINS: ""
   GF_PATHS_PLUGINS: "/opt/bitnami/grafana/data/plugins"
   GF_AUTH_LDAP_ENABLED: "false"
