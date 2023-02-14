@@ -23,6 +23,6 @@ spec:
       value: "$(body.ref_type)"
     - name: REGISTRY
       value: "$(body.repository.name)"
-    - name: NAMESPACE
-      value: "$(body.repository.name)"
+#    - name: NAMESPACE
+#      value: "$(body.repository.name)"
 
