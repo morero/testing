@@ -3,23 +3,23 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: git-kpt-gitea
+  name: git-gitea
   namespace: "git"
   labels:
     app.kubernetes.io/name: gitea
     helm.sh/chart: gitea-0.1.6
-    app.kubernetes.io/instance: git-kpt
+    app.kubernetes.io/instance: git
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
   sessionAffinity: None
   ports:
     - name: http
-      port: 8000
+      port: 80
       targetPort: http
     - name: ssh
-      port: 22
+      port: 10022
       targetPort: ssh
   selector:
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/instance: git-kpt
+    app.kubernetes.io/instance: git

@@ -1,4 +1,3 @@
----
 # Source: git-main/charts/gitea/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -16,17 +15,17 @@ metadata:
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
-    - host: "git.local.ertia.cloud" # {"$kpt-set":"git-domain"}
-      http:
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: git-kpt-gitea
-                port:
-                  name: http
+  - host: "git.local.ertia.cloud" # {"$kpt-set":"git-domain"}
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: git-kpt-gitea
+            port:
+              name: http
   tls:
-    - hosts:
-        - "git.local.ertia.cloud" # {"$kpt-set":"git-domain"}
-      secretName: gitea.local-tls
+  - hosts:
+    - "git.local.ertia.cloud" # {"$kpt-set":"git-domain"}
+    secretName: gitea.local-tls

@@ -37,3 +37,11 @@ gitea:
         hosts:
           - "git.@DOMAIN@"
 
+  service:
+    type: LoadBalancer
+    ports:
+      http: 80
+      ssh: 10022
+
+  exposeSSH: true
+  rootURL: "git.local.ertia.cloud"
