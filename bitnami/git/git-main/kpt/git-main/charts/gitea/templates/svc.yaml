@@ -18,7 +18,7 @@ spec:
       port: 80
       targetPort: http
     - name: ssh
-      port: 10022
+      port: 22
       targetPort: ssh
   selector:
     app.kubernetes.io/name: gitea

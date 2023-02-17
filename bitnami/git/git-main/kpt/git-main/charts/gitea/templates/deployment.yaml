@@ -60,7 +60,7 @@ spec:
         - name: GITEA_SSH_LISTEN_PORT
           value: "2222"
         - name: GITEA_SSH_PORT
-          value: "10022"
+          value: "22"
         - name: GITEA_DATABASE_HOST
           value: "stolon-proxy.stolon"
         - name: GITEA_DATABASE_PORT_NUMBER
