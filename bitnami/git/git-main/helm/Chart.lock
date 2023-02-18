@@ -1,9 +1,9 @@
 dependencies:
-- name: gitea
-  repository: ""
-  version: 0.1.6
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.2.0
 - name: common
   repository: https://charts.bitnami.com/bitnami
-  version: 1.17.1
-digest: sha256:e666a9ec1e838635ac329fe3defcc08c92796ae409f85c69373ec07b452718e9
-generated: "2023-01-19T11:49:49.064366054+01:00"
+  version: 2.2.3
+digest: sha256:43c1e54e73f7b79881c6e2f9cf3bec9293d38b0df403f3945653fa04959611ee
+generated: "2023-02-17T14:35:04.758676766Z"

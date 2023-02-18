@@ -106,7 +106,7 @@ runMode: prod
 exposeSSH: true
 ## @param rootURL UI Root URL (for link generation)
 ##
-rootURL: "https://git.local.ertia.cloud"
+rootURL: ""
 ## @param command Override default container command (useful when using custom images)
 ##
 command: []
@@ -166,10 +166,10 @@ sidecars: []
 tolerations: []
 ## @param existingSecret Name of a secret with the application password
 ##
-existingSecret: "existingSecret"
+existingSecret: ""
 ## @param existingSecretKey Key inside the existing secret containing the password
 ##
-existingSecretKey: "existingSecretKey"
+existingSecretKey: "admin-password"
 ## SMTP mail delivery configuration
 ## ref: https://github.com/bitnami/containers/tree/main/bitnami/gitea/#smtp-configuration
 ## @param smtpHost SMTP host
@@ -470,7 +470,7 @@ ingress:
   ingressClassName: ""
   ## @param ingress.hostname Default host for the ingress resource
   ##
-  hostname: "git.local.ertia.cloud"
+  hostname: "gitea.local"
   ## @param ingress.path The Path to Gitea. You may need to set this to '/*' in order to use this
   ## with ALB ingress controllers.
   ##
@@ -585,7 +585,7 @@ serviceAccount:
 ## @param postgresql.service.ports.postgresql PostgreSQL service port
 ##
 postgresql:
-  enabled: false
+  enabled: true
   auth:
     username: bn_gitea
     password: ""
@@ -606,13 +606,14 @@ postgresql:
 ## @param externalDatabase.existingSecret Name of an existing secret resource containing the database credentials
 ## @param externalDatabase.existingSecretPasswordKey Name of an existing secret key containing the database credentials
 ##
-
 externalDatabase:
-  existingSecret: "git-external-postgres"
-  existingSecretPasswordKey: "db-password"
-  host: "stolon-proxy.stolon"
+  host: ""
   port: 5432
+  user: postgres
   database: gitea
+  password: ""
+  existingSecret: ""
+  existingSecretPasswordKey: "db-password"
 
 ## @section Volume Permissions parameters
 ##
@@ -667,25 +668,3 @@ volumePermissions:
     ##    memory: 128Mi
     ##
     requests: {}
-
-#ingress:
-#  enabled: true
-#  annotations:
-#    kubernetes.io/ingress.class: traefik
-#    cert-manager.io/cluster-issuer: letsencrypt-selfsigned
-#  hosts:
-#    - host: "git.local.ertia.cloud"
-#      paths:
-#        - path: /
-#          pathType: Prefix
-#    - host: "git.local.ertia.cloud"
-#      paths:
-#        - path: /
-#          pathType: Prefix
-#  tls:
-#    - secretName: git-tls
-#  hosts:
-#    - "git.local.ertia.cloud"
-
-
-

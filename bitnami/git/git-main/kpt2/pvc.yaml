@@ -1,0 +1,17 @@
+---
+# Source: gitea/templates/pvc.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: git
+  namespace: "git"
+  labels:
+    app.kubernetes.io/name: git
+    app.kubernetes.io/instance: git
+spec:
+  
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "8Gi"

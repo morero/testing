@@ -1,0 +1,71 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: kpt
+packageMetadata:
+  shortDescription: sample description
+openAPI:
+  definitions:
+    io.k8s.cli.setters.git-admin-username:
+      x-k8s-cli:
+        setter:
+          name: git-admin-username
+          value: "git"
+    io.k8s.cli.setters.git-admin-password:
+      x-k8s-cli:
+        setter:
+          name: git-admin-password
+          value: "git"
+    io.k8s.cli.setters.git-admin-email:
+      x-k8s-cli:
+        setter:
+          name: git-admin-email
+          value: "git@example.com"
+    io.k8s.cli.setters.git-app-name:
+      x-k8s-cli:
+        setter:
+          name: git-app-name
+          value: "ertia"
+    io.k8s.cli.setters.git-endpoint:
+      x-k8s-cli:
+        setter:
+          name: git-endpoint
+          value: "http://git.local.ertia.cloud"
+          isSet: true
+    io.k8s.cli.setters.postgres-secret-name:
+      x-k8s-cli:
+        setter:
+          name: postgres-secret-name
+          value: "postgres-git"
+    io.k8s.cli.setters.postgres-secret-database-key:
+      x-k8s-cli:
+        setter:
+          name: postgres-secret-database-key
+          value: "database"
+    io.k8s.cli.setters.postgres-secret-username-key:
+      x-k8s-cli:
+        setter:
+          name: postgres-secret-username-key
+          value: "username"
+    io.k8s.cli.setters.postgres-secret-password-key:
+      x-k8s-cli:
+        setter:
+          name: postgres-secret-password-key
+          value: "password"
+    io.k8s.cli.setters.git-domain:
+      x-k8s-cli:
+        setter:
+          name: git-domain
+          value: "git.local.ertia.cloud"
+          isSet: true
+    io.k8s.cli.setters.cert-issuer:
+      x-k8s-cli:
+        setter:
+          name: cert-issuer
+          value: "letsencrypt-selfsigned"
+    io.k8s.cli.setters.generate-password-fields:
+      x-k8s-cli:
+        setter:
+          name: generate-password-fields
+          value: "password"
+          isSet: true

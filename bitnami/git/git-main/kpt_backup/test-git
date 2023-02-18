@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-selfsigned
+    cert-manager.k8s.io/cluster-issuer: letsencrypt-selfsigned
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"cert-manager.io/cluster-issuer":"letsencrypt-selfsigned","cert-manager.k8s.io/cluster-issuer":"letsencrypt-selfsigned","kubernetes.io/ingress.class":"traefik"},"creationTimestamp":"2023-02-04T12:48:25Z","generation":1,"labels":{"app.kubernetes.io/instance":"git-kpt","app.kubernetes.io/name":"gitea","cert-promoter":"pending","helm.sh/chart":"gitea-0.1.6"},"name":"git-kpt-gitea","namespace":"git","resourceVersion":"18173","uid":"57835348-1a70-43ea-88a6-1f6fe763f2a0"},"spec":{"rules":[{"host":"git.local.ertia.cloud","http":{"paths":[{"backend":{"service":{"name":"git-kpt-gitea","port":{"name":"http"}}},"path":"/","pathType":"ImplementationSpecific"}]}}],"tls":[{"hosts":["git.local.ertia.cloud"],"secretName":"gitea.local-tls"}]},"status":{"loadBalancer":{}}}
+    kubernetes.io/ingress.class: traefik
+  creationTimestamp: "2023-02-04T12:49:51Z"
+  generation: 1
+  labels:
+    app.kubernetes.io/instance: git-kpt
+    app.kubernetes.io/name: gitea
+    cert-promoter: pending
+    helm.sh/chart: gitea-0.1.6
+  name: git-kpt-gitea
+  namespace: git
+  resourceVersion: "18504"
+  uid: e5b28c80-7221-4c78-9213-dcd7947307e3
+spec:
+  rules:
+  - host: git.local.ertia.cloud
+    http:
+      paths:
+      - backend:
+          service:
+            name: git-kpt-gitea
+            port:
+              name: http
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - git.local.ertia.cloud
+    secretName: gitea.local-tls
+status:
+  loadBalancer: {}
