@@ -2,9 +2,12 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 traefik:
-#  ports:
-#    web:
-#      redirectTo: websecure
+  ports:
+    web:
+      redirectTo: websecure
+    git-ssh:
+      port: 22
+      expose: true
 
   services:
     zitadel:
