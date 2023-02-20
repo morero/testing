@@ -1,0 +1,21 @@
+---
+# Source: dragonfly/templates/metrics-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cache-dragonfly-metrics
+  labels:
+    app.kubernetes.io/name: dragonfly
+    app.kubernetes.io/instance: cache
+    app.kubernetes.io/version: "v0.15.0"
+    type: metrics
+spec:
+  type: ClusterIP
+  ports:
+    - name: metrics
+      port: 6379
+      targetPort: 6379
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: dragonfly
+    app.kubernetes.io/instance: cache

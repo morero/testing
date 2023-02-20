@@ -1,0 +1,29 @@
+---
+# Source: dragonfly/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: cache-dragonfly-metrics
+  labels:
+    app.kubernetes.io/name: dragonfly
+    app.kubernetes.io/instance: cache
+    app.kubernetes.io/version: "v0.15.0"
+spec:
+  endpoints:
+    - interval: 10s
+      scrapeTimeout: 10s
+      honorLabels: true
+      port: metrics
+      path: /metrics
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true
+  jobLabel: "cache"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dragonfly
+      app.kubernetes.io/instance: cache
+      type: metrics
+  namespaceSelector:
+    matchNames:
+      - cache

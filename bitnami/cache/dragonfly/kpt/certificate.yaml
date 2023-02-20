@@ -1,0 +1,31 @@
+---
+# Source: dragonfly/templates/certificate.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cache-dragonfly
+  labels:
+    app.kubernetes.io/name: dragonfly
+    app.kubernetes.io/instance: cache
+    app.kubernetes.io/version: "v0.15.0"
+spec:
+  commonName: 'cache-dragonfly'
+  dnsNames:
+  - '*.cache-dragonfly.cache.svc.cluster.local'
+  - 'cache-dragonfly.cache.svc.cluster.local'
+  - 'cache-dragonfly.cache.svc'
+  - 'cache-dragonfly.cache'
+  - 'cache-dragonfly'
+  - localhost
+  duration: 87600h0m0s
+  ipAddresses:
+  - 127.0.0.1
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-selfsigned
+  secretName: 'cache-dragonfly-server-tls'
+  usages:
+  - client auth
+  - server auth
+  - signing
+  - key encipherment
