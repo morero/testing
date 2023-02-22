@@ -497,9 +497,9 @@ containerRuntime:
   # - docker
   # - none
   # - auto (automatically detect the container runtime)
-  integration: none
+  integration: containerd
   # -- Configure the path to the container runtime control socket.
-  # socketPath: /path/to/runtime.sock
+  socketPath: /var/run/k3s/containerd/containerd.sock
 
 # -- (string) Configure timeout in which Cilium will exit if CRDs are not available
 # @default -- `"5m"`
@@ -576,7 +576,7 @@ enableCiliumEndpointSlice: false
 ingressController:
   # -- Enable cilium ingress controller
   # This will automatically set enable-envoy-config as well.
-  enabled: false
+  enabled: true
 
   # -- Default ingress load balancer mode
   # Supported values: shared, dedicated
@@ -1379,7 +1379,7 @@ readinessProbe:
 # -- Configure the kube-proxy replacement in Cilium BPF datapath
 # Valid options are "disabled", "partial", "strict".
 # ref: https://docs.cilium.io/en/stable/gettingstarted/kubeproxy-free/
-#kubeProxyReplacement: "disabled"
+kubeProxyReplacement: "strict"
 
 # -- healthz server bind address for the kube-proxy replacement.
 # To enable set the value to '0.0.0.0:10256' for all ipv4
