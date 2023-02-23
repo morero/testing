@@ -1,0 +1,102 @@
+apiVersion: pg.percona.com/v2beta1
+kind: PerconaPGCluster
+metadata:
+  name: "cluster-v2" # {"$kpt-set":"cluster_name"}
+spec:
+  
+# if users is comment out, default user cluster2 will be created.
+# if restore from s3 backup, previous users will exist with password from backup  
+  users:
+    - name: postgres
+      password:
+        type: AlphaNumeric
+      databases:
+        - "postgres"
+      options: "SUPERUSER"
+      
+  image: perconalab/percona-postgresql-operator:main-ppg14-postgres
+  postgresVersion: 14
+
+  #Get data from existing S3 backup to new cluster
+  dataSource:
+    pgbackrest:
+      stanza: db
+      configuration:
+        - secret:
+            name: cluster-pgbackrest-secrets
+      global:
+        repo2-path: "/pgbackrest/pgo/cluster-v1/repo2" # {"$kpt-set":"s3_restore_path"}
+      repo:
+        name: repo2
+        s3:
+          bucket: "" # {"$kpt-set":"s3_backup_bucket"}
+          endpoint: "" # {"$kpt-set":"s3_backup_endpoint"}
+          region: "" # {"$kpt-set":"s3_backup_region"}
+
+  instances:
+  - name: instance1
+    dataVolumeClaimSpec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+
+
+  backups:
+    pgbackrest:
+      stanza: db
+      image: perconalab/percona-postgresql-operator:main-ppg14-pgbackrest
+      configuration:
+        - secret:
+            name: cluster-pgbackrest-secrets
+      repos:
+#        - name: repo1
+#          schedules:
+#            full: "0 0 * * 6"
+#            differential: "0 1 * * 1-6"
+#          volume:
+#            volumeClaimSpec:
+#              accessModes:
+#              - ReadWriteOnce
+#              resources:
+#                requests:
+#                  storage: 1Gi
+        - name: repo2
+          schedules:
+            full: "0 0 * * 6" # {"$kpt-set":"s3_backup_schedule_full"}
+            differential: "0 1 * * 1-6" # {"$kpt-set":"s3_backup_schedule_diff"}
+          s3:
+            bucket: "" # {"$kpt-set":"s3_backup_bucket"}
+            endpoint: "" # {"$kpt-set":"s3_backup_endpoint"}
+            region: "" # {"$kpt-set":"s3_backup_region"}
+
+      global:
+#        repo1-retention-full: "14"
+#        repo1-retention-full-type: time
+#        repo1-path: /pgbackrest/pgo/cluster-v1/repo1
+        #repo1-cipher-type: aes-256-cbc
+        #repo1-s3-uri-style: path
+        repo2-retention-full: "14"
+        repo2-retention-full-type: time
+        repo2-path: "/pgbackrest/pgo/cluster-v1/repo2" # {"$kpt-set":"s3_backup_path"}
+        log-level-console: info
+
+      #MANUAL BACKUP :: manual backup trigger from command line
+      manual:
+        repoName: repo2
+        options:
+          - --type=full
+
+      # enable/disable restore (no time will takes latest backup)
+      restore:
+        enabled: false # {"$kpt-set":"s3_restore_operation"}
+        repoName: repo2
+        options:
+          - --type="default"
+
+  proxy:
+    pgBouncer:
+      image: perconalab/percona-postgresql-operator:main-ppg14-pgbouncer
+
+

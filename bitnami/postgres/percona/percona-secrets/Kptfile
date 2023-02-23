@@ -1,0 +1,28 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: percona-backup
+packageMetadata:
+  shortDescription: sample description
+openAPI:
+  definitions:
+    io.k8s.cli.setters.s3_key:
+      x-k8s-cli:
+        setter:
+          name: s3_key
+          value: "s3_key"
+    io.k8s.cli.setters.s3_access_key:
+      x-k8s-cli:
+        setter:
+          name: s3_access_key
+          value: "s3_access_key"
+    io.k8s.cli.substitutions.s3_conf:
+      x-k8s-cli:
+        substitution:
+          name: s3_conf
+          pattern: "[global]\nrepo2-s3-key=${s3_key}\nrepo2-s3-key-secret=${s3_access_key}"
+          values:
+            - marker: ${s3_key}
+              ref: '#/definitions/io.k8s.cli.setters.s3_key'
+            - marker: ${s3_access_key}
+              ref: '#/definitions/io.k8s.cli.setters.s3_access_key'

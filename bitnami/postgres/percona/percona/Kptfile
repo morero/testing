@@ -1,0 +1,13 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: percona-backup
+packageMetadata:
+  shortDescription: sample description
+openAPI:
+  definitions:
+    io.k8s.cli.setters.cluster_name:
+      x-k8s-cli:
+        setter:
+          name: cluster_name
+          value: "cluster_name"
