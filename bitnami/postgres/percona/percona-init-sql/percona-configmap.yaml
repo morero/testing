@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-init-sql
+  namespace: pgo
+data:
+  init.sql: ""

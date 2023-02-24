@@ -1,0 +1,74 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: percona-clone-cluster
+packageMetadata:
+  shortDescription: sample description
+openAPI:
+  definitions:
+    io.k8s.cli.setters.clone_cluster_name:
+      x-k8s-cli:
+        setter:
+          name: clone_cluster_name
+          value: ""
+    io.k8s.cli.setters.s3_backup_bucket:
+      x-k8s-cli:
+        setter:
+          name: s3_backup_bucket
+          value: ""
+    io.k8s.cli.setters.s3_backup_endpoint:
+      x-k8s-cli:
+        setter:
+          name: s3_backup_endpoint
+          value: ""
+    io.k8s.cli.setters.s3_backup_region:
+      x-k8s-cli:
+        setter:
+          name: s3_backup_region
+          value: ""
+    io.k8s.cli.setters.s3_backup_schedule_full:
+      type: string
+      x-k8s-cli:
+        setter:
+          name: s3_backup_schedule_full
+          value: "0 0 * * 6"
+    io.k8s.cli.setters.s3_backup_schedule_diff:
+      type: string
+      x-k8s-cli:
+        setter:
+          name: s3_backup_schedule_diff
+          value: "0 1 * * 1-6"
+    io.k8s.cli.setters.s3_restore_operation:
+      x-k8s-cli:
+        setter:
+          name: s3_restore_operation
+          value: "false"
+    io.k8s.cli.setters.cluster_name:
+      type: string
+      x-k8s-cli:
+        setter:
+          name: cluster_name
+          value: ""
+
+    io.k8s.cli.setters.s3_restore_type:
+      type: string
+      x-k8s-cli:
+        setter:
+          name: s3_restore_type
+          value: "default"
+
+    io.k8s.cli.setters.s3_restore_time:
+      type: string
+      x-k8s-cli:
+        setter:
+          name: s3_restore_time
+          value: " "
+    io.k8s.cli.substitutions.s3_backup_path:
+      type: string
+      x-k8s-cli:
+        substitution:
+          name: s3_backup_path
+          pattern: "/pgbackrest/pgo/${cluster_name}/repo2"
+          values:
+            - marker: ${cluster_name}
+              ref: '#/definitions/io.k8s.cli.setters.cluster_name'

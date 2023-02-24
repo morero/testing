@@ -1,0 +1,8 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: percona-init.sql
+packageMetadata:
+  shortDescription: sample description
+openAPI:
+  definitions:

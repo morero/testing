@@ -7,13 +7,24 @@ spec:
 # if users is comment out, default user cluster2 will be created.
 # if restore from s3 backup, previous users will exist with password from backup  
   users:
+    - name: dfuser
+      password:
+        type: AlphaNumeric
+      databases:
+        - "df"
+        - "auth"
+      options: "SUPERUSER"
     - name: postgres
       password:
         type: AlphaNumeric
       databases:
         - "postgres"
       options: "SUPERUSER"
-      
+
+#  databaseInitSQL:
+#    key: init.sql
+#    name: cluster-init-sql
+
   image: perconalab/percona-postgresql-operator:main-ppg14-postgres
   postgresVersion: 14
 
@@ -43,6 +54,7 @@ spec:
               resources:
                 requests:
                   storage: 1Gi
+        - name: repo2
 
       global:
 #        repo1-retention-full: "14"
