@@ -5,7 +5,7 @@ metadata:
 spec:
   # if users is comment out, default user cluster2 will be created.
   # if restore from s3 backup, previous users will exist with password from backup
-  users:
+  users: # {"$kpt-set":"users"}
     - name: "demo" # {"$kpt-set":"db_user"}
       password:
         type: AlphaNumeric
