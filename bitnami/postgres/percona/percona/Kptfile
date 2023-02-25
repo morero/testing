@@ -11,3 +11,20 @@ openAPI:
         setter:
           name: cluster_name
           value: "cluster_name"
+    io.k8s.cli.setters.db_user:
+      x-k8s-cli:
+        setter:
+          name: db_user
+          value: "demo"
+    io.k8s.cli.setters.db_roles:
+      x-k8s-cli:
+        setter:
+          name: db_roles
+          value: ""
+          isSet: true
+    io.k8s.cli.setters.db_list:
+      type: array
+      x-k8s-cli:
+        setter:
+          name: db_list
+          listValues:

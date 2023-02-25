@@ -3,17 +3,15 @@ kind: PerconaPGCluster
 metadata:
   name: "cluster-v1" # {"$kpt-set":"cluster_name"}
 spec:
-  
-# if users is comment out, default user cluster2 will be created.
-# if restore from s3 backup, previous users will exist with password from backup  
+  # if users is comment out, default user cluster2 will be created.
+  # if restore from s3 backup, previous users will exist with password from backup
   users:
-    - name: dfuser
+    - name: "demo" # {"$kpt-set":"db_user"}
       password:
         type: AlphaNumeric
-      databases:
-        - "df"
-        - "auth"
-      options: "SUPERUSER"
+      databases: # {"$kpt-set":"db_list"}
+        - "demo"
+      options: "" # {"$kpt-set":"db_roles"}
     - name: postgres
       password:
         type: AlphaNumeric
@@ -21,51 +19,39 @@ spec:
         - "postgres"
       options: "SUPERUSER"
 
-#  databaseInitSQL:
-#    key: init.sql
-#    name: cluster-init-sql
+  #  databaseInitSQL:
+  #    key: init.sql
+  #    name: cluster-init-sql
 
   image: perconalab/percona-postgresql-operator:main-ppg14-postgres
   postgresVersion: 14
-
   instances:
-  - name: instance1
-    dataVolumeClaimSpec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1Gi
-
-
+    - name: instance1
+      dataVolumeClaimSpec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
   backups:
     pgbackrest:
       stanza: db
       image: perconalab/percona-postgresql-operator:main-ppg14-pgbackrest
       repos:
         - name: repo1
-#          schedules:
-#            full: "0 0 * * 6"
-#            differential: "0 1 * * 1-6"
+          #          schedules:
+          #            full: "0 0 * * 6"
+          #            differential: "0 1 * * 1-6"
           volume:
             volumeClaimSpec:
               accessModes:
-              - ReadWriteOnce
+                - ReadWriteOnce
               resources:
                 requests:
                   storage: 1Gi
-        - name: repo2
 
       global:
-#        repo1-retention-full: "14"
-#        repo1-retention-full-type: time
-#        repo1-path: /pgbackrest/pgo/cluster-v1/repo1
-        #repo1-cipher-type: aes-256-cbc
-        #repo1-s3-uri-style: path
         log-level-console: info
-
   proxy:
     pgBouncer:
       image: perconalab/percona-postgresql-operator:main-ppg14-pgbouncer
-
-
