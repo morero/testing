@@ -125,7 +125,7 @@ data:
 
 
   # Enables L7 proxy for L7 policy enforcement and visibility
-  enable-l7-proxy: "false"
+  enable-l7-proxy: "true"
 
   enable-ipv4-masquerade: "true"
   enable-ipv6-big-tcp: "false"
