@@ -1,7 +1,7 @@
 apiVersion: pg.percona.com/v2beta1
 kind: PerconaPGCluster
 metadata:
-  name: "cluster-v1" # {"$kpt-set":"cluster_name"}
+  name: "percona-cluster"
 spec:
   # if users is comment out, default user cluster2 will be created.
   # if restore from s3 backup, previous users will exist with password from backup
@@ -22,6 +22,13 @@ spec:
   #  databaseInitSQL:
   #    key: init.sql
   #    name: cluster-init-sql
+
+  spec:
+    #  secretsName: cluster1-users
+    sslCA: percona-cluster-ssl-ca
+    sslSecretName: percona-cluster-ssl-keypair
+    sslReplicationSecretName: percona-cluster-ssl-keypair
+    tlsOnly: true
 
   image: perconalab/percona-postgresql-operator:main-ppg14-postgres
   postgresVersion: 14
@@ -52,6 +59,7 @@ spec:
 
       global:
         log-level-console: info
-  proxy:
-    pgBouncer:
-      image: perconalab/percona-postgresql-operator:main-ppg14-pgbouncer
+#  proxy:
+#    pgBouncer:
+      #replicas: 3
+#      image: perconalab/percona-postgresql-operator:main-ppg14-pgbouncer

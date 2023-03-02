@@ -17,6 +17,13 @@ spec:
   image: perconalab/percona-postgresql-operator:main-ppg14-postgres
   postgresVersion: 14
 
+  spec:
+    #  secretsName: cluster1-users
+    sslCA: percona-cluster-ssl-ca
+    sslSecretName: percona-cluster-ssl-keypair
+    sslReplicationSecretName: percona-cluster-ssl-keypair
+    tlsOnly: true
+
   #Get data from existing S3 backup to new cluster
   dataSource:
     pgbackrest:

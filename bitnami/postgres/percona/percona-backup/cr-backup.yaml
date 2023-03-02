@@ -1,19 +1,32 @@
 apiVersion: pg.percona.com/v2beta1
 kind: PerconaPGCluster
 metadata:
-  name: "cluster-v1" # {"$kpt-set":"cluster_name"}
+  name: "percona-cluster"
 spec:
   
 # if users is comment out, default user cluster2 will be created.
 # if restore from s3 backup, previous users will exist with password from backup  
   users: # {"$kpt-set":"users"}
+    - name: "demo" # {"$kpt-set":"db_user"}
+      password:
+        type: AlphaNumeric
+      databases: # {"$kpt-set":"db_list"}
+        - "demo"
+      options: "" # {"$kpt-set":"db_roles"}
     - name: postgres
       password:
         type: AlphaNumeric
       databases:
         - "postgres"
       options: "SUPERUSER"
-      
+
+  spec:
+    #  secretsName: cluster1-users
+    sslCA: percona-cluster-ssl-ca
+    sslSecretName: percona-cluster-ssl-keypair
+    sslReplicationSecretName: percona-cluster-ssl-keypair
+    tlsOnly: true
+
   image: perconalab/percona-postgresql-operator:main-ppg14-postgres
   postgresVersion: 14
 
@@ -63,7 +76,7 @@ spec:
         #repo1-s3-uri-style: path
         repo2-retention-full: "14"
         repo2-retention-full-type: time
-        repo2-path: "/pgbackrest/pgo/cluster-v1/repo2" # {"$kpt-set":"s3_backup_path"}
+        repo2-path: "/pgbackrest/pgo/percona-cluster/repo2" # {"$kpt-set":"s3_backup_path"}
         log-level-console: info
 
       #MANUAL BACKUP :: manual backup trigger from command line
