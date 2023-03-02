@@ -23,7 +23,7 @@ spec:
                   name: "stolon-auth" # {"$kpt-set":"postgres-admin-secret-name"}
                   key: "password" # {"$kpt-set":"postgres-admin-secret-password-key"}
             - name: PGCONN
-              value: "postgresql://$(ADMIN_DB_USERNAME):$(ADMIN_DB_PASSWORD)@stolon-proxy.stolon:5432/postgres"
+              value: "postgresql://$(ADMIN_DB_USERNAME):$(ADMIN_DB_PASSWORD)@percona-cluster-ha.pgo:5432/postgres"
             - name: DB_USER
               valueFrom:
                 secretKeyRef:

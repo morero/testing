@@ -38,20 +38,6 @@ openAPI:
         setter:
           name: s3_restore_operation
           value: "false"
-    io.k8s.cli.setters.cluster_name:
-      type: string
-      x-k8s-cli:
-        setter:
-          name: cluster_name
-          value: "cluster-v1"
-
-    io.k8s.cli.setters.s3_restore_type:
-      type: string
-      x-k8s-cli:
-        setter:
-          name: s3_restore_type
-          value: "default"
-
     io.k8s.cli.setters.s3_restore_time:
       type: string
       x-k8s-cli:
@@ -75,4 +61,21 @@ openAPI:
           values:
             - marker: "${s3_restore_time}"
               ref: '#/definitions/io.k8s.cli.setters.s3_restore_time'
+    io.k8s.cli.setters.db_user:
+      x-k8s-cli:
+        setter:
+          name: db_user
+          value: "demo"
+    io.k8s.cli.setters.db_roles:
+      x-k8s-cli:
+        setter:
+          name: db_roles
+          value: ""
+          isSet: true
+    io.k8s.cli.setters.db_list:
+      type: array
+      x-k8s-cli:
+        setter:
+          name: db_list
+          listValues:
 

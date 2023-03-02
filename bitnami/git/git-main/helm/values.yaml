@@ -610,7 +610,7 @@ postgresql:
 externalDatabase:
   existingSecret: "git-external-postgres"
   existingSecretPasswordKey: "db-password"
-  host: "stolon-proxy.stolon"
+  host: "percona-cluster-ha.pgo"
   port: 5432
   database: gitea
 

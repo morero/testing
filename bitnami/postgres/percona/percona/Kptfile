@@ -6,11 +6,6 @@ packageMetadata:
   shortDescription: sample description
 openAPI:
   definitions:
-    io.k8s.cli.setters.cluster_name:
-      x-k8s-cli:
-        setter:
-          name: cluster_name
-          value: "cluster_name"
     io.k8s.cli.setters.db_user:
       x-k8s-cli:
         setter:
