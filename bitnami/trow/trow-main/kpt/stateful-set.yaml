@@ -18,7 +18,7 @@ spec:
         args:
         - "--no-tls"
         - "-n"
-        - "registry.7xqfswmw24tga222.ertia.cloud" # {"$kpt-set":"domains"}
+        - "registry.83cnnvea23rb2222.ertia.cloud" # {"$kpt-set":"domains"}
         - "-u"
         - "registry" # {"$kpt-set":"username"}
         - "--password-file"

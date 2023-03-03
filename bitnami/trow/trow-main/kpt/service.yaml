@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     app: trow
-  type: ClusterIP
+  type: ClusterIP #LoadBalancer #NodePort #ClusterIP
   ports:
   - name: http-tcp
     protocol: TCP

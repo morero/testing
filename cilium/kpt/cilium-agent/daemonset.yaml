@@ -106,7 +106,7 @@ spec:
               key: custom-cni-conf
               optional: true
         - name: KUBERNETES_SERVICE_HOST
-          value: "46.246.46.160" # {"$kpt-set":"master-ip"}
+          value: "46.246.46.242"
         - name: KUBERNETES_SERVICE_PORT
           value: "6443"
         lifecycle:
@@ -214,7 +214,7 @@ spec:
               apiVersion: v1
               fieldPath: metadata.namespace
         - name: KUBERNETES_SERVICE_HOST
-          value: "46.246.46.160" # {"$kpt-set":"master-ip"}
+          value: "46.246.46.242"
         - name: KUBERNETES_SERVICE_PORT
           value: "6443"
         volumeMounts:
@@ -333,7 +333,7 @@ spec:
               key: clean-cilium-bpf-state
               optional: true
         - name: KUBERNETES_SERVICE_HOST
-          value: "46.246.46.160" # {"$kpt-set":"master-ip"}
+          value: "46.246.46.242"
         - name: KUBERNETES_SERVICE_PORT
           value: "6443"
         terminationMessagePolicy: FallbackToLogsOnError

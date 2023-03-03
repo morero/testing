@@ -5,6 +5,8 @@ metadata:
   namespace: lb
 spec:
   addresses:
-  - 172.21.255.1-172.21.255.250
+  - 46.246.47.190/32
+  - 46.246.46.179/32
+  - 46.246.46.160/32
   autoAssign: true
   avoidBuggyIPs: true

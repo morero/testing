@@ -1,0 +1,8 @@
+---
+# Source: cilium/charts/cilium/templates/cilium-ingress-class.yaml
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: cilium
+spec:
+  controller: cilium.io/ingress-controller

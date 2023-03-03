@@ -4,7 +4,7 @@ metadata:
   name: trow-ingress
   namespace: registry
   labels:
-    cert-promoter: pending
+    cert-promoter: test #pending
   annotations:
     ingress.kubernetes.io/proxy-body-size: "0"
     ingress.kubernetes.io/ssl-redirect: "false"
@@ -14,7 +14,7 @@ metadata:
 spec:
   ingressClassName: cilium
   rules:
-  - host: registry.local.ertia.cloud # {"$kpt-set":"registry-domain"}
+  - host: registry.83cnnvea23rb2222.ertia.cloud # {"$kpt-set":"registry-domain"}
     http:
       paths:
       - pathType: Prefix
@@ -26,5 +26,5 @@ spec:
               number: 8000
   tls: 
     - hosts:
-        - "registry.local.ertia.cloud" # {"$kpt-set":"registry-domain"}
+        - "registry.83cnnvea23rb2222.ertia.cloud" # {"$kpt-set":"registry-domain"}
       secretName: trow-registry-tls

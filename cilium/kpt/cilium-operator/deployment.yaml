@@ -59,7 +59,7 @@ spec:
               name: cilium-config
               optional: true
         - name: KUBERNETES_SERVICE_HOST
-          value: "46.246.46.160" # {"$kpt-set":"master-ip"}
+          value: "46.246.46.242"
         - name: KUBERNETES_SERVICE_PORT
           value: "6443"
         livenessProbe:
