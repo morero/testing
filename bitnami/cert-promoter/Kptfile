@@ -61,3 +61,8 @@ openAPI:
         setter:
           name: memory-max
           value: "100Mi"
+    io.k8s.cli.setters.base-domain:
+      x-k8s-cli:
+        setter:
+          name: base-domain
+          value: "xdns.local.ertia.cloud"

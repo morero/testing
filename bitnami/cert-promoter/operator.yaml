@@ -83,3 +83,5 @@ spec:
               value: "" # {"$kpt-set":"cluster-ips"}
             - name: IGNORE_DOMAIN
               value: "local.ertia.cloud" # {"$kpt-set":"ignore-domain"}
+            - name: BASE_DOMAIN
+              value: "xdns.local.ertia.cloud" # {"$kpt-set":"base-domain"}
