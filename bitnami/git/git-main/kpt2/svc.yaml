@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/name: git
     app.kubernetes.io/instance: git
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   sessionAffinity: None
   externalTrafficPolicy: "Cluster"
   ports:
