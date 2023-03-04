@@ -14,8 +14,9 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
     ingress.kubernetes.io/ssl-redirect: "true"
-    kubernetes.io/ingress.class: "traefik"
+    kubernetes.io/ingress.class: "cilium"
 spec:
+  ingressClassName: cilium
   tls:
   - hosts:
     - grafana.local.ertia.cloud # {"$kpt-set":"grafana-domain"}
