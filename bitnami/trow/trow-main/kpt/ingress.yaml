@@ -4,7 +4,7 @@ metadata:
   name: trow-ingress
   namespace: registry
   labels:
-    cert-promoter: test
+    cert-promoter: pending
   annotations:
     ingress.kubernetes.io/proxy-body-size: "0"
     ingress.kubernetes.io/ssl-redirect: "false"

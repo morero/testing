@@ -72,7 +72,7 @@ spec:
       containers:
         - name: cert-promoter-operator
           # Replace this with the built image name
-          image: morero/cert-promoter:v0.0.2
+          image: morero/cert-promoter:v0.0.3
           command:
             - /manager
           imagePullPolicy: Always # set to IfNotPresent later
