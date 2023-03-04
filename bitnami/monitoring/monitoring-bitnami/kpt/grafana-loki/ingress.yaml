@@ -17,7 +17,7 @@ metadata:
     ingress.kubernetes.io/ssl-redirect: "true"
     traefik.ingress.kubernetes.io/router.middlewares: monitoring-loki-basic-auth@kubernetescrd
 spec:
-  ingressClassName: "cilium"
+  #ingressClassName: "cilium"
   tls:
   - hosts:
     - "loki.local.ertia.cloud" # {"$kpt-set":"loki-domain"}
