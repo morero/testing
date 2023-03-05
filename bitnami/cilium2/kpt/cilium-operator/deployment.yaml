@@ -62,6 +62,10 @@ spec:
               key: debug
               name: cilium-config
               optional: true
+        - name: KUBERNETES_SERVICE_HOST
+          value: "0.0.0.0" # {"$kpt-set":"master-ip"}
+        - name: KUBERNETES_SERVICE_PORT
+          value: "6443"
         livenessProbe:
           httpGet:
             host: "127.0.0.1"

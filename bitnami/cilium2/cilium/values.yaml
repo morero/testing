@@ -35,9 +35,9 @@ imagePullSecrets:
 # @default -- `"~/.kube/config"`
 kubeConfigPath: ""
 # -- (string) Kubernetes service host
-k8sServiceHost: ""
+k8sServiceHost: "replace"
 # -- (string) Kubernetes service port
-k8sServicePort: ""
+k8sServicePort: "6443"
 
 cluster:
   # -- Name of the cluster. Only required for Cluster Mesh.

@@ -103,6 +103,10 @@ spec:
               name: cilium-config
               key: custom-cni-conf
               optional: true
+        - name: KUBERNETES_SERVICE_HOST
+          value: "0.0.0.0" # {"$kpt-set":"master-ip"}
+        - name: KUBERNETES_SERVICE_PORT
+          value: "6443"
         lifecycle:
           postStart:
             exec:
@@ -190,6 +194,10 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
+        - name: KUBERNETES_SERVICE_HOST
+          value: "0.0.0.0" # {"$kpt-set":"master-ip"}
+        - name: KUBERNETES_SERVICE_PORT
+          value: "6443"
         volumeMounts:
         - name: tmp
           mountPath: /tmp
@@ -305,6 +313,10 @@ spec:
               name: cilium-config
               key: clean-cilium-bpf-state
               optional: true
+        - name: KUBERNETES_SERVICE_HOST
+          value: "0.0.0.0" # {"$kpt-set":"master-ip"}
+        - name: KUBERNETES_SERVICE_PORT
+          value: "6443"
         terminationMessagePolicy: FallbackToLogsOnError
         securityContext:
           seLinuxOptions:
