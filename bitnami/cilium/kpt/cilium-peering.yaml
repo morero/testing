@@ -1,0 +1,16 @@
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumBGPPeeringPolicy
+metadata:
+ name: peering-policy
+spec:
+ nodeSelector:
+   matchLabels:
+     policy: local-peering
+ virtualRouters:
+ - localASN: 65010
+   exportPodCIDR: true
+   neighbors: # {"$kpt-set":"ip-addresses"}
+   - peerAddress: "46.246.46.36/32"
+   - peerAddress: "46.246.46.68/32"
+   - peerAddress: "46.246.46.148/32"
