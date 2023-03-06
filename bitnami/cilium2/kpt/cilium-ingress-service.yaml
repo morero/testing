@@ -12,11 +12,9 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    nodePort: 80
   - name: https
     port: 443
     protocol: TCP
-    nodePort: 443
   type: LoadBalancer
 ---
 # Source: cilium/templates/cilium-ingress-service.yaml
@@ -27,6 +25,7 @@ metadata:
   namespace: kube-system
 subsets:
 - addresses:
-  - ip: "192.192.192.192"
+  - ip: "192.192.192.192" {"$kpt-set":"master-ip"}
   ports:
-  - port: 9999
+  - port: 443
+  - port: 80
