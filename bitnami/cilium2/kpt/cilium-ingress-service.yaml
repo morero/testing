@@ -27,7 +27,7 @@ metadata:
   namespace: kube-system
 subsets:
 - addresses:
-  - ip: "192.192.192.192" {"$kpt-set":"master-ip"}
+  - ip: "192.192.192.192" # {"$kpt-set":"master-ip"}
   ports:
   - port: 443
   - port: 80
