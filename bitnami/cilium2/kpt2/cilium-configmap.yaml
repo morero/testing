@@ -41,9 +41,6 @@ data:
   ingress-lb-annotation-prefixes: "service.beta.kubernetes.io service.kubernetes.io cloud.google.com"
   ingress-default-lb-mode: shared
   ingress-shared-lb-service-name: cilium-ingress
-  enable-gateway-api: "true"
-  enable-gateway-api-secrets-sync: "true"
-  gateway-api-secrets-namespace: "cilium-secrets"
   loadbalancer-l7: "envoy"
   loadbalancer-l7-ports: ""
   loadbalancer-l7-algorithm: "round_robin"
