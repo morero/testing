@@ -4,3 +4,19 @@ metadata:
   name: ips
 packageMetadata:
   shortDescription: sample description
+openAPI:
+  definitions:
+    io.k8s.cli.setters.master-ip:
+      x-k8s-cli:
+        setter:
+          name: "master-ip"
+          value: "10.0.10.0"
+        substitution:
+    io.k8s.cli.substitutions.master_ip_str:
+      x-k8s-cli:
+        substitution:
+          name: master_ip_str
+          pattern: "${master-ip}/32"
+          values:
+            - marker: ${master-ip}
+              ref: '#/definitions/io.k8s.cli.setters.master-ip'

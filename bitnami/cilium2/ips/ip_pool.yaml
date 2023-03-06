@@ -4,8 +4,7 @@ metadata:
   name: "blue-pool"
 spec:
   cidrs:
-  - cidr: "10.0.10.0/24"
-  - cidr: "2004::0/64"
+  - cidr: "10.0.10.0/24" # {"$kpt-set":"master_ip_str"}
   serviceSelector:
     matchLabels:
       "io.kubernetes.service.name": "cilium-ingress"
