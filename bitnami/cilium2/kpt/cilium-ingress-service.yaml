@@ -11,11 +11,11 @@ spec:
   ports:
   - name: http
     port: 80
-    nodePort:
+    nodePort: 80
     protocol: TCP
   - name: https
     port: 443
-    nodePort:
+    nodePort: 443
     protocol: TCP
   type: LoadBalancer
 ---
@@ -30,4 +30,3 @@ subsets:
   - ip: "192.192.192.192" # {"$kpt-set":"master-ip"}
   ports:
   - port: 443
-  - port: 80
