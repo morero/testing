@@ -11,9 +11,11 @@ spec:
   ports:
   - name: http
     port: 80
+    nodePort:
     protocol: TCP
   - name: https
     port: 443
+    nodePort:
     protocol: TCP
   type: LoadBalancer
 ---
