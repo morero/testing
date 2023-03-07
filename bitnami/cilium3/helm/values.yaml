@@ -1,0 +1,23 @@
+cilium:
+  kubeProxyReplacement: strict
+  ingressController:
+    enabled: true
+    loadbalancerMode: dedicated
+  hostServices:
+    enabled: false
+  externalIPs:
+    enabled: true
+  nodePort:
+    enabled: true
+  hostPort:
+    enabled: true
+  image:
+    pullPolicy: IfNotPresent
+  ipam:
+    mode: kubernetes
+  hubble:
+    enabled: true
+    relay:
+      enabled: true
+  k8sServiceHost: 46.246.46.114
+  k8sServicePort: 6443 
