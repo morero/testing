@@ -39,9 +39,9 @@ data:
   enable-ingress-secrets-sync: "true"
   ingress-secrets-namespace: "cilium-secrets"
   ingress-lb-annotation-prefixes: "service.beta.kubernetes.io service.kubernetes.io cloud.google.com"
-  ingress-default-lb-mode: shared
+  ingress-default-lb-mode: dedicated
   ingress-shared-lb-service-name: cilium-ingress
-  enable-gateway-api: "true"
+  enable-gateway-api: "false"
   enable-gateway-api-secrets-sync: "true"
   gateway-api-secrets-namespace: "cilium-secrets"
   loadbalancer-l7: "envoy"
@@ -122,7 +122,7 @@ data:
 
 
   # Enables L7 proxy for L7 policy enforcement and visibility
-  enable-l7-proxy: "true"
+  enable-l7-proxy: "false"
 
   enable-ipv4-masquerade: "true"
   enable-ipv6-big-tcp: "false"
