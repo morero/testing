@@ -643,13 +643,13 @@ ingressController:
     # -- Service type for the shared LB service
     type: LoadBalancer
     # -- Configure a specific nodePort for insecure HTTP traffic on the shared LB service
-    insecureNodePort: 80
+    insecureNodePort: ~
     # -- Configure a specific nodePort for secure HTTPS traffic on the shared LB service
-    secureNodePort : 443
+    secureNodePort : ~
     # -- Configure a specific loadBalancerClass on the shared LB service (requires Kubernetes 1.24+)
     loadBalancerClass: ~
     # -- Configure a specific loadBalancerIP on the shared LB service
-    loadBalancerIP : replace-lb-ip~
+    loadBalancerIP : ~
 
 gatewayAPI:
   # -- Enable support for Gateway API in cilium

@@ -12,13 +12,12 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    nodePort: 80
+    nodePort: 
   - name: https
     port: 443
     protocol: TCP
-    nodePort: 443
+    nodePort: 
   type: LoadBalancer
-  loadBalancerIP: replace-lb-ip~
 ---
 # Source: cilium/templates/cilium-ingress-service.yaml
 apiVersion: v1
