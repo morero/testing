@@ -35,7 +35,7 @@ imagePullSecrets:
 # @default -- `"~/.kube/config"`
 kubeConfigPath: ""
 # -- (string) Kubernetes service host
-k8sServiceHost: "replace"
+k8sServiceHost: ""
 # -- (string) Kubernetes service port
 k8sServicePort: "6443"
 
@@ -609,7 +609,7 @@ ingressController:
   # Supported values: shared, dedicated
   # For granular control, use the following annotations on the ingress resource
   # ingress.cilium.io/loadbalancer-mode: shared|dedicated,
-  loadbalancerMode: shared
+  loadbalancerMode: dedicated
 
   # -- Enforce https for host having matching TLS host in Ingress.
   # Incoming traffic to http listener will return 308 http error code with respective location in header.
