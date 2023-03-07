@@ -1,0 +1,14 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: kpt
+packageMetadata:
+  shortDescription: sample description
+openAPI:
+  definitions:
+    io.k8s.cli.setters.master-ip:
+      x-k8s-cli:
+        setter:
+          name: master-ip
+          value: "127.0.0.1"
+
