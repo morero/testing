@@ -7,8 +7,6 @@ metadata:
   namespace: kube-system
   labels:
     cilium.io/ingress: "true"
-  annotations:
-    "io.cilium/lb-ipam-ips": "0.0.0.0" # {"$kpt-set":"master-ip"}
 spec:
   ports:
   - name: http
