@@ -2,7 +2,7 @@ cilium:
   kubeProxyReplacement: strict
   ingressController:
     enabled: true
-    loadbalancerMode: dedicated
+    loadbalancerMode: shared
   hostServices:
     enabled: false
   externalIPs:
