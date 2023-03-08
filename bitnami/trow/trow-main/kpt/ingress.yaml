@@ -13,7 +13,7 @@ metadata:
     certmanager.k8s.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
     cert-manager.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
 spec:
-  #ingressClassName: cilium
+  ingressClassName: cilium
   rules:
   - host: registry.83cnnvea23rb2222.ertia.cloud # {"$kpt-set":"registry-domain"}
     http:
