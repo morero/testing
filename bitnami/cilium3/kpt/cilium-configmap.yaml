@@ -35,7 +35,7 @@ data:
   enable-policy: "default"
   enable-ingress-controller: "true"
   enable-envoy-config: "true"
-  enforce-ingress-https: "true"
+  enforce-ingress-https: "false"
   enable-ingress-secrets-sync: "true"
   ingress-secrets-namespace: "cilium-secrets"
   ingress-lb-annotation-prefixes: "service.beta.kubernetes.io service.kubernetes.io cloud.google.com"

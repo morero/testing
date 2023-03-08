@@ -3,6 +3,7 @@ cilium:
   ingressController:
     enabled: true
     loadbalancerMode: shared
+    enforceHttps: false
   hostServices:
     enabled: false
   externalIPs:
