@@ -1,4 +1,6 @@
 cilium:
+  image:
+    tag: "v1.12.5"
   kubeProxyReplacement: strict
   ingressController:
     enabled: true
