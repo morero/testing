@@ -22,3 +22,12 @@ cilium:
       enabled: true
   k8sServiceHost: 46.246.46.114
   k8sServicePort: 6443 
+
+  bgp:
+    enabled: true
+    announce:
+      loadbalancerIP: true
+      podCIDR: false
+
+  bgpControlPlane:
+    enabled: false

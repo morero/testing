@@ -327,7 +327,7 @@ nat46x64Gateway:
 bgp:
   # -- Enable BGP support inside Cilium; embeds a new ConfigMap for BGP inside
   # cilium-agent and cilium-operator
-  enabled: false
+  enabled: false 
   announce:
     # -- Enable allocation and announcement of service LoadBalancer IPs
     loadbalancerIP: false
