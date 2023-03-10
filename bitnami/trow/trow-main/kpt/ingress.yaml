@@ -6,12 +6,11 @@ metadata:
   labels:
     cert-promoter: ignore
   annotations:
-    ingress.kubernetes.io/proxy-body-size: "0"
-    ingress.kubernetes.io/ssl-redirect: "false"
-    kubernetes.io/ingress.class: "cilium"
-#    kubernetes.io/ingress.class: "traefik"
-    certmanager.k8s.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
     cert-manager.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.class: "cilium"
+    acme.cert-manager.io/http01-edit-in-place: "true"
+    ingress.kubernetes.io/proxy-body-size: "0"
 spec:
   #ingressClassName: cilium
   rules:

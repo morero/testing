@@ -13,11 +13,10 @@ metadata:
     cert-promoter: pending
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
-    ingress.kubernetes.io/ssl-redirect: "false"
+    ingress.kubernetes.io/ssl-redirect: "true"
     kubernetes.io/ingress.class: "cilium"
     acme.cert-manager.io/http01-edit-in-place: "true"
 spec:
-  #ingressClassName: cilium
   tls:
   - hosts:
     - grafana.local.ertia.cloud # {"$kpt-set":"grafana-domain"}
