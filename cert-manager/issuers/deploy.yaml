@@ -2,6 +2,8 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-production
+  annotations:
+    cert-manager.forked.se/disable-self-check: true
 spec:
   acme:
     email: jasmin.beharic@fabled.se
@@ -18,6 +20,8 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-staging
+  annotations:
+    cert-manager.forked.se/disable-self-check: true
 spec:
   acme:
     email: jasmin.beharic@fabled.se
