@@ -2,6 +2,8 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-production
+  labels:
+    cert-manager.forged.se/disable-self-check: true
   annotations:
     cert-manager.forked.se/disable-self-check: true
 spec:
