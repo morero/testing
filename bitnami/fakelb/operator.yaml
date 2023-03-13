@@ -75,7 +75,7 @@ spec:
       containers:
         - name: fakelb-operator
           # Replace this with the built image name
-          image: gothenburg/fakelb:v0.0.1
+          image: gothenburg/fakelb:v0.0.2
           command:
             - /manager
           imagePullPolicy: Always # set to IfNotPresent later
