@@ -1,0 +1,4 @@
+apiVersion: ertia.ertia.io/v1
+kind: FakeLB
+metadata:
+  name: fakelb
