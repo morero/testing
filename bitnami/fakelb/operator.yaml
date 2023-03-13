@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lb 
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: fakelb
+rules:
+  - apiGroups:
+      - "networking.k8s.io"
+    resources:
+      - ingresses
+      - services
+    verbs:
+      - create
+      - get
+      - list
+      - patch
+      - update
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrolebinding
+    app.kubernetes.io/instance: fakelb-rolebinding
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: fakelb
+    app.kubernetes.io/part-of: fakelb
+  name: fakelb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: fakelb
+subjects:
+  - kind: ServiceAccount
+    name: fakelb
+    namespace: lb 
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/name: serviceaccount
+    app.kubernetes.io/instance: fakelb
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: fakelb 
+    app.kubernetes.io/part-of: fakelb
+  name: fakelb 
+  namespace: lb 
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fakelb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: fakelb-operator
+  template:
+    metadata:
+      labels:
+        name: fakelb-operator
+    spec:
+      serviceAccountName: fakelb
+      containers:
+        - name: fakelb-operator
+          # Replace this with the built image name
+          image: gothenburg/fakelb:v0.0.1
+          command:
+            - /manager
+          imagePullPolicy: Always # set to IfNotPresent later

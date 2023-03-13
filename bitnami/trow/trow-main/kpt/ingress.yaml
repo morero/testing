@@ -4,13 +4,12 @@ metadata:
   name: trow-ingress
   namespace: registry
   labels:
-    cert-promoter: ignore
+    cert-promoter: pending
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
     ingress.kubernetes.io/ssl-redirect: "true"
     kubernetes.io/ingress.class: "cilium"
     acme.cert-manager.io/http01-edit-in-place: "true"
-    ingress.kubernetes.io/proxy-body-size: "0"
 spec:
   #ingressClassName: cilium
   rules:
