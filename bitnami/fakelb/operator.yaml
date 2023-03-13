@@ -12,10 +12,12 @@ rules:
   - apiGroups:
       - "networking.k8s.io"
       - "ertia.ertia.io"
+      - ""
     resources:
       - ingresses
       - services
       - fakelbs
+      - nodes
     verbs:
       - create
       - get
