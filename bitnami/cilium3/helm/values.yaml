@@ -31,3 +31,7 @@ cilium:
 
   bgpControlPlane:
     enabled: false
+
+  ingressController:
+    service:
+      annotations: ["ertia.io/fake-lb"]
