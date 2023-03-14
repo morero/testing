@@ -33,6 +33,8 @@ cilium:
     enabled: false
 
   ingressController:
+    enabled: true
     service:
       annotations: 
         ertia.io/fake-lb: true
+    loadbalancerMode: shared
