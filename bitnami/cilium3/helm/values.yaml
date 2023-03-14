@@ -34,4 +34,5 @@ cilium:
 
   ingressController:
     service:
-      annotations: ["ertia.io/fake-lb"]
+      annotations: 
+        ertia.io/fake-lb: true
