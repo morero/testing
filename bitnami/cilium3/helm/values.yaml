@@ -36,5 +36,5 @@ cilium:
     enabled: true
     service:
       annotations: 
-        ertia.io/fake-lb: true
+        - ertia.io/fake-lb: true
     loadbalancerMode: shared
