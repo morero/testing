@@ -11,8 +11,12 @@ metadata:
 rules:
   - apiGroups:
       - "networking.k8s.io"
+      - "cert-manager.io"
+      - ""
     resources:
       - ingresses
+      - services
+      - clusterissuers
     verbs:
       - create
       - get
@@ -20,6 +24,7 @@ rules:
       - patch
       - update
       - watch
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
