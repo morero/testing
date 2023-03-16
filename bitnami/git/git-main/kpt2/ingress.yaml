@@ -7,11 +7,12 @@ metadata:
   labels:
     app.kubernetes.io/name: git
     app.kubernetes.io/instance: git
-    cert-promoter: pending
+    cert-promoter: ready
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
+    cert-manager.io/cluster-issuer: "letsencrypt-production" # {"$kpt-set":"cert-issuer"}
     ingress.kubernetes.io/ssl-redirect: "true"
     kubernetes.io/ingress.class: "cilium"
+    cert-manager.io/issue-temporary-certificate: "true"
     acme.cert-manager.io/http01-edit-in-place: "true"
 spec:
   #ingressClassName: cilium
