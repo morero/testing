@@ -9,7 +9,7 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-production" # {"$kpt-set":"cert-issuer"}
     ingress.kubernetes.io/ssl-redirect: "true"
     kubernetes.io/ingress.class: "cilium"
-    cert-manager.io/issue-temporary-certificate": "true"
+    cert-manager.io/issue-temporary-certificate: "true"
     acme.cert-manager.io/http01-edit-in-place: "true"
 spec:
   #ingressClassName: cilium
