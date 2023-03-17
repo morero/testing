@@ -3,7 +3,7 @@ kind: ClusterIssuer
 metadata:
   name: letsencrypt-production
   annotations:
-    cert-manager.forked.se/disable-self-check: "false"
+    cert-manager.forked.se/disable-self-check: "true"
 spec:
   acme:
     email: jasmin.beharic@fabled.se
@@ -21,7 +21,7 @@ kind: ClusterIssuer
 metadata:
   name: letsencrypt-staging
   annotations:
-    cert-manager.forked.se/disable-self-check: "false"
+    cert-manager.forked.se/disable-self-check: "true"
 spec:
   acme:
     email: jasmin.beharic@fabled.se
