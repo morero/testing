@@ -5326,7 +5326,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: cert-manager-controller
-          image: "docker.io/morero/cert-manager-controller:v1.11.0-1-g5a26a144c9bea1"
+          image: "docker.io/gothenburg/cert-manager-controller:v1.11.0-1-g5a26a144c9bea1"
           imagePullPolicy: IfNotPresent
           args:
           - --v=2
@@ -5387,7 +5387,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: cert-manager-webhook
-          image: "docker.io/morero/cert-manager-webhook:v1.11.0-1-g5a26a144c9bea1"
+          image: "docker.io/gothenburg/cert-manager-webhook:v1.11.0-1-g5a26a144c9bea1"
           imagePullPolicy: IfNotPresent
           args:
           - --v=2
