@@ -8,6 +8,7 @@ metadata:
   labels:
     cilium.io/ingress: "true"
 spec:
+  externalTrafficPolicy: Cluster
   ports:
   - name: http
     port: 80
