@@ -34,7 +34,12 @@ cilium:
 
   ingressController:
     enabled: true
+
     service:
       annotations: 
-        ertia.io/fake-lb: "true"
+#        ertia.io/fake-lb: "true"
+      type: NodePort
+      insecureNodePort: 80
+      secureNodePort: 443
+    
     loadbalancerMode: shared
