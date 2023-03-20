@@ -1,0 +1,30 @@
+# Source: git-main/charts/gitea/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: git
+  namespace: "git"
+  labels:
+    app.kubernetes.io/name: git
+    app.kubernetes.io/instance: git
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
+    cert-manager.k8s.io/cluster-issuer: "letsencrypt-selfsigned" # {"$kpt-set":"cert-issuer"}
+    kubernetes.io/ingress.class: cilium
+spec:
+  rules:
+  - host: "git.local.ertia.cloud" # {"$kpt-set":"git-domain"}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: git
+            port:
+              name: http
+  tls:
+  - hosts:
+    - "git.local.ertia.cloud" # {"$kpt-set":"git-domain"}
+    secretName: gitea.local-tls
+
