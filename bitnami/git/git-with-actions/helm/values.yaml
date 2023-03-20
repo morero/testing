@@ -1,0 +1,58 @@
+
+pac.ertia.io: 
+  pac.ertia.io/domain: git.local.ertia.cloud
+
+testing: test0
+gitea:
+  testing: testx2
+  gitea:
+    testing: testx
+    gitea:
+      testing: testx1
+    additionalConfigFromEnvs:
+      - name: ENV_TO_INI__DATABASE__HOST
+        value: my.own.host
+      - name: ENV_TO_INI__DATABASE__PASSWD
+        valueFrom:
+          secretKeyRef:
+            name: postgres-secret
+            key: password
+
+  replicaCount: 1
+  image:
+    repository: gothenburg/gitea
+    tag: latest 
+  clusterDomain: cluster.local
+
+  config:
+    database:
+      DB_TYPE: postgresql 
+      HOST: 127.0.0.1:5432
+      NAME: postgres
+      USER: postgres
+      PASSWD: gitea
+      SCHEMA: gitea
+    cache:
+      ENABLED: true
+      ADAPTER: memory
+      INTERVAL: 60
+      HOST: 127.0.0.1:9090
+  admin:
+    username: gitea
+    password: gitea
+    email: gitea@example.com
+
+service:
+  http:
+    type: ClusterIP
+    port: 3000
+  ssh:
+    type: NodePort
+    port: 22
+    nodePort: 22
+
+
+
+postgresql:
+  enabled: false
+
