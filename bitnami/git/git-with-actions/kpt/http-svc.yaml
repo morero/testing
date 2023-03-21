@@ -4,19 +4,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: git-http
-  labels:
-    app: git
-    app.kubernetes.io/name: git
-    app.kubernetes.io/instance: git
-    app.kubernetes.io/version: "latest"
-    version: "latest"
   annotations:
-    {}
+    io.cilium.service/lb-l7: enabled
 spec:
   type: ClusterIP
-  clusterIP: None
+  sessionAffinity: None
   ports:
   - name: http
+    protocol: TCP
     port: 3000
     targetPort: 3000
   selector:
