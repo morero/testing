@@ -22,7 +22,7 @@ spec:
           service:
             name: git
             port:
-              name: http
+              number: 3000
   tls:
   - hosts:
     - "git.local.ertia.cloud" # {"$kpt-set":"git-domain"}
