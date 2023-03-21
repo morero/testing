@@ -189,15 +189,15 @@ spec:
       volumes:
         - name: init
           secret:
-            secretName: git-gitea-init
+            secretName: git-init
             defaultMode: 110
         - name: config
           secret:
-            secretName: git-gitea
+            secretName: git
             defaultMode: 110
         - name: inline-config-sources
           secret:
-            secretName: git-gitea-inline-config
+            secretName: git-inline-config
         - name: temp
           emptyDir: {}
   volumeClaimTemplates:
