@@ -31,7 +31,6 @@ openAPI:
         setter:
           name: git-endpoint
           value: "http://git.local.ertia.cloud"
-          isSet: true
     io.k8s.cli.setters.postgres-secret-name:
       x-k8s-cli:
         setter:
@@ -57,7 +56,6 @@ openAPI:
         setter:
           name: git-domain
           value: "git.local.ertia.cloud"
-          isSet: true
     io.k8s.cli.setters.cert-issuer:
       x-k8s-cli:
         setter:
