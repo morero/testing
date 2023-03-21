@@ -3,10 +3,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: git-gitea-http
+  name: git-http
   labels:
-    app: gitea
-    app.kubernetes.io/name: gitea
+    app: git
+    app.kubernetes.io/name: git
     app.kubernetes.io/instance: git
     app.kubernetes.io/version: "latest"
     version: "latest"
@@ -20,5 +20,5 @@ spec:
     port: 3000
     targetPort: 3000
   selector:
-    app.kubernetes.io/name: gitea
+    app.kubernetes.io/name: git
     app.kubernetes.io/instance: git

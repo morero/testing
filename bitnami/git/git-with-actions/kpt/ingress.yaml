@@ -21,7 +21,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: git-gitea-http
+            name: git-http
             port:
               number: 3000
   tls:

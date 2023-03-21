@@ -3,31 +3,28 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: git-gitea
+  name: git
   annotations:
   labels:
-    helm.sh/chart: gitea-0.0.0
-    app: gitea
-    app.kubernetes.io/name: gitea
+    app: git
+    app.kubernetes.io/name: git
     app.kubernetes.io/instance: git
     app.kubernetes.io/version: "latest"
     version: "latest"
-    app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: gitea
+      app.kubernetes.io/name: git
       app.kubernetes.io/instance: git
-  serviceName: git-gitea
+  serviceName: git
   template:
     metadata:
       annotations:
         checksum/config: b8212f242222b656f12c5fea77ff9b89652fa168c79333b113dcf3cdb0125b71
       labels:
-        helm.sh/chart: gitea-0.0.0
-        app: gitea
-        app.kubernetes.io/name: gitea
+        app: git
+        app.kubernetes.io/name: git
         app.kubernetes.io/instance: git
         app.kubernetes.io/version: "latest"
         version: "latest"
