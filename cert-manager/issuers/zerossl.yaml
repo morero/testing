@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: zero-ssl-secret
+data:
+  secret: NEt5eGtIV2VNRUUyVmhyamNGVEd5eDFFaUtlanptbFZIa0Y4RG9hQmVEVzAwVzBZV2w5MHBFcTBDNGZkcTZ1amN2TVFlNC1RWWNIaU9TT0J5MTREWmc=
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: zerossl-production
+  annotations:
+    cert-manager.forked.se/disable-self-check: "true"
+spec:
+  acme:
+    email: jasmin.beharic@fabled.se
+    privateKeySecretRef:
+      name: zerossl-production-issuer-account-key
+    server: https://acme.zerossl.com/v2/DV90
+    externalAccountBinding:
+      keyID: apZ8n2bTPoETFx95T2cHQA
+      keySecretRef:
+        name: zero-ssl-secret
+        key: secret
+      keyAlgorithm: HS256
+    solvers:
+    - http01:
+        ingress:
+          class: cilium
+          serviceType: ClusterIP
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: zerossl-staging
+  annotations:
+    cert-manager.forked.se/disable-self-check: "true"
+spec:
+  acme:
+    email: jasmin.beharic@fabled.se
+    privateKeySecretRef:
+      name: zerossl-staging-issuer-account-key
+    server: https://acme.zerossl.com/v2/DV90
+    externalAccountBinding:
+      keyID: TI1Y9QB8JLKkaTHNjWc8bA
+      keySecretRef:
+        name: zero-ssl-secret
+        key: secret
+      keyAlgorithm: HS256
+    solvers:
+    - http01:
+        ingress:
+          class: cilium
+          serviceType: ClusterIP
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: zerossl-selfsigned
+spec:
+  selfSigned: {}
+#---
+#apiVersion: cert-manager.io/v1
+#kind: ClusterIssuer
+#metadata:
+#  name: mkcert
+#spec:
+#  ca:
+#    secretName: mkcert-issuer
+
+
