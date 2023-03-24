@@ -7,15 +7,12 @@ metadata:
 spec:
   acme:
     email: jasmin.beharic@fabled.se
-    privateKeySecretRef:
-      name: zero-ssl-secret
     server: https://acme.zerossl.com/v2/DV90
-#    externalAccountBinding:
-#      keyID: apZ8n2bTPoETFx95T2cHQA
-#      keySecretRef:
-#        name: zero-ssl-secret
-#        key: secret
-#      keyAlgorithm: HS256
+    externalAccountBinding:
+      keyID: SuP46VywarNQQG5bPL79PQ
+      keySecretRef:
+        name: zero-ssl-secret
+        key: secret
     solvers:
     - http01:
         ingress:
@@ -34,12 +31,11 @@ spec:
     privateKeySecretRef:
       name: zero-ssl-secret
     server: https://acme.zerossl.com/v2/DV90
-#    externalAccountBinding:
-#      keyID: apZ8n2bTPoETFx95T2cHQA
-#      keySecretRef:
-#        name: zero-ssl-secret
-#        key: secret
-#      keyAlgorithm: HS256
+    externalAccountBinding:
+      keyID: SuP46VywarNQQG5bPL79PQ
+      keySecretRef:
+        name: zero-ssl-secret
+        key: secret
     solvers:
     - http01:
         ingress:
