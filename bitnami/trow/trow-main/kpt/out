@@ -1,0 +1,324 @@
+apiVersion: v1
+items:
+- apiVersion: cilium.io/v2
+  kind: CiliumEnvoyConfig
+  metadata:
+    creationTimestamp: "2023-03-24T16:54:03Z"
+    generation: 9
+    name: cilium-ingress
+    namespace: kube-system
+    resourceVersion: "2561"
+    uid: f40dc393-0109-411c-8ac4-c6e9e98d38ef
+  spec:
+    backendServices:
+    - name: monitoring-grafana
+      namespace: monitoring
+      number:
+      - "3000"
+    - name: monitoring-loki-gateway
+      namespace: monitoring
+      number:
+      - "80"
+    - name: trow-svc
+      namespace: registry
+      number:
+      - "8000"
+    resources:
+    - '@type': type.googleapis.com/envoy.config.listener.v3.Listener
+      filterChains:
+      - filterChainMatch:
+          transportProtocol: raw_buffer
+        filters:
+        - name: envoy.filters.network.http_connection_manager
+          typedConfig:
+            '@type': type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+            httpFilters:
+            - name: envoy.filters.http.router
+            rds:
+              routeConfigName: listener-insecure
+            statPrefix: listener-insecure
+            upgradeConfigs:
+            - upgradeType: websocket
+      - filterChainMatch:
+          serverNames:
+          - loki.84dcqksg228pe222.ertia.cloud
+          transportProtocol: tls
+        filters:
+        - name: envoy.filters.network.http_connection_manager
+          typedConfig:
+            '@type': type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+            httpFilters:
+            - name: envoy.filters.http.router
+            rds:
+              routeConfigName: listener-secure
+            statPrefix: listener-secure
+            upgradeConfigs:
+            - upgradeType: websocket
+        transportSocket:
+          name: envoy.transport_sockets.tls
+          typedConfig:
+            '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+            commonTlsContext:
+              tlsCertificateSdsSecretConfigs:
+              - name: cilium-secrets/monitoring-loki-tls
+                sdsConfig:
+                  apiConfigSource:
+                    apiType: GRPC
+                    grpcServices:
+                    - envoyGrpc:
+                        clusterName: xds-grpc-cilium
+                    transportApiVersion: V3
+                  resourceApiVersion: V3
+      - filterChainMatch:
+          serverNames:
+          - registry.84dcqksg228pe222.ertia.cloud
+          transportProtocol: tls
+        filters:
+        - name: envoy.filters.network.http_connection_manager
+          typedConfig:
+            '@type': type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+            httpFilters:
+            - name: envoy.filters.http.router
+            rds:
+              routeConfigName: listener-secure
+            statPrefix: listener-secure
+            upgradeConfigs:
+            - upgradeType: websocket
+        transportSocket:
+          name: envoy.transport_sockets.tls
+          typedConfig:
+            '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+            commonTlsContext:
+              tlsCertificateSdsSecretConfigs:
+              - name: cilium-secrets/registry-trow-registry-tls
+                sdsConfig:
+                  apiConfigSource:
+                    apiType: GRPC
+                    grpcServices:
+                    - envoyGrpc:
+                        clusterName: xds-grpc-cilium
+                    transportApiVersion: V3
+                  resourceApiVersion: V3
+      - filterChainMatch:
+          serverNames:
+          - grafana.84dcqksg228pe222.ertia.cloud
+          transportProtocol: tls
+        filters:
+        - name: envoy.filters.network.http_connection_manager
+          typedConfig:
+            '@type': type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+            httpFilters:
+            - name: envoy.filters.http.router
+            rds:
+              routeConfigName: listener-secure
+            statPrefix: listener-secure
+            upgradeConfigs:
+            - upgradeType: websocket
+        transportSocket:
+          name: envoy.transport_sockets.tls
+          typedConfig:
+            '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+            commonTlsContext:
+              tlsCertificateSdsSecretConfigs:
+              - name: cilium-secrets/monitoring-grafana-tls
+                sdsConfig:
+                  apiConfigSource:
+                    apiType: GRPC
+                    grpcServices:
+                    - envoyGrpc:
+                        clusterName: xds-grpc-cilium
+                    transportApiVersion: V3
+                  resourceApiVersion: V3
+      listenerFilters:
+      - name: envoy.filters.listener.tls_inspector
+      name: listener
+      socketOptions:
+      - description: Enable TCP keep-alive (default to enabled)
+        intValue: "1"
+        level: "1"
+        name: "9"
+        state: STATE_LISTENING
+      - description: TCP keep-alive idle time (in seconds) (defaults to 10s)
+        intValue: "10"
+        level: "6"
+        name: "4"
+        state: STATE_LISTENING
+      - description: TCP keep-alive probe intervals (in seconds) (defaults to 5s)
+        intValue: "5"
+        level: "6"
+        name: "5"
+        state: STATE_LISTENING
+      - description: TCP keep-alive probe max failures.
+        intValue: "10"
+        level: "6"
+        name: "6"
+        state: STATE_LISTENING
+    - '@type': type.googleapis.com/envoy.config.route.v3.RouteConfiguration
+      name: listener-insecure
+      virtualHosts:
+      - domains:
+        - grafana.84dcqksg228pe222.ertia.cloud
+        - grafana.84dcqksg228pe222.ertia.cloud:*
+        name: grafana.84dcqksg228pe222.ertia.cloud
+        routes:
+        - match:
+            safeRegex:
+              googleRe2: {}
+              regex: (/.*)?$
+          redirect:
+            httpsRedirect: true
+      - domains:
+        - loki.84dcqksg228pe222.ertia.cloud
+        - loki.84dcqksg228pe222.ertia.cloud:*
+        name: loki.84dcqksg228pe222.ertia.cloud
+        routes:
+        - match:
+            safeRegex:
+              googleRe2: {}
+              regex: (/.*)?$
+          redirect:
+            httpsRedirect: true
+      - domains:
+        - registry.84dcqksg228pe222.ertia.cloud
+        - registry.84dcqksg228pe222.ertia.cloud:*
+        name: registry.84dcqksg228pe222.ertia.cloud
+        routes:
+        - match:
+            safeRegex:
+              googleRe2: {}
+              regex: (/.*)?$
+          redirect:
+            httpsRedirect: true
+      - domains:
+        - grafana.84dcqksg228pe222.ertia.cloud
+        - grafana.84dcqksg228pe222.ertia.cloud:*
+        name: grafana.84dcqksg228pe222.ertia.cloud
+        routes:
+        - match:
+            safeRegex:
+              googleRe2: {}
+              regex: (/.*)?$
+          route:
+            cluster: monitoring/monitoring-grafana:3000
+            maxStreamDuration:
+              maxStreamDuration: 0s
+      - domains:
+        - loki.84dcqksg228pe222.ertia.cloud
+        - loki.84dcqksg228pe222.ertia.cloud:*
+        name: loki.84dcqksg228pe222.ertia.cloud
+        routes:
+        - match:
+            safeRegex:
+              googleRe2: {}
+              regex: (/.*)?$
+          route:
+            maxStreamDuration:
+              maxStreamDuration: 0s
+            weightedClusters:
+              clusters:
+              - name: monitoring/monitoring-loki-gateway:80
+                weight: 1
+              - name: monitoring/monitoring-loki-gateway:80
+                weight: 1
+              totalWeight: 2
+      - domains:
+        - registry.84dcqksg228pe222.ertia.cloud
+        - registry.84dcqksg228pe222.ertia.cloud:*
+        name: registry.84dcqksg228pe222.ertia.cloud
+        routes:
+        - match:
+            safeRegex:
+              googleRe2: {}
+              regex: (/.*)?$
+          route:
+            cluster: registry/trow-svc:8000
+            maxStreamDuration:
+              maxStreamDuration: 0s
+    - '@type': type.googleapis.com/envoy.config.route.v3.RouteConfiguration
+      name: listener-secure
+      virtualHosts:
+      - domains:
+        - grafana.84dcqksg228pe222.ertia.cloud
+        - grafana.84dcqksg228pe222.ertia.cloud:*
+        name: grafana.84dcqksg228pe222.ertia.cloud
+        routes:
+        - match:
+            safeRegex:
+              googleRe2: {}
+              regex: (/.*)?$
+          route:
+            cluster: monitoring/monitoring-grafana:3000
+            maxStreamDuration:
+              maxStreamDuration: 0s
+      - domains:
+        - loki.84dcqksg228pe222.ertia.cloud
+        - loki.84dcqksg228pe222.ertia.cloud:*
+        name: loki.84dcqksg228pe222.ertia.cloud
+        routes:
+        - match:
+            safeRegex:
+              googleRe2: {}
+              regex: (/.*)?$
+          route:
+            maxStreamDuration:
+              maxStreamDuration: 0s
+            weightedClusters:
+              clusters:
+              - name: monitoring/monitoring-loki-gateway:80
+                weight: 1
+              - name: monitoring/monitoring-loki-gateway:80
+                weight: 1
+              totalWeight: 2
+      - domains:
+        - registry.84dcqksg228pe222.ertia.cloud
+        - registry.84dcqksg228pe222.ertia.cloud:*
+        name: registry.84dcqksg228pe222.ertia.cloud
+        routes:
+        - match:
+            safeRegex:
+              googleRe2: {}
+              regex: (/.*)?$
+          route:
+            cluster: registry/trow-svc:8000
+            maxStreamDuration:
+              maxStreamDuration: 0s
+    - '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+      connectTimeout: 5s
+      name: monitoring/monitoring-grafana:3000
+      outlierDetection:
+        splitExternalLocalOriginErrors: true
+      type: EDS
+      typedExtensionProtocolOptions:
+        envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+          '@type': type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+          useDownstreamProtocolConfig:
+            http2ProtocolOptions: {}
+    - '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+      connectTimeout: 5s
+      name: monitoring/monitoring-loki-gateway:80
+      outlierDetection:
+        splitExternalLocalOriginErrors: true
+      type: EDS
+      typedExtensionProtocolOptions:
+        envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+          '@type': type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+          useDownstreamProtocolConfig:
+            http2ProtocolOptions: {}
+    - '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+      connectTimeout: 5s
+      name: registry/trow-svc:8000
+      outlierDetection:
+        splitExternalLocalOriginErrors: true
+      type: EDS
+      typedExtensionProtocolOptions:
+        envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+          '@type': type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+          useDownstreamProtocolConfig:
+            http2ProtocolOptions: {}
+    services:
+    - listener: ""
+      name: cilium-ingress
+      namespace: kube-system
+kind: List
+metadata:
+  resourceVersion: ""

@@ -4,7 +4,7 @@ metadata:
   name: trow-ingress
   namespace: registry
   labels:
-    cert-promoter: ready
+    cert-promoter: pending
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production" # {"$kpt-set":"cert-issuer"}
     ingress.kubernetes.io/ssl-redirect: "true"
