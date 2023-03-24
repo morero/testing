@@ -7,6 +7,8 @@ metadata:
 spec:
   acme:
     email: jasmin.beharic@fabled.se
+    privateKeySecretRef:
+      name: zero-ssl-production
     server: https://acme.zerossl.com/v2/DV90
     externalAccountBinding:
       keyID: SuP46VywarNQQG5bPL79PQ
@@ -29,7 +31,7 @@ spec:
   acme:
     email: jasmin.beharic@fabled.se
     privateKeySecretRef:
-      name: zero-ssl-secret
+      name: zero-ssl-staging
     server: https://acme.zerossl.com/v2/DV90
     externalAccountBinding:
       keyID: SuP46VywarNQQG5bPL79PQ
