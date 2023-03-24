@@ -8,7 +8,7 @@ spec:
   acme:
     email: jasmin.beharic@fabled.se
     privateKeySecretRef:
-      name: zerossl-ssl-secret
+      name: zero-ssl-secret
     server: https://acme.zerossl.com/v2/DV90
 #    externalAccountBinding:
 #      keyID: apZ8n2bTPoETFx95T2cHQA
@@ -32,7 +32,7 @@ spec:
   acme:
     email: jasmin.beharic@fabled.se
     privateKeySecretRef:
-      name: zerossl-ssl-secret
+      name: zero-ssl-secret
     server: https://acme.zerossl.com/v2/DV90
 #    externalAccountBinding:
 #      keyID: apZ8n2bTPoETFx95T2cHQA
