@@ -10,7 +10,6 @@ spec:
     privateKeySecretRef:
       name: zerossl-production-issuer-account-key
     server: https://acme.zerossl.com/v2/DV90
-    disableAccountKeyGeneration: true
     externalAccountBinding:
       keyID: apZ8n2bTPoETFx95T2cHQA
       keySecretRef:
@@ -35,7 +34,6 @@ spec:
     privateKeySecretRef:
       name: zerossl-staging-issuer-account-key
     server: https://acme.zerossl.com/v2/DV90
-    disableAccountKeyGeneration: true
     externalAccountBinding:
       keyID: TI1Y9QB8JLKkaTHNjWc8bA
       keySecretRef:
