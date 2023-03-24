@@ -8,14 +8,14 @@ spec:
   acme:
     email: jasmin.beharic@fabled.se
     privateKeySecretRef:
-      name: zerossl-production-issuer-account-key
+      name: zerossl-ssl-secret
     server: https://acme.zerossl.com/v2/DV90
-    externalAccountBinding:
-      keyID: apZ8n2bTPoETFx95T2cHQA
-      keySecretRef:
-        name: zero-ssl-secret
-        key: secret
-      keyAlgorithm: HS256
+#    externalAccountBinding:
+#      keyID: apZ8n2bTPoETFx95T2cHQA
+#      keySecretRef:
+#        name: zero-ssl-secret
+#        key: secret
+#      keyAlgorithm: HS256
     solvers:
     - http01:
         ingress:
@@ -32,14 +32,14 @@ spec:
   acme:
     email: jasmin.beharic@fabled.se
     privateKeySecretRef:
-      name: zerossl-staging-issuer-account-key
+      name: zerossl-ssl-secret
     server: https://acme.zerossl.com/v2/DV90
-    externalAccountBinding:
-      keyID: TI1Y9QB8JLKkaTHNjWc8bA
-      keySecretRef:
-        name: zero-ssl-secret
-        key: secret
-      keyAlgorithm: HS256
+#    externalAccountBinding:
+#      keyID: apZ8n2bTPoETFx95T2cHQA
+#      keySecretRef:
+#        name: zero-ssl-secret
+#        key: secret
+#      keyAlgorithm: HS256
     solvers:
     - http01:
         ingress:
