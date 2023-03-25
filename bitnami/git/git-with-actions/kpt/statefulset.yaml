@@ -69,6 +69,12 @@ spec:
               value: /data
             - name: GITEA_TEMP
               value: /tmp/gitea
+            - name: ENV_TO_INI__SERVER__ROOT_URL
+              value: "example.com" # {"$kpt-set":"git-endpoint"}
+            - name: ENV_TO_INI__SERVER__DOMAIN
+              value: "example.com" # {"$kpt-set":"git-domain"}
+            - name: ENV_TO_INI__SERVER__SSH_DOMAIN
+              value: "example.com" # {"$kpt-set":"git-domain"}
             - name: ENV_TO_INI__ACTIONS__ENABLED
               value: "true"
             - name: ENV_TO_INI__DATABASE__SSL_MODE
