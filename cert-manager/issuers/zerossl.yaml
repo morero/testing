@@ -3,7 +3,7 @@ kind: ClusterIssuer
 metadata:
   name: zerossl-production
   annotations:
-    cert-manager.forked.se/disable-self-check: "true"
+    cert-manager.forked.se/disable-self-check: "false"
 spec:
   acme:
     email: jasmin.beharic@fabled.se
@@ -26,7 +26,7 @@ kind: ClusterIssuer
 metadata:
   name: zerossl-staging
   annotations:
-    cert-manager.forked.se/disable-self-check: "true"
+    cert-manager.forked.se/disable-self-check: "false"
 spec:
   acme:
     email: jasmin.beharic@fabled.se
