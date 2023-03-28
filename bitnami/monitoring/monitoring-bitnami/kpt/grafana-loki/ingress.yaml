@@ -16,7 +16,7 @@ metadata:
     kubernetes.io/ingress.class: "cilium"
     cert-manager.io/issue-temporary-certificate: "true"
     acme.cert-manager.io/http01-edit-in-place: "true"
-    traefik.ingress.kubernetes.io/router.middlewares: monitoring-loki-basic-auth@kubernetescrd
+    #traefik.ingress.kubernetes.io/router.middlewares: monitoring-loki-basic-auth@kubernetescrd
 spec:
   #ingressClassName: "cilium"
   tls:
